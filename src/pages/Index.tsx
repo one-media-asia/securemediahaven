@@ -1,6 +1,5 @@
-
 import { useState, useEffect } from 'react';
-import { Shield, Lock, Server, ChevronRight, Users, Network, CloudCog } from 'lucide-react';
+import { Shield, Lock, Server, ChevronRight, Users, Network, CloudCog, Key } from 'lucide-react';
 
 const Index = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -47,6 +46,16 @@ const Index = () => {
       icon: CloudCog,
       title: "Security Automation",
       description: "Streamline security operations with AI-powered tools",
+    },
+    {
+      icon: Key,
+      title: "Secure Website Design",
+      description: "Build websites with security-first architecture and best practices",
+    },
+    {
+      icon: Server,
+      title: "Secure Web Hosting",
+      description: "Protected hosting environment with advanced security measures",
     },
   ];
 

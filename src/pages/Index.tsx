@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Shield, Lock, Server, ChevronRight, Users, Network, CloudCog, Key } from 'lucide-react';
 import ContactForm from '../components/ContactForm';
 
 const Index = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const contactRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -16,6 +17,10 @@ const Index = () => {
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
+
+  const scrollToContact = () => {
+    contactRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   const services = [
     {
@@ -90,7 +95,10 @@ const Index = () => {
           <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
             Comprehensive cybersecurity solutions tailored for modern enterprises. Protect your assets with industry-leading security measures.
           </p>
-          <button className="inline-flex items-center px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium transition-all hover:bg-primary/90">
+          <button 
+            onClick={scrollToContact}
+            className="inline-flex items-center px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium transition-all hover:bg-primary/90"
+          >
             Get Started
             <ChevronRight className="ml-2 h-4 w-4" />
           </button>
@@ -146,7 +154,7 @@ const Index = () => {
       </section>
 
       {/* Contact Section */}
-      <section className="py-24 px-4 bg-secondary">
+      <section ref={contactRef} className="py-24 px-4 bg-secondary">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-4xl font-bold text-secondary-foreground mb-4">
             Ready to Secure Your Business?

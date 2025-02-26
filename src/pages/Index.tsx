@@ -1,5 +1,6 @@
+
 import { useState, useEffect, useRef } from 'react';
-import { Shield, Lock, Server, ChevronRight, Users, Network, CloudCog, Key } from 'lucide-react';
+import { Shield, Lock, Server, ChevronRight, Users, Network, CloudCog, Key, Smartphone } from 'lucide-react';
 import ContactForm from '../components/ContactForm';
 
 const Index = () => {
@@ -52,6 +53,11 @@ const Index = () => {
       icon: CloudCog,
       title: "Security Automation",
       description: "Streamline security operations with AI-powered tools",
+    },
+    {
+      icon: Smartphone,
+      title: "Mobile Applications",
+      description: "Secure mobile app development with robust security features",
     },
     {
       icon: Key,

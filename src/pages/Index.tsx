@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Shield, Lock, Server, ChevronRight, Users, Network, CloudCog, Key } from 'lucide-react';
+import ContactForm from '../components/ContactForm';
 
 const Index = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -72,6 +73,14 @@ const Index = () => {
       {/* Hero Section */}
       <section className="relative min-h-[90vh] flex items-center justify-center px-4">
         <div className="text-center max-w-4xl mx-auto">
+          {/* Logo */}
+          <div className="mb-8 inline-flex items-center justify-center">
+            <div className="relative w-16 h-16">
+              <Shield className="w-16 h-16 text-primary absolute" />
+              <Lock className="w-8 h-8 text-accent absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+            </div>
+            <span className="ml-4 text-2xl font-bold tracking-tight">One Media Asia</span>
+          </div>
           <div className="inline-block mb-4 px-4 py-1.5 rounded-full bg-accent text-accent-foreground font-medium text-sm">
             Trusted by Leading Asian Enterprises
           </div>
@@ -145,10 +154,7 @@ const Index = () => {
           <p className="text-secondary-foreground/70 mb-8">
             Contact us today for a personalized security assessment
           </p>
-          <button className="inline-flex items-center px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium transition-all hover:bg-primary/90">
-            Contact Us
-            <ChevronRight className="ml-2 h-4 w-4" />
-          </button>
+          <ContactForm />
         </div>
       </section>
     </div>

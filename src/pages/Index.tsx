@@ -1,10 +1,13 @@
 
 import { useState, useEffect, useRef } from 'react';
-import { Shield, Lock, Server, ChevronRight, Users, Network, CloudCog, Key, Smartphone, Facebook, Linkedin, Copyright } from 'lucide-react';
+import { Shield, Lock, Server, ChevronRight, Users, Network, CloudCog, Key, Smartphone, Facebook, Linkedin, Copyright, Menu, X } from 'lucide-react';
 
 const Index = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const contactRef = useRef<HTMLDivElement>(null);
+  const aboutRef = useRef<HTMLDivElement>(null);
+  const homeRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -18,8 +21,9 @@ const Index = () => {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  const scrollToContact = () => {
-    contactRef.current?.scrollIntoView({ behavior: 'smooth' });
+  const scrollToSection = (ref: React.RefObject<HTMLDivElement>) => {
+    ref.current?.scrollIntoView({ behavior: 'smooth' });
+    setMobileMenuOpen(false);
   };
 
   const services = [
@@ -80,8 +84,82 @@ const Index = () => {
     <div className="min-h-screen w-full overflow-hidden">
       <div className="spotlight fixed inset-0 -z-10" />
       
+      {/* Navigation Menu */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-white/10">
+        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+          {/* Logo */}
+          <div className="flex items-center">
+            <div className="relative w-10 h-10 mr-2">
+              <Shield className="w-10 h-10 text-primary absolute" />
+              <Lock className="w-5 h-5 text-accent absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+            </div>
+            <span className="text-lg font-bold tracking-tight">One Media Asia</span>
+          </div>
+          
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-8">
+            <button 
+              onClick={() => scrollToSection(homeRef)} 
+              className="text-foreground hover:text-primary transition-colors font-medium"
+            >
+              Home
+            </button>
+            <button 
+              onClick={() => scrollToSection(aboutRef)} 
+              className="text-foreground hover:text-primary transition-colors font-medium"
+            >
+              About
+            </button>
+            <button 
+              onClick={() => scrollToSection(contactRef)} 
+              className="text-foreground hover:text-primary transition-colors font-medium"
+            >
+              Contact
+            </button>
+          </nav>
+          
+          {/* Mobile Menu Button */}
+          <button 
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden flex items-center p-2 rounded-lg"
+          >
+            {mobileMenuOpen ? (
+              <X className="h-6 w-6 text-foreground" />
+            ) : (
+              <Menu className="h-6 w-6 text-foreground" />
+            )}
+          </button>
+        </div>
+        
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden absolute w-full bg-background/95 backdrop-blur-sm border-b border-white/10">
+            <div className="py-4 px-4 space-y-4">
+              <button 
+                onClick={() => scrollToSection(homeRef)} 
+                className="block w-full text-left py-2 text-foreground hover:text-primary transition-colors font-medium"
+              >
+                Home
+              </button>
+              <button 
+                onClick={() => scrollToSection(aboutRef)} 
+                className="block w-full text-left py-2 text-foreground hover:text-primary transition-colors font-medium"
+              >
+                About
+              </button>
+              <button 
+                onClick={() => scrollToSection(contactRef)} 
+                className="block w-full text-left py-2 text-foreground hover:text-primary transition-colors font-medium"
+              >
+                Contact
+              </button>
+            </div>
+          </div>
+        )}
+      </header>
+      
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center justify-center px-4">
+      <section ref={homeRef} className="relative min-h-[100vh] flex items-center justify-center px-4 pt-16">
         <div className="text-center max-w-4xl mx-auto">
           {/* Logo */}
           <div className="mb-8 flex items-center justify-center">
@@ -101,7 +179,7 @@ const Index = () => {
             Comprehensive cybersecurity solutions tailored for modern enterprises. Protect your assets with industry-leading security measures.
           </p>
           <button 
-            onClick={scrollToContact}
+            onClick={() => scrollToSection(contactRef)}
             className="inline-flex items-center px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium transition-all hover:bg-primary/90"
           >
             Get Started
@@ -111,7 +189,7 @@ const Index = () => {
       </section>
 
       {/* Services Section */}
-      <section className="py-24 px-4 bg-secondary">
+      <section ref={aboutRef} className="py-24 px-4 bg-secondary">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-secondary-foreground mb-4">

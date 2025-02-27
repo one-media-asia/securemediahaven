@@ -187,7 +187,7 @@ const Index = () => {
                 <h4 className="text-xl font-medium text-secondary-foreground mb-4">Connect With Us</h4>
                 <div className="flex space-x-4">
                   <a 
-                    href="https://facebook.com" 
+                    href="https://facebook.com/onemediaasia" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="p-3 bg-card rounded-full hover:bg-primary/20 transition-colors"
@@ -203,7 +203,7 @@ const Index = () => {
                     <Linkedin className="h-6 w-6 text-primary" />
                   </a>
                   <a 
-                    href="https://wa.me/6561234567" 
+                    href="https://wa.me/6281353833289" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="p-3 bg-card rounded-full hover:bg-primary/20 transition-colors"

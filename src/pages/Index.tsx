@@ -1,7 +1,6 @@
 
 import { useState, useEffect, useRef } from 'react';
-import { Shield, Lock, Server, ChevronRight, Users, Network, CloudCog, Key, Smartphone } from 'lucide-react';
-import ContactForm from '../components/ContactForm';
+import { Shield, Lock, Server, ChevronRight, Users, Network, CloudCog, Key, Smartphone, Facebook, Linkedin, Copyright } from 'lucide-react';
 
 const Index = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -159,16 +158,116 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Contact Section */}
+      {/* Company Information Section */}
       <section ref={contactRef} className="py-24 px-4 bg-secondary">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-4xl font-bold text-secondary-foreground mb-4">
-            Ready to Secure Your Business?
-          </h2>
-          <p className="text-secondary-foreground/70 mb-8">
-            Contact us today for a personalized security assessment
-          </p>
-          <ContactForm />
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-secondary-foreground mb-4">
+              Get In Touch
+            </h2>
+            <p className="text-secondary-foreground/70 mb-8 max-w-2xl mx-auto">
+              Contact us today for a personalized security assessment
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            {/* Company Info */}
+            <div className="space-y-6">
+              <h3 className="text-2xl font-semibold text-secondary-foreground">Company Information</h3>
+              <div className="space-y-4 text-secondary-foreground/80">
+                <p>One Media Asia Pte Ltd</p>
+                <p>123 Security Tower, #10-01</p>
+                <p>Cyber District, Singapore 123456</p>
+                <p>Phone: +65 6123 4567</p>
+                <p>Email: contact@onemedia.asia</p>
+              </div>
+              
+              {/* Social Media Links */}
+              <div className="pt-4">
+                <h4 className="text-xl font-medium text-secondary-foreground mb-4">Connect With Us</h4>
+                <div className="flex space-x-4">
+                  <a 
+                    href="https://facebook.com" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="p-3 bg-card rounded-full hover:bg-primary/20 transition-colors"
+                  >
+                    <Facebook className="h-6 w-6 text-primary" />
+                  </a>
+                  <a 
+                    href="https://linkedin.com" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="p-3 bg-card rounded-full hover:bg-primary/20 transition-colors"
+                  >
+                    <Linkedin className="h-6 w-6 text-primary" />
+                  </a>
+                  <a 
+                    href="https://wa.me/6561234567" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="p-3 bg-card rounded-full hover:bg-primary/20 transition-colors"
+                  >
+                    <svg 
+                      xmlns="http://www.w3.org/2000/svg" 
+                      width="24" 
+                      height="24" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      strokeWidth="2" 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      className="h-6 w-6 text-primary"
+                    >
+                      <path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21"></path>
+                      <path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1Z"></path>
+                      <path d="M14 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1Z"></path>
+                      <path d="M9.5 15.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 0-1h-4a.5.5 0 0 0-.5.5Z"></path>
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+            
+            {/* Business Hours */}
+            <div className="space-y-6">
+              <h3 className="text-2xl font-semibold text-secondary-foreground">Business Hours</h3>
+              <div className="space-y-3 text-secondary-foreground/80">
+                <div className="flex justify-between">
+                  <span>Monday - Friday:</span>
+                  <span>9:00 AM - 6:00 PM</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Saturday:</span>
+                  <span>10:00 AM - 2:00 PM</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Sunday:</span>
+                  <span>Closed</span>
+                </div>
+              </div>
+              
+              <div className="pt-6">
+                <h4 className="text-xl font-medium text-secondary-foreground mb-4">Our Locations</h4>
+                <div className="space-y-3 text-secondary-foreground/80">
+                  <p className="font-medium">Singapore (HQ)</p>
+                  <p>Malaysia</p>
+                  <p>Thailand</p>
+                  <p>Indonesia</p>
+                  <p>Vietnam</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Copyright */}
+          <div className="mt-16 pt-8 border-t border-white/10 text-center text-secondary-foreground/60">
+            <div className="flex items-center justify-center">
+              <Copyright className="h-4 w-4 mr-2" />
+              <p>{new Date().getFullYear()} One Media Asia. All rights reserved.</p>
+            </div>
+          </div>
         </div>
       </section>
     </div>

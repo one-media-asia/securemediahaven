@@ -331,7 +331,7 @@ const Index = () => {
                 <div className="space-y-3 text-secondary-foreground/80">
                   <p className="font-medium">Thailand (HQ)</p>
   
-                  <p>Thailand</p>
+                 
                   <p>Indonesia</p>
                   
                 </div>
@@ -346,7 +346,22 @@ const Index = () => {
               <p>{new Date().getFullYear()} One Media Asia Co Ltd. All rights reserved.</p>
             </div>
           </div>
-        </div>
+        </div><script>
+!function(w, d, s, ...args){
+  var div = d.createElement('div');
+  div.id = 'aichatbot';
+  d.body.appendChild(div);
+  w.chatbotConfig = args;
+  var f = d.getElementsByTagName(s)[0],
+  j = d.createElement(s);
+  j.defer = true;
+  j.type = 'module';
+  j.src = 'https://aichatbot.sendbird.com/index.js';
+  f.parentNode.insertBefore(j, f);
+}(window, document, 'script', '6752017B-41A5-482D-BC64-F57605CBCF5C', '4VjjNDCBImJaVSCR8NloP', {
+  apiHost: 'https://api-cf-us-3.sendbird.com',
+});
+</script>
       </section>
     </div>
   );

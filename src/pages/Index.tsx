@@ -21,6 +21,28 @@ const Index = () => {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
+  // Add AI Chatbot script
+  useEffect(() => {
+    const initChatbot = () => {
+      const div = document.createElement('div');
+      div.id = 'aichatbot';
+      document.body.appendChild(div);
+      
+      window.chatbotConfig = ['6752017B-41A5-482D-BC64-F57605CBCF5C', '4VjjNDCBImJaVSCR8NloP', {
+        apiHost: 'https://api-cf-us-3.sendbird.com',
+      }];
+      
+      const script = document.createElement('script');
+      script.defer = true;
+      script.type = 'module';
+      script.src = 'https://aichatbot.sendbird.com/index.js';
+      
+      document.head.appendChild(script);
+    };
+    
+    initChatbot();
+  }, []);
+
   const scrollToSection = (ref: React.RefObject<HTMLDivElement>) => {
     ref.current?.scrollIntoView({ behavior: 'smooth' });
     setMobileMenuOpen(false);
@@ -151,10 +173,6 @@ const Index = () => {
                 onClick={() => scrollToSection(contactRef)} 
                 className="block w-full text-left py-2 text-foreground hover:text-primary transition-colors font-medium"
               >
-                Contact
-              </button>
-                <button 
-                  </br>
                 Contact
               </button>
             </div>
@@ -334,10 +352,7 @@ const Index = () => {
                 <h4 className="text-xl font-medium text-secondary-foreground mb-4">Our Locations</h4>
                 <div className="space-y-3 text-secondary-foreground/80">
                   <p className="font-medium">Thailand (HQ)</p>
-  
-                 
                   <p>Indonesia</p>
-                  
                 </div>
               </div>
             </div>
@@ -355,20 +370,5 @@ const Index = () => {
     </div>
   );
 };
-<script>
-!function(w, d, s, ...args){
-  var div = d.createElement('div');
-  div.id = 'aichatbot';
-  d.body.appendChild(div);
-  w.chatbotConfig = args;
-  var f = d.getElementsByTagName(s)[0],
-  j = d.createElement(s);
-  j.defer = true;
-  j.type = 'module';
-  j.src = 'https://aichatbot.sendbird.com/index.js';
-  f.parentNode.insertBefore(j, f);
-}(window, document, 'script', '6752017B-41A5-482D-BC64-F57605CBCF5C', '4VjjNDCBImJaVSCR8NloP', {
-  apiHost: 'https://api-cf-us-3.sendbird.com',
-});
-</script>
+
 export default Index;

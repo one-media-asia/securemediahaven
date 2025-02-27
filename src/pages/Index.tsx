@@ -2,6 +2,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { Shield, Lock, Server, ChevronRight, Users, Network, CloudCog, Key, Smartphone, Facebook, Linkedin, Copyright, Menu, X } from 'lucide-react';
 
+// Extend Window interface to include chatbotConfig
+declare global {
+  interface Window {
+    chatbotConfig: any;
+  }
+}
+
 const Index = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

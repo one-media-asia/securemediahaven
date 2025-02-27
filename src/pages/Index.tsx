@@ -153,6 +153,10 @@ const Index = () => {
               >
                 Contact
               </button>
+                <button 
+                  </br>
+                Contact
+              </button>
             </div>
           </div>
         )}
@@ -273,7 +277,7 @@ const Index = () => {
                     <Facebook className="h-6 w-6 text-primary" />
                   </a>
                   <a 
-                    href="https://linkedin.com" 
+                    href="https://www.linkedin.com/in/peter-greaney-00368840/" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="p-3 bg-card rounded-full hover:bg-primary/20 transition-colors"
@@ -314,11 +318,11 @@ const Index = () => {
               <div className="space-y-3 text-secondary-foreground/80">
                 <div className="flex justify-between">
                   <span>Monday - Friday:</span>
-                  <span>9:00 AM - 6:00 PM</span>
+                  <span>10:00 AM - 10:00 PM</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Saturday:</span>
-                  <span>10:00 AM - 2:00 PM</span>
+                  <span>10:00 AM - 4:00 PM</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Sunday:</span>

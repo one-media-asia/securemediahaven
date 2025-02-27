@@ -175,10 +175,10 @@ const Index = () => {
             <div className="space-y-6">
               <h3 className="text-2xl font-semibold text-secondary-foreground">Company Information</h3>
               <div className="space-y-4 text-secondary-foreground/80">
-                <p>One Media Asia Pte Ltd</p>
+                <p>One Media Asia Co, Ltd</p>
                 <p>35/3 Moo 3 , Hang Dong </p>
                 <p>Chiang Mai, Thailand</p>
-                <p>Phone: +65 6123 4567</p>
+                <p>Phone: +62 8135 3833 289</p>
                 <p>Email: contact@onemedia.asia</p>
               </div>
               

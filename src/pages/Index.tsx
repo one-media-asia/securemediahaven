@@ -84,12 +84,12 @@ const Index = () => {
       <section className="relative min-h-[90vh] flex items-center justify-center px-4">
         <div className="text-center max-w-4xl mx-auto">
           {/* Logo */}
-          <div className="mb-8 inline-flex items-center justify-center">
-            <div className="relative w-16 h-16">
+          <div className="mb-8 flex items-center justify-center">
+            <div className="relative w-16 h-16 mr-4">
               <Shield className="w-16 h-16 text-primary absolute" />
               <Lock className="w-8 h-8 text-accent absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
             </div>
-            <span className="ml-4 text-2xl font-bold tracking-tight">One Media Asia</span>
+            <span className="text-2xl font-bold tracking-tight">One Media Asia</span>
           </div>
           <div className="inline-block mb-4 px-4 py-1.5 rounded-full bg-accent text-accent-foreground font-medium text-sm">
             Trusted by Leading Asian Enterprises

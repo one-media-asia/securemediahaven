@@ -346,7 +346,12 @@ const Index = () => {
               <p>{new Date().getFullYear()} One Media Asia Co Ltd. All rights reserved.</p>
             </div>
           </div>
-        </div><script>
+        </div>
+      </section>
+    </div>
+  );
+};
+<script>
 !function(w, d, s, ...args){
   var div = d.createElement('div');
   div.id = 'aichatbot';
@@ -362,9 +367,4 @@ const Index = () => {
   apiHost: 'https://api-cf-us-3.sendbird.com',
 });
 </script>
-      </section>
-    </div>
-  );
-};
-
 export default Index;

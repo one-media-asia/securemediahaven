@@ -176,8 +176,8 @@ const Index = () => {
               <h3 className="text-2xl font-semibold text-secondary-foreground">Company Information</h3>
               <div className="space-y-4 text-secondary-foreground/80">
                 <p>One Media Asia Pte Ltd</p>
-                <p>123 Security Tower, #10-01</p>
-                <p>Cyber District, Singapore 123456</p>
+                <p>35/3 Moo 3 , Hang Dong </p>
+                <p>Chiang Mai, Thailand</p>
                 <p>Phone: +65 6123 4567</p>
                 <p>Email: contact@onemedia.asia</p>
               </div>
@@ -251,11 +251,11 @@ const Index = () => {
               <div className="pt-6">
                 <h4 className="text-xl font-medium text-secondary-foreground mb-4">Our Locations</h4>
                 <div className="space-y-3 text-secondary-foreground/80">
-                  <p className="font-medium">Singapore (HQ)</p>
-                  <p>Malaysia</p>
+                  <p className="font-medium">Thailand (HQ)</p>
+  
                   <p>Thailand</p>
                   <p>Indonesia</p>
-                  <p>Vietnam</p>
+                  
                 </div>
               </div>
             </div>
@@ -265,7 +265,7 @@ const Index = () => {
           <div className="mt-16 pt-8 border-t border-white/10 text-center text-secondary-foreground/60">
             <div className="flex items-center justify-center">
               <Copyright className="h-4 w-4 mr-2" />
-              <p>{new Date().getFullYear()} One Media Asia. All rights reserved.</p>
+              <p>{new Date().getFullYear()} One Media Asia Co Ltd. All rights reserved.</p>
             </div>
           </div>
         </div>

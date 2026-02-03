@@ -49,20 +49,6 @@ const Services = () => {
       ],
       highlight: "INCLUDED",
       highlightColor: "bg-accent"
-    },
-    {
-      icon: Download,
-      title: "Security Tools Download",
-      description: "Essential tools to protect your business",
-      features: [
-        "Antivirus software",
-        "Firewall configuration tools",
-        "Password managers",
-        "Encryption utilities",
-        "Network monitoring apps"
-      ],
-      highlight: "FREE DOWNLOAD",
-      highlightColor: "bg-green-500"
     }
   ];
 

@@ -42,7 +42,7 @@ const Index = () => {
       const script = document.createElement('script');
       script.defer = true;
       script.type = 'module';
-      script.3src = 'https://aichatbot.sendbird.com/index.js';
+      script.src = 'https://aichatbot.sendbird.com/index.js';
       
       document.head.appendChild(script);
     };

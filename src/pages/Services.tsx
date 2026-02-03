@@ -351,19 +351,19 @@ const Services = () => {
           <h2 className="text-3xl font-bold text-center mb-12">Our Security Services</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
             {offers.map((offer, index) => (
-              <Card key={index} className="relative overflow-hidden hover:shadow-lg transition-shadow">
+              <Card key={index} className="relative overflow-hidden hover:shadow-lg transition-shadow bg-background">
                 <div className={`absolute top-4 right-4 ${offer.highlightColor} text-white px-3 py-1 rounded-full text-sm font-bold`}>
                   {offer.highlight}
                 </div>
                 <CardHeader>
                   <offer.icon className="h-12 w-12 text-primary mb-4" />
-                  <CardTitle className="text-2xl">{offer.title}</CardTitle>
-                  <CardDescription className="text-base">{offer.description}</CardDescription>
+                  <CardTitle className="text-2xl text-foreground">{offer.title}</CardTitle>
+                  <CardDescription className="text-base text-muted-foreground">{offer.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-3">
                     {offer.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-center gap-2">
+                      <li key={idx} className="flex items-center gap-2 text-foreground">
                         <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
                         <span>{feature}</span>
                       </li>

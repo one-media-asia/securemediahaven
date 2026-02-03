@@ -220,13 +220,22 @@ const Index = () => {
           <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
             Comprehensive cybersecurity solutions tailored for modern enterprises. Protect your assets with industry-leading security measures.
           </p>
-          <button 
-            onClick={() => scrollToSection(contactRef)}
-            className="inline-flex items-center px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium transition-all hover:bg-primary/90"
-          >
-            Get Started
-            <ChevronRight className="ml-2 h-4 w-4" />
-          </button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button 
+              onClick={() => scrollToSection(contactRef)}
+              className="inline-flex items-center px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium transition-all hover:bg-primary/90"
+            >
+              Get Started
+              <ChevronRight className="ml-2 h-4 w-4" />
+            </button>
+            <Link
+              to="/services"
+              className="inline-flex items-center px-6 py-3 bg-secondary text-secondary-foreground rounded-lg font-medium transition-all hover:bg-secondary/90 border border-border"
+            >
+              Main Services
+              <ChevronRight className="ml-2 h-4 w-4" />
+            </Link>
+          </div>
         </div>
       </section>
 

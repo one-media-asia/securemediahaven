@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Shield, Lock, Server, Cloud, Bug, Download, Gift, CheckCircle, ArrowLeft, Percent, Calendar, ShieldCheck } from 'lucide-react';
+import { Shield, Lock, Server, Cloud, Bug, Download, Gift, CheckCircle, ArrowLeft, Percent, Calendar, ShieldCheck, CreditCard, Award, Users, Monitor, Terminal, Network } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 const Services = () => {
   const offers = [
@@ -130,6 +131,167 @@ const Services = () => {
               <Gift className="h-5 w-5 text-primary" />
               <span>99% Off Website Packages</span>
             </div>
+            <div className="flex items-center gap-2 px-4 py-2 bg-card rounded-lg border border-border">
+              <CreditCard className="h-5 w-5 text-primary" />
+              <span>10% Deposit to Start</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Certifications & Expertise Section */}
+      <section className="py-16 px-4 bg-card">
+        <div className="container mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">Our Certifications & Expertise</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Industry-recognized certifications and real-world experience in cybersecurity and IT infrastructure.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            {/* Cisco Ethical Hacking */}
+            <Card className="border-primary/20 hover:border-primary/50 transition-colors">
+              <CardHeader className="pb-3">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-primary/10 rounded-lg">
+                    <Shield className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg">Cisco Ethical Hacking</CardTitle>
+                    <Badge variant="secondary" className="mt-1">Certified</Badge>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm">
+                  Advanced penetration testing and vulnerability assessment expertise.
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Threat Management */}
+            <Card className="border-primary/20 hover:border-primary/50 transition-colors">
+              <CardHeader className="pb-3">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-primary/10 rounded-lg">
+                    <Bug className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg">Threat Management</CardTitle>
+                    <Badge variant="secondary" className="mt-1">Certified</Badge>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm">
+                  Proactive threat detection, analysis, and incident response capabilities.
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Cyber Crime Forensics */}
+            <Card className="border-primary/20 hover:border-primary/50 transition-colors">
+              <CardHeader className="pb-3">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-primary/10 rounded-lg">
+                    <Award className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg">Cyber Crime Forensics</CardTitle>
+                    <Badge variant="secondary" className="mt-1">Expert Analyst</Badge>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm">
+                  Digital forensic investigation and evidence analysis for cybercrime cases.
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* AI Security Expert */}
+            <Card className="border-primary/20 hover:border-primary/50 transition-colors">
+              <CardHeader className="pb-3">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-primary/10 rounded-lg">
+                    <Monitor className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg">AI Security</CardTitle>
+                    <Badge variant="secondary" className="mt-1">Expert</Badge>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm">
+                  Leveraging artificial intelligence for advanced threat detection and security automation.
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Law Enforcement OSINT */}
+            <Card className="border-primary/20 hover:border-primary/50 transition-colors">
+              <CardHeader className="pb-3">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-primary/10 rounded-lg">
+                    <Users className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg">Law Enforcement OSINT</CardTitle>
+                    <Badge variant="secondary" className="mt-1">Experienced</Badge>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm">
+                  Collaboration with law enforcement on open-source intelligence and network investigation projects.
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Networking Expertise */}
+            <Card className="border-primary/20 hover:border-primary/50 transition-colors">
+              <CardHeader className="pb-3">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-primary/10 rounded-lg">
+                    <Network className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg">Multi-Platform Networking</CardTitle>
+                    <Badge variant="secondary" className="mt-1">Expert</Badge>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm">
+                  Expert in Mac, Linux, and Windows networking for both desktop and server environments.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Platform Icons */}
+          <div className="mt-12 text-center">
+            <p className="text-muted-foreground mb-4">Platforms We Support</p>
+            <div className="flex flex-wrap justify-center gap-4">
+              <Badge variant="outline" className="px-4 py-2 text-base">
+                <Terminal className="h-4 w-4 mr-2" />
+                macOS
+              </Badge>
+              <Badge variant="outline" className="px-4 py-2 text-base">
+                <Terminal className="h-4 w-4 mr-2" />
+                Linux
+              </Badge>
+              <Badge variant="outline" className="px-4 py-2 text-base">
+                <Monitor className="h-4 w-4 mr-2" />
+                Windows
+              </Badge>
+              <Badge variant="outline" className="px-4 py-2 text-base">
+                <Server className="h-4 w-4 mr-2" />
+                Servers
+              </Badge>
+            </div>
           </div>
         </div>
       </section>
@@ -194,10 +356,19 @@ const Services = () => {
                     <div className="text-4xl font-bold text-primary">
                       ${Math.round(pkg.originalPrice * 0.01)}
                     </div>
-                    <span className="text-muted-foreground text-sm">one-time payment</span>
+                    <span className="text-muted-foreground text-sm">or 10% deposit to start</span>
                   </div>
                 </CardHeader>
                 <CardContent>
+                  <div className="mb-4 p-3 bg-primary/10 rounded-lg border border-primary/20">
+                    <div className="flex items-center gap-2 text-primary font-medium">
+                      <CreditCard className="h-4 w-4" />
+                      <span className="text-sm">Installment Plan Available</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Start with just ${Math.round(pkg.originalPrice * 0.01 * 0.1)} deposit
+                    </p>
+                  </div>
                   <ul className="space-y-3 mb-6">
                     {pkg.features.map((feature, idx) => (
                       <li key={idx} className="flex items-center gap-2">

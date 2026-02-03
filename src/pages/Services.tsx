@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Shield, Lock, Server, Cloud, Bug, Download, Gift, CheckCircle, ArrowLeft, Percent, Calendar, ShieldCheck, CreditCard, Award, Users, Monitor, Terminal, Network } from 'lucide-react';
+import { Shield, Lock, Server, Cloud, Bug, Download, Gift, CheckCircle, ArrowLeft, Percent, Calendar, ShieldCheck, CreditCard, Award, Users, Monitor, Terminal, Network, FileDown } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { generateBrochure } from '@/lib/generateBrochure';
 
 const Services = () => {
   const offers = [
@@ -135,6 +136,19 @@ const Services = () => {
               <CreditCard className="h-5 w-5 text-primary" />
               <span>10% Deposit to Start</span>
             </div>
+          </div>
+          
+          {/* Download Brochure Button */}
+          <div className="mt-8">
+            <Button 
+              onClick={generateBrochure}
+              size="lg" 
+              variant="outline"
+              className="gap-2"
+            >
+              <FileDown className="h-5 w-5" />
+              Download Brochure (PDF)
+            </Button>
           </div>
         </div>
       </section>

@@ -69,17 +69,20 @@ const Services = () => {
   const websitePackages = [
     {
       name: "Starter",
-      originalPrice: 999,
+      priceDisplay: "$59.99",
+      hostingIncluded: false,
       features: ["5-page website", "Mobile responsive", "Basic SEO", "Contact form", "1 month support"]
     },
     {
       name: "Professional",
-      originalPrice: 2499,
+      priceDisplay: "$99.99",
+      hostingIncluded: true,
       features: ["10-page website", "Advanced SEO", "E-commerce ready", "CMS integration", "3 months support"]
     },
     {
       name: "Enterprise",
-      originalPrice: 4999,
+      priceDisplay: "Contact Us",
+      hostingIncluded: true,
       features: ["Unlimited pages", "Custom features", "Priority support", "Advanced security", "12 months support"]
     }
   ];
@@ -149,6 +152,32 @@ const Services = () => {
               <FileDown className="h-5 w-5" />
               Download Brochure (PDF)
             </Button>
+            <Button
+              onClick={generateBrochure}
+              size="lg"
+              variant="ghost"
+              className="gap-2 ml-3"
+            >
+              <FileDown className="h-5 w-5" />
+              Download Assessment Form (PDF)
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-12 px-4 bg-card">
+        <div className="container mx-auto max-w-4xl text-center">
+          <h3 className="text-2xl font-bold mb-6">What Our Clients Say</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="p-6 bg-background rounded-lg border border-border">
+              <p className="text-muted-foreground mb-4">“One Media Asia secured our infrastructure quickly and clearly — highly recommended.”</p>
+              <div className="font-medium">— Jane D., CTO</div>
+            </div>
+            <div className="p-6 bg-background rounded-lg border border-border">
+              <p className="text-muted-foreground mb-4">“Our ad spend was optimized after their advertising cost analysis. ROI improved within weeks.”</p>
+              <div className="font-medium">— Mark T., Marketing Lead</div>
+            </div>
           </div>
         </div>
       </section>
@@ -283,6 +312,26 @@ const Services = () => {
                 </p>
               </CardContent>
             </Card>
+
+            {/* Social Media Marketing & Advertising Analysis */}
+            <Card className="border-primary/20 hover:border-primary/50 transition-colors">
+              <CardHeader className="pb-3">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-primary/10 rounded-lg">
+                    <Users className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg">Social Media Marketing</CardTitle>
+                    <Badge variant="secondary" className="mt-1">Marketing + Analysis</Badge>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm">
+                  Strategy, campaign setup, and advertising cost analysis to maximize ROI across social platforms.
+                </p>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Platform Icons */}
@@ -334,7 +383,9 @@ const Services = () => {
                       </li>
                     ))}
                   </ul>
-                  <Button className="w-full mt-6">Get Started</Button>
+                  <Link to="/#contact">
+                    <Button className="w-full mt-6">Book Now</Button>
+                  </Link>
                 </CardContent>
               </Card>
             ))}
@@ -366,10 +417,7 @@ const Services = () => {
                 <CardHeader className="text-center">
                   <CardTitle className="text-xl">{pkg.name}</CardTitle>
                   <div className="mt-4">
-                    <span className="text-muted-foreground line-through text-lg">${pkg.originalPrice}</span>
-                    <div className="text-4xl font-bold text-primary">
-                      ${Math.round(pkg.originalPrice * 0.01)}
-                    </div>
+                    <div className="text-4xl font-bold text-primary">{pkg.priceDisplay}</div>
                     <span className="text-muted-foreground text-sm">or 10% deposit to start</span>
                   </div>
                 </CardHeader>
@@ -379,9 +427,7 @@ const Services = () => {
                       <CreditCard className="h-4 w-4" />
                       <span className="text-sm">Installment Plan Available</span>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Start with just ${Math.round(pkg.originalPrice * 0.01 * 0.1)} deposit
-                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">Or 10% deposit to start</p>
                   </div>
                   <ul className="space-y-3 mb-6">
                     {pkg.features.map((feature, idx) => (
@@ -391,9 +437,18 @@ const Services = () => {
                       </li>
                     ))}
                   </ul>
-                  <Button className="w-full" variant={index === 1 ? "default" : "outline"}>
-                    Choose {pkg.name}
-                  </Button>
+                  <div className="mb-3 text-sm text-muted-foreground">
+                    {pkg.hostingIncluded ? (
+                      <span>Includes free hosting & domain for 1 year</span>
+                    ) : (
+                      <span>Hosting & domain not included</span>
+                    )}
+                  </div>
+                  <Link to="/#contact">
+                    <Button className="w-full" variant={index === 1 ? "default" : "outline"}>
+                      Book Now{pkg.priceDisplay && ` — ${pkg.priceDisplay}`}
+                    </Button>
+                  </Link>
                 </CardContent>
               </Card>
             ))}

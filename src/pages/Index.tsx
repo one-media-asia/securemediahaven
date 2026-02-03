@@ -118,10 +118,7 @@ const Index = () => {
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center">
-            <div className="relative w-10 h-10 mr-2">
-              <Shield className="w-10 h-10 text-primary absolute" />
-              <Lock className="w-5 h-5 text-accent absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-            </div>
+            <Shield className="w-10 h-10 text-primary mr-2" />
             <span className="text-lg font-bold tracking-tight">One Media Asia</span>
           </div>
           
@@ -205,7 +202,7 @@ const Index = () => {
         <div className="text-center max-w-4xl mx-auto">
           {/* Logo */}
           <div className="mb-8 flex items-center justify-center">
-            <img src="/logo.png" alt="One Media Asia" className="h-32 object-contain" />
+            <img src="/logo.png" alt="One Media Asia" className="h-32 object-contain border border-primary/30 rounded-lg p-2" />
           </div>
           <div className="inline-block mb-4 px-4 py-1.5 rounded-full bg-accent text-accent-foreground font-medium text-sm">
             Trusted by Leading Asian Enterprises

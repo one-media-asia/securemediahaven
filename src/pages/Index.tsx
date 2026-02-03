@@ -1,5 +1,5 @@
-
 import { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { Shield, Lock, Server, ChevronRight, Users, Network, CloudCog, Key, Smartphone, Facebook, Linkedin, Copyright, Menu, X } from 'lucide-react';
 
 // Extend Window interface to include chatbotConfig
@@ -133,6 +133,12 @@ const Index = () => {
             >
               Home
             </button>
+            <Link 
+              to="/services" 
+              className="text-foreground hover:text-primary transition-colors font-medium"
+            >
+              Services
+            </Link>
             <button 
               onClick={() => scrollToSection(aboutRef)} 
               className="text-foreground hover:text-primary transition-colors font-medium"
@@ -170,6 +176,13 @@ const Index = () => {
               >
                 Home
               </button>
+              <Link 
+                to="/services" 
+                className="block w-full text-left py-2 text-foreground hover:text-primary transition-colors font-medium"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Services
+              </Link>
               <button 
                 onClick={() => scrollToSection(aboutRef)} 
                 className="block w-full text-left py-2 text-foreground hover:text-primary transition-colors font-medium"

@@ -42,7 +42,7 @@ const Index = () => {
       const script = document.createElement('script');
       script.defer = true;
       script.type = 'module';
-      script.src = 'https://aichatbot.sendbird.com/index.js';
+      script.3src = 'https://aichatbot.sendbird.com/index.js';
       
       document.head.appendChild(script);
     };
@@ -205,11 +205,7 @@ const Index = () => {
         <div className="text-center max-w-4xl mx-auto">
           {/* Logo */}
           <div className="mb-8 flex items-center justify-center">
-            <div className="relative w-16 h-16 mr-4">
-              <Shield className="w-16 h-16 text-primary absolute" />
-              <Lock className="w-8 h-8 text-accent absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-            </div>
-            <span className="text-2xl font-bold tracking-tight">One Media Asia</span>
+            <img src="/logo.png" alt="One Media Asia" className="h-32 object-contain" />
           </div>
           <div className="inline-block mb-4 px-4 py-1.5 rounded-full bg-accent text-accent-foreground font-medium text-sm">
             Trusted by Leading Asian Enterprises

@@ -115,13 +115,7 @@ const Index = () => {
       
       {/* Navigation Menu */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-white/10">
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center">
-            <Shield className="w-10 h-10 text-primary mr-2" />
-            <span className="text-lg font-bold tracking-tight">One Media Asia</span>
-          </div>
-          
+        <div className="container mx-auto px-4 py-3 flex items-center justify-center relative">
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             <button 
@@ -153,7 +147,7 @@ const Index = () => {
           {/* Mobile Menu Button */}
           <button 
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden flex items-center p-2 rounded-lg"
+            className="md:hidden flex items-center p-2 rounded-lg absolute right-4"
           >
             {mobileMenuOpen ? (
               <X className="h-6 w-6 text-foreground" />

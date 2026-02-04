@@ -195,8 +195,8 @@ const Index = () => {
       <section ref={homeRef} className="relative min-h-[100vh] flex items-center justify-center px-4 pt-16">
         <div className="text-center max-w-4xl mx-auto">
           {/* Logo */}
-          <div className="mb-8 flex items-center justify-center">
-            <img src="/logo.png" alt="One Media Asia" className="h-32 object-contain border border-primary/30 rounded-lg p-2" />
+          <div className="mb-15 flex items-center justify-center">
+            <img src="/logo.png" alt="One Media Asia" className="h-40 object-contain border border-primary/30 rounded-lg p-2" />
           </div>
           <div className="inline-block mb-4 px-4 py-1.5 rounded-full bg-accent text-accent-foreground font-medium text-sm">
             Trusted by Leading Asian Enterprises

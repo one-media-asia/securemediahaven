@@ -1,390 +1,67 @@
-import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import { Shield, Lock, Server, ChevronRight, Users, Network, CloudCog, Key, Smartphone, Facebook, Linkedin, Copyright, Menu, X } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { ArrowRight, Check, ChevronDown, ExternalLink, LayoutGrid, Menu, Search, ShoppingBag, Sparkles, X } from 'lucide-react';
 
-// Extend Window interface to include chatbotConfig
-declare global {
-  interface Window {
-    chatbotConfig: any;
-  }
-}
+type Category = 'All' | 'Hosting' | 'Domains' | 'Learning apps';
+type Product = {
+  name: string;
+  category: Category;
+  price: string;
+  period: string;
+  description: string;
+  color: string;
+  detail: string;
+  stripeUrl?: string;
+  appUrl?: string;
+  featured?: boolean;
+};
+
+const products: Product[] = [
+  { name: 'Launch hosting', category: 'Hosting' as Category, price: '$8', period: '/ month', description: 'Fast, managed hosting for your first serious website.', color: 'coral', detail: '100 GB SSD / Free SSL', stripeUrl: import.meta.env.VITE_STRIPE_LAUNCH_HOSTING_URL },
+  { name: 'Studio hosting', category: 'Hosting' as Category, price: '$18', period: '/ month', description: 'More room for busy sites, stores, and growing teams.', color: 'blue', detail: '500 GB SSD / Daily backups', featured: true, stripeUrl: import.meta.env.VITE_STRIPE_STUDIO_HOSTING_URL },
+  { name: 'Your .studio domain', category: 'Domains' as Category, price: '$24', period: '/ year', description: 'A memorable home for your work, portfolio, or next idea.', color: 'lime', detail: 'Private registration included', stripeUrl: import.meta.env.VITE_STRIPE_STUDIO_DOMAIN_URL },
+  { name: 'LearnKit', category: 'Learning apps' as Category, price: '$12', period: '/ month', description: 'Short, focused courses that help you build useful skills.', color: 'yellow', detail: 'New lessons every week', stripeUrl: import.meta.env.VITE_STRIPE_LEARNKIT_URL, appUrl: 'https://learn.onemedia.asia' },
+  { name: 'Focus school', category: 'Learning apps' as Category, price: '$79', period: '/ year', description: 'A full library for learning code, design, and business.', color: 'purple', detail: 'All courses / Lifetime notes', stripeUrl: import.meta.env.VITE_STRIPE_FOCUS_SCHOOL_URL },
+  { name: 'Domain + hosting', category: 'Domains' as Category, price: '$29', period: '/ month', description: 'Everything you need to launch, bundled in one calm place.', color: 'green', detail: 'Domain included / SSL ready', stripeUrl: import.meta.env.VITE_STRIPE_DOMAIN_HOSTING_URL },
+];
+
+const categories: Category[] = ['All', 'Hosting', 'Domains', 'Learning apps'];
 
 const Index = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const contactRef = useRef<HTMLDivElement>(null);
-  const aboutRef = useRef<HTMLDivElement>(null);
-  const homeRef = useRef<HTMLDivElement>(null);
+  const [category, setCategory] = useState<Category>('All');
+  const [query, setQuery] = useState('');
+  const [cart, setCart] = useState(0);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const visibleProducts = useMemo(() => products.filter((product) => {
+    const matchesCategory = category === 'All' || product.category === category;
+    const matchesQuery = !query || `${product.name} ${product.category}`.toLowerCase().includes(query.toLowerCase());
+    return matchesCategory && matchesQuery;
+  }), [category, query]);
 
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const x = e.clientX;
-      const y = e.clientY;
-      document.documentElement.style.setProperty('--x', `${x}px`);
-      document.documentElement.style.setProperty('--y', `${y}px`);
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  // Add AI Chatbot script
-  useEffect(() => {
-    const initChatbot = () => {
-      const div = document.createElement('div');
-      div.id = 'aichatbot';
-      document.body.appendChild(div);
-      
-      window.chatbotConfig = ['6752017B-41A5-482D-BC64-F57605CBCF5C', '4VjjNDCBImJaVSCR8NloP', {
-        apiHost: 'https://api-cf-us-3.sendbird.com',
-      }];
-      
-      const script = document.createElement('script');
-      script.defer = true;
-      script.type = 'module';
-      script.src = 'https://aichatbot.sendbird.com/index.js';
-      
-      document.head.appendChild(script);
-    };
-    
-    initChatbot();
-  }, []);
-
-  const scrollToSection = (ref: React.RefObject<HTMLDivElement>) => {
-    ref.current?.scrollIntoView({ behavior: 'smooth' });
-    setMobileMenuOpen(false);
+  const addToCart = () => setCart((count) => count + 1);
+  const purchaseProduct = (stripeUrl?: string) => {
+    if (stripeUrl) {
+      window.location.assign(stripeUrl);
+      return;
+    }
+    addToCart();
   };
 
-  const services = [
-    {
-      icon: Shield,
-      title: "Network Security",
-      description: "Advanced protection for your digital infrastructure",
-    },
-    {
-      icon: Lock,
-      title: "Data Protection",
-      description: "Secure your sensitive information with military-grade encryption",
-    },
-    {
-      icon: Server,
-      title: "Cloud Security",
-      description: "Comprehensive cloud infrastructure protection",
-    },
-    {
-      icon: Users,
-      title: "Security Training",
-      description: "Empower your team with cybersecurity best practices",
-    },
-    {
-      icon: Network,
-      title: "Threat Detection",
-      description: "24/7 monitoring and rapid incident response",
-    },
-    {
-      icon: CloudCog,
-      title: "Security Automation",
-      description: "Streamline security operations with AI-powered tools",
-    },
-    {
-      icon: Smartphone,
-      title: "Mobile Applications",
-      description: "Secure mobile app development with robust security features",
-    },
-    {
-      icon: Key,
-      title: "Secure Website Design",
-      description: "Build websites with security-first architecture and best practices",
-    },
-    {
-      icon: Server,
-      title: "Secure Web Hosting",
-      description: "Protected hosting environment with advanced security measures",
-    },
-  ];
+  return <main className="storefront">
+    <div className="announcement"><Sparkles size={13} /> Build something worth visiting <ArrowRight size={13} /></div>
+    <header className="store-header">
+      <a className="brand" href="#top"><span className="brand-mark">m</span>morrow</a>
+      <nav className={menuOpen ? 'main-nav open' : 'main-nav'}><a href="#shop" onClick={() => setMenuOpen(false)}>Shop</a><a href="#why" onClick={() => setMenuOpen(false)}>Why us</a><a href="#support" onClick={() => setMenuOpen(false)}>Support</a></nav>
+      <div className="header-actions"><button className="icon-button" aria-label="Focus search" onClick={() => document.getElementById('search')?.focus()}><Search size={18} /></button><button className="bag-button" onClick={addToCart}><ShoppingBag size={17} /><span>Bag ({cart})</span></button><button className="menu-button" aria-label="Toggle menu" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X size={20} /> : <Menu size={20} />}</button></div>
+    </header>
 
-  const stats = [
-    { value: "99.9%", label: "Uptime Guarantee" },
-    { value: "24/7", label: "Monitoring" },
-    { value: "500+", label: "Clients Protected" },
-  ];
+    <section className="hero" id="top"><div className="hero-copy"><p className="eyebrow">Your corner of the internet</p><h1>Start small.<br /><em>Make it matter.</em></h1><p className="hero-text">Hosting, domains, and learning tools for people building their next thing.</p><a className="button button-dark" href="#shop">Browse the shop <ArrowRight size={16} /></a><div className="hero-note"><span className="avatar-stack"><i>J</i><i>M</i><i>A</i></span><span>Trusted by 12,000+ builders</span></div></div><div className="hero-art"><div className="art-orbit orbit-one" /><div className="art-orbit orbit-two" /><div className="art-window"><div className="window-top"><span /><span /><span /></div><div className="window-lines"><b /><b /><b /><b /></div><div className="window-chip">MAKE SPACE</div></div><div className="art-sticker sticker-one">HOST<br /><strong>YOUR IDEA</strong></div><div className="art-sticker sticker-two">✦</div></div></section>
 
-  return (
-    <div className="min-h-screen w-full overflow-hidden">
-      <div className="spotlight fixed inset-0 -z-10" />
-      
-      {/* Navigation Menu */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-white/10">
-        <div className="container mx-auto px-4 py-3 flex items-center justify-center relative">
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            <button 
-              onClick={() => scrollToSection(homeRef)} 
-              className="text-foreground hover:text-primary transition-colors font-medium"
-            >
-              Home
-            </button>
-            <Link 
-              to="/services" 
-              className="text-foreground hover:text-primary transition-colors font-medium"
-            >
-              Services
-            </Link>
-            <button 
-              onClick={() => scrollToSection(aboutRef)} 
-              className="text-foreground hover:text-primary transition-colors font-medium"
-            >
-              About
-            </button>
-            <button 
-              onClick={() => scrollToSection(contactRef)} 
-              className="text-foreground hover:text-primary transition-colors font-medium"
-            >
-              Contact
-            </button>
-          </nav>
-          
-          {/* Mobile Menu Button */}
-          <button 
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden flex items-center p-2 rounded-lg absolute right-4"
-          >
-            {mobileMenuOpen ? (
-              <X className="h-6 w-6 text-foreground" />
-            ) : (
-              <Menu className="h-6 w-6 text-foreground" />
-            )}
-          </button>
-        </div>
-        
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden absolute w-full bg-background/95 backdrop-blur-sm border-b border-white/10">
-            <div className="py-4 px-4 space-y-4">
-              <button 
-                onClick={() => scrollToSection(homeRef)} 
-                className="block w-full text-left py-2 text-foreground hover:text-primary transition-colors font-medium"
-              >
-                Home
-              </button>
-              <Link 
-                to="/services" 
-                className="block w-full text-left py-2 text-foreground hover:text-primary transition-colors font-medium"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Services
-              </Link>
-              <button 
-                onClick={() => scrollToSection(aboutRef)} 
-                className="block w-full text-left py-2 text-foreground hover:text-primary transition-colors font-medium"
-              >
-                About
-              </button>
-              <button 
-                onClick={() => scrollToSection(contactRef)} 
-                className="block w-full text-left py-2 text-foreground hover:text-primary transition-colors font-medium"
-              >
-                Contact
-              </button>
-            </div>
-          </div>
-        )}
-      </header>
-      
-      {/* Hero Section */}
-      <section ref={homeRef} className="relative min-h-[100vh] flex items-center justify-center px-4 pt-16">
-        <div className="text-center max-w-4xl mx-auto">
-          {/* Logo */}
-          <div className="mb-15 flex items-center justify-center">
-            <img src="/logo.png" alt="One Media Asia" className="h-40 object-contain border border-primary/30 rounded-lg p-2" />
-          </div>
-          <div className="inline-block mb-4 px-4 py-1.5 rounded-full bg-accent text-accent-foreground font-medium text-sm">
-            Trusted by Leading Asian Enterprises
-          </div>
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
-            Securing Asia's Digital Future
-          </h1>
-          <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Comprehensive cybersecurity solutions tailored for modern enterprises. Protect your assets with industry-leading security measures.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button 
-              onClick={() => scrollToSection(contactRef)}
-              className="inline-flex items-center px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium transition-all hover:bg-primary/90"
-            >
-              Get Started
-              <ChevronRight className="ml-2 h-4 w-4" />
-            </button>
-            <Link
-              to="/services"
-              className="inline-flex items-center px-6 py-3 bg-secondary text-secondary-foreground rounded-lg font-medium transition-all hover:bg-secondary/90 border border-border"
-            >
-              Main Services
-              <ChevronRight className="ml-2 h-4 w-4" />
-            </Link>
-          </div>
-        </div>
-      </section>
+    <section className="collection" id="shop"><div className="section-heading"><div><p className="eyebrow">The shop</p><h2>Everything to<br /><em>get going.</em></h2></div><p>Clear pricing, useful tools, and a human on the other end when you need one.</p></div><div className="shop-toolbar"><div className="filters">{categories.map((item) => <button className={category === item ? 'filter active' : 'filter'} key={item} onClick={() => setCategory(item)}>{item}</button>)}</div><label className="search-field"><Search size={16} /><input id="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search the shop" /><ChevronDown size={15} /></label></div><div className="product-grid">{visibleProducts.map((product) => <article className="product-card" key={product.name}><div className={`product-visual ${product.color}`}><span className="product-symbol">{product.category === 'Hosting' ? '⌁' : product.category === 'Domains' ? '.com' : 'Aa'}</span>{product.featured && <span className="featured-tag">Popular</span>}<div className="visual-grid" /></div><div className="product-info"><div><p className="product-category">{product.category}</p><h3>{product.name}</h3></div><span className="price">{product.price}<small>{product.period}</small></span></div><p className="product-description">{product.description}</p><div className="product-footer"><span className="product-detail"><Check size={14} /> {product.detail}</span><div className="product-actions">{product.appUrl && <a className="app-link" href={product.appUrl} target="_blank" rel="noreferrer" aria-label={`Open ${product.name}`}><ExternalLink size={15} /></a>}<button className="add-button" aria-label={`Buy ${product.name}`} onClick={() => purchaseProduct(product.stripeUrl)}><ShoppingBag size={16} /></button></div></div></article>)}</div>{visibleProducts.length === 0 && <div className="empty-state">No products match that search. Try a different phrase.</div>}</section>
 
-      {/* Services Section */}
-      <section ref={aboutRef} className="py-24 px-4 bg-secondary">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-secondary-foreground mb-4">
-              Comprehensive Security Solutions
-            </h2>
-            <p className="text-secondary-foreground/70 max-w-2xl mx-auto">
-              Protect your business with our advanced cybersecurity services
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {services.map((service, index) => (
-              <div
-                key={index}
-                className="card-hover p-6 rounded-xl bg-card backdrop-blur-sm border border-white/10"
-              >
-                <service.icon className="h-12 w-12 text-primary mb-4" />
-                <h3 className="text-xl font-semibold mb-2 text-card-foreground">
-                  {service.title}
-                </h3>
-                <p className="text-card-foreground/70">
-                  {service.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="py-24 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-4xl font-bold text-primary mb-2">
-                  {stat.value}
-                </div>
-                <div className="text-muted-foreground">
-                  {stat.label}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Company Information Section */}
-      <section ref={contactRef} className="py-24 px-4 bg-secondary">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-secondary-foreground mb-4">
-              Get In Touch
-            </h2>
-            <p className="text-secondary-foreground/70 mb-8 max-w-2xl mx-auto">
-              Contact us today for a personalized security assessment
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            {/* Company Info */}
-            <div className="space-y-6">
-              <h3 className="text-2xl font-semibold text-secondary-foreground">Company Information</h3>
-              <div className="space-y-4 text-secondary-foreground/80">
-                <p>One Media Asia Co, Ltd</p>
-                <p>35/3 Moo 3 , Hang Dong </p>
-                <p>Chiang Mai, Thailand</p>
-                <p>Phone: +62 8135 3833 289</p>
-                <p>Email: contact@onemedia.asia</p>
-              </div>
-              
-              {/* Social Media Links */}
-              <div className="pt-4">
-                <h4 className="text-xl font-medium text-secondary-foreground mb-4">Connect With Us</h4>
-                <div className="flex space-x-4">
-                  <a 
-                    href="https://facebook.com/onemediaasia" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="p-3 bg-card rounded-full hover:bg-primary/20 transition-colors"
-                  >
-                    <Facebook className="h-6 w-6 text-primary" />
-                  </a>
-                  <a 
-                    href="https://www.linkedin.com/in/peter-greaney-00368840/" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="p-3 bg-card rounded-full hover:bg-primary/20 transition-colors"
-                  >
-                    <Linkedin className="h-6 w-6 text-primary" />
-                  </a>
-                  <a 
-                    href="https://wa.me/6281353833289" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="p-3 bg-card rounded-full hover:bg-primary/20 transition-colors"
-                  >
-                    <svg 
-                      xmlns="http://www.w3.org/2000/svg" 
-                      width="24" 
-                      height="24" 
-                      viewBox="0 0 24 24" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      strokeWidth="2" 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      className="h-6 w-6 text-primary"
-                    >
-                      <path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21"></path>
-                      <path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1Z"></path>
-                      <path d="M14 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1Z"></path>
-                      <path d="M9.5 15.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 0-1h-4a.5.5 0 0 0-.5.5Z"></path>
-                    </svg>
-                  </a>
-                </div>
-              </div>
-            </div>
-            
-            {/* Business Hours */}
-            <div className="space-y-6">
-              <h3 className="text-2xl font-semibold text-secondary-foreground">Business Hours</h3>
-              <div className="space-y-3 text-secondary-foreground/80">
-                <div className="flex justify-between">
-                  <span>Monday - Friday:</span>
-                  <span>10:00 AM - 10:00 PM</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Saturday:</span>
-                  <span>10:00 AM - 4:00 PM</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Sunday:</span>
-                  <span>Closed</span>
-                </div>
-              </div>
-              
-              <div className="pt-6">
-                <h4 className="text-xl font-medium text-secondary-foreground mb-4">Our Locations</h4>
-                <div className="space-y-3 text-secondary-foreground/80">
-                  <p className="font-medium">Thailand (HQ)</p>
-                  <p>Indonesia</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          {/* Copyright */}
-          <div className="mt-16 pt-8 border-t border-white/10 text-center text-secondary-foreground/60">
-            <div className="flex items-center justify-center">
-              <Copyright className="h-4 w-4 mr-2" />
-              <p>{new Date().getFullYear()} One Media Asia Co Ltd. All rights reserved.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-  );
+    <section className="story" id="why"><div className="story-mark"><LayoutGrid size={27} /></div><div><p className="eyebrow">The Morrow promise</p><h2>Useful is a <em>feature.</em></h2><p>We make the essentials feel less complicated. No surprise fees, confusing dashboards, or endless upsells. Just reliable services that respect your time.</p><div className="promise-list"><span><Check size={15} /> Simple pricing, shown upfront</span><span><Check size={15} /> Setup help from real people</span><span><Check size={15} /> Cancel or change whenever you need</span></div></div></section>
+    <section className="newsletter" id="support"><p className="eyebrow">A note from the shop</p><h2>More signal. Less noise.</h2><p>New products, useful guides, and no inbox clutter.</p><div className="email-form"><input type="email" placeholder="you@example.com" aria-label="Email address" /><button className="button button-dark">Sign me up <ArrowRight size={16} /></button></div></section>
+    <footer><a className="brand" href="#top"><span className="brand-mark">m</span>morrow</a><span>Tools for building a more considered web.</span><div><a href="#shop">Shop</a><a href="#why">About</a><a href="#support">Contact</a></div></footer>
+  </main>;
 };
 
 export default Index;

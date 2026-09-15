@@ -3,7 +3,7 @@ import { ArrowLeft, ArrowRight, Check, Clock3, Heart, Search, Sparkles } from 'l
 import { Link } from 'react-router-dom';
 
 type Exercise = { title: string; type: string; topic: string; duration: string; description: string; accent: string };
-const topics = ['All', 'Reflection', 'Routines', 'Confidence', 'Rest'];
+const topics = ['All', 'Reflection', 'Routines', 'Confidence', 'Rest', 'Stress', 'Relationships', 'Focus', 'Motivation'];
 const exercises: Exercise[] = [
   { title: 'A gentler morning', type: 'Practice', topic: 'Routines', duration: '8 min', description: 'Start the day with less urgency and one clear intention.', accent: 'selfhelp-coral' },
   { title: 'Name what you need', type: 'Journal', topic: 'Reflection', duration: '10 min', description: 'A simple prompt for getting honest about what would help right now.', accent: 'selfhelp-yellow' },
@@ -11,6 +11,10 @@ const exercises: Exercise[] = [
   { title: 'An evening release', type: 'Practice', topic: 'Rest', duration: '7 min', description: 'Close the day by putting down what does not need to follow you.', accent: 'selfhelp-blue' },
   { title: 'Make space for progress', type: 'Journal', topic: 'Reflection', duration: '15 min', description: 'Notice what is working and choose what deserves more room.', accent: 'selfhelp-purple' },
   { title: 'A routine that fits', type: 'Guide', topic: 'Routines', duration: '18 min', description: 'Design a small routine around your actual life, not an ideal one.', accent: 'selfhelp-green' },
+  { title: 'The pressure pause', type: 'Practice', topic: 'Stress', duration: '6 min', description: 'Create enough space between pressure and reaction to choose your next move.', accent: 'selfhelp-blue' },
+  { title: 'Say it more clearly', type: 'Guide', topic: 'Relationships', duration: '14 min', description: 'Prepare for a difficult conversation with honesty, care, and a clear request.', accent: 'selfhelp-coral' },
+  { title: 'The single-task reset', type: 'Practice', topic: 'Focus', duration: '9 min', description: 'Return to one meaningful task when your attention is scattered.', accent: 'selfhelp-yellow' },
+  { title: 'Start before you feel ready', type: 'Journal', topic: 'Motivation', duration: '11 min', description: 'Turn a vague intention into one small action you can complete today.', accent: 'selfhelp-mint' },
 ];
 
 const SelfHelp = () => {

@@ -10,6 +10,7 @@ import Services from "./pages/Services";
 import LearnKit from "./pages/LearnKit";
 import SelfHelp from "./pages/SelfHelp";
 import Vaultline from "./pages/Vaultline";
+import VaultlineSignup from "./pages/VaultlineSignup";
 import Success from "./pages/Success";
 import NotFound from "./pages/NotFound";
 
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/learnkit" element={<LearnKit />} />
           <Route path="/self-help" element={<SelfHelp />} />
           <Route path="/vaultline" element={<Vaultline />} />
+          <Route path="/vaultline/signup" element={<VaultlineSignup />} />
           <Route path="/success" element={<Success />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

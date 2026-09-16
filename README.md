@@ -14,6 +14,12 @@ Simply visit the [Lovable Project](https://lovable.dev/projects/4370d94c-14a6-44
 
 Changes made via Lovable will be committed automatically to this repo.
 
+## Hosting subdomain
+
+The original site remains on the primary domain. The hosting storefront is available at `/hosting` and automatically becomes the homepage when the app is opened on a hostname beginning with `hosting.`.
+
+To publish it as a subdomain, deploy this project to Vercel, add `hosting.yourdomain.com` under the project's Domains settings, and create the DNS record Vercel provides (usually a CNAME to `cname.vercel-dns.com`).
+
 **Use your preferred IDE**
 
 If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.

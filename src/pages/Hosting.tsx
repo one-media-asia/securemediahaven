@@ -15,6 +15,7 @@ const Hosting = () => {
   const [chatOpen, setChatOpen] = useState(false);
   const [chatInput, setChatInput] = useState('');
   const [chatMessages, setChatMessages] = useState([{ from: 'support', text: 'Hi. Ask about plans, AWS Ubuntu OpenVPN setup, or checkout.' }]);
+  const launchPlan = hostingPlans.find((plan) => plan.badge === 'Launch') ?? hostingPlans[0];
   const visiblePlans = useMemo(() => hostingPlans.filter((plan) => {
     const matchesCategory = category === 'All' || plan.badge === category;
     const matchesQuery = !query || `${plan.name} ${plan.tagline} ${plan.description}`.toLowerCase().includes(query.toLowerCase());
@@ -55,7 +56,7 @@ const Hosting = () => {
         </nav>
         <div className="header-actions">
           <button className="icon-button" aria-label="Focus search" onClick={() => document.getElementById('search')?.focus()}><Search size={18} /></button>
-          <button className="bag-button" onClick={() => purchasePlan(hostingPlans[0].stripeUrl)}><ShoppingBag size={17} /><span>Buy now</span></button>
+          <button className="bag-button" onClick={() => purchasePlan(launchPlan.stripeUrl)}><ShoppingBag size={17} /><span>Buy now</span></button>
           <button className="menu-button" aria-label="Toggle menu" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X size={20} /> : <Menu size={20} />}</button>
         </div>
       </header>
@@ -64,7 +65,7 @@ const Hosting = () => {
           <p className="eyebrow">Swiss-hosted infrastructure for privacy-focused projects</p>
           <h1>Hosting for onion sites,<br /><em>guides, and tutorials.</em></h1>
           <p className="hero-text">Tingi helps you plan, launch, and maintain privacy-focused websites, lawful .onion services, and security tutorials on Swiss-hosted infrastructure independent from Proton.</p>
-          <div className="hero-actions">{hostingPlans[0].stripeUrl ? <a className="button button-dark" href={hostingPlans[0].stripeUrl}>Start Launch Hosting — $29/mo <ArrowRight size={16} /></a> : <a className="button button-dark" href="#plans">Choose Launch Hosting — $29/mo <ArrowRight size={16} /></a>}<a className="text-link" href="#plans">Compare plans <ArrowRight size={15} /></a></div>
+          <div className="hero-actions">{launchPlan.stripeUrl ? <a className="button button-dark" href={launchPlan.stripeUrl}>Start Launch Hosting — $29/mo <ArrowRight size={16} /></a> : <a className="button button-dark" href="#plans">Choose Launch Hosting — $29/mo <ArrowRight size={16} /></a>}<a className="text-link" href="#plans">Compare plans <ArrowRight size={15} /></a></div>
           <div className="hero-note"><span className="avatar-stack"><i>J</i><i>M</i><i>A</i></span><span>Trusted by founders, agencies, and growth teams</span></div>
         </div>
         <div className="hero-art"><div className="art-orbit orbit-one" /><div className="art-orbit orbit-two" /><div className="art-window"><div className="window-top"><span /><span /><span /></div><div className="window-lines"><b /><b /><b /><b /></div><div className="window-chip">99.9% UPTIME</div></div><div className="art-sticker sticker-one">FAST<br /><strong>HOSTING</strong></div><div className="art-sticker sticker-two">✦</div></div>

@@ -14,13 +14,14 @@ export type HostingPlan = {
 export const hostingPlans: HostingPlan[] = [
   {
     name: 'Launch Hosting',
-    price: 'Free',
-    period: '',
-    tagline: 'Request access for free',
-    description: 'Apply for a free launch hosting slot for lawful, privacy-first projects and early testing.',
+    price: '$12',
+    period: '/ month',
+    tagline: 'Start managed hosting',
+    description: 'Launch a managed hosting slot for lawful, privacy-first projects and early testing.',
     color: 'coral',
     badge: 'Launch',
-    features: ['1 free starter site', 'Tor-ready setup guidance', 'Basic monitoring', 'Support onboarding', 'No upfront payment'],
+    stripeUrl: import.meta.env.VITE_STRIPE_LAUNCH_HOSTING_URL,
+    features: ['1 starter site', 'Tor-ready setup guidance', 'Basic monitoring', 'Support onboarding', 'Monthly billing'],
   },
   {
     name: 'AWS Ubuntu OpenVPN',

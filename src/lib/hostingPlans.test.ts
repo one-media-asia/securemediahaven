@@ -16,11 +16,12 @@ describe('hostingPlans', () => {
     );
   });
 
-  it('keeps the launch hosting offer free and request-based', () => {
+  it('routes launch hosting to the paid Stripe offer', () => {
     const launchPlan = hostingPlans.find((plan) => plan.name === 'Launch Hosting');
 
-    expect(launchPlan?.price).toBe('Free');
-    expect(launchPlan?.stripeUrl).toBeUndefined();
+    expect(launchPlan?.price).toBe('$12');
+    expect(launchPlan?.period).toBe('/ month');
+    expect(launchPlan?.stripeUrl).toBe('https://buy.stripe.com/8x2eVd8hyacyeJ61PN7EQ0c');
   });
 
   it('includes a separate VPN product', () => {
@@ -29,10 +30,10 @@ describe('hostingPlans', () => {
     ]));
   });
 
-  it('includes essentials customers expect from a free onboarding offer', () => {
+  it('includes essentials customers expect from the onboarding offer', () => {
     const features = hostingPlans.flatMap((plan) => plan.features);
 
-    expect(features).toContain('1 free starter site');
+    expect(features).toContain('1 starter site');
     expect(features).toContain('Support onboarding');
     expect(hostingPlans.length).toBeGreaterThan(1);
   });

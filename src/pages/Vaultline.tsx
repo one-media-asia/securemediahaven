@@ -1,7 +1,7 @@
 import { ChangeEvent, DragEvent, useEffect, useMemo, useRef, useState } from 'react';
-import { Archive, ArrowLeft, ChevronDown, Download, File, FileImage, FileText, Folder, HardDrive, LockKeyhole, MoreHorizontal, Search, ShieldCheck, Upload } from 'lucide-react';
+import { Archive, ArrowLeft, ChevronDown, File, FileImage, FileText, Folder, HardDrive, LockKeyhole, MoreHorizontal, Search, ShieldCheck, Upload } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { buildStoredFile, getStoredFiles, isAwsStorageEnabled, requestDownloadUrl, requestUploadUrl, saveFiles, type StoredFile } from '@/lib/fileStorage';
+import { buildStoredFile, getStoredFiles, saveFiles, type StoredFile } from '@/lib/fileStorage';
 
 const initialFiles: StoredFile[] = [
   { id: 'seed-guidelines', name: 'brand-guidelines.pdf', type: 'PDF document', size: '4.8 MB', updated: 'Today, 09:42', updatedAt: Date.now(), icon: 'text' },
@@ -63,13 +63,6 @@ const Vaultline = () => {
       const uploaded = await Promise.all(Array.from(selectedFiles).map(async (file) => {
         const metadata = buildStoredFile(file);
 
-        if (isAwsStorageEnabled()) {
-          const signedUpload = await requestUploadUrl(file);
-          if (signedUpload && signedUpload.file) {
-            return signedUpload.file;
-          }
-        }
-
         return metadata;
       }));
 
@@ -84,11 +77,6 @@ const Vaultline = () => {
 
   const onDrop = (event: DragEvent<HTMLDivElement>) => { event.preventDefault(); void addFiles(event.dataTransfer.files); };
   const onChange = (event: ChangeEvent<HTMLInputElement>) => void addFiles(event.target.files);
-  const downloadFile = async (file: StoredFile) => {
-    const downloadUrl = await requestDownloadUrl(file);
-    if (downloadUrl) window.open(downloadUrl, '_blank', 'noopener,noreferrer');
-  };
-
   return (
     <main className="vaultline-page">
       <aside className="vaultline-sidebar">
@@ -230,9 +218,6 @@ const Vaultline = () => {
                 </div>
                 <span>{file.updated}</span>
                 <span>{file.size}</span>
-                <button type="button" aria-label={`Download ${file.name}`} onClick={() => void downloadFile(file)}>
-                  <Download size={16} />
-                </button>
               </article>
             ))}
           </div>

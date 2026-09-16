@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap');
 
+.hosting-brand-group, .hosting-footer-brand { display: flex; align-items: center; gap: 18px; }
+.hosting-home-link { color: inherit; font-size: 11px; font-weight: 700; text-decoration: none; }
+.hosting-home-link:hover { color: #7fe7d5; }
 #root { min-height: 100vh; }
 .storefront { min-height: 100vh; color: #18231f; background: #f4f0e8; }
 .announcement { min-height: 32px; display: flex; align-items: center; justify-content: center; gap: 8px; background: #c9ed6a; font: 500 10px 'DM Mono', monospace; letter-spacing: .05em; text-transform: uppercase; }

@@ -1,5 +1,6 @@
 import { FormEvent, useMemo, useState } from 'react';
 import { ArrowRight, Check, ChevronDown, LayoutGrid, Menu, Search, ShoppingBag, Sparkles, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { hostingPlans } from '@/lib/hostingPlans';
 
 type Category = 'All' | 'Launch' | 'Growth' | 'Business';
@@ -32,7 +33,7 @@ const Hosting = () => {
     <main className="storefront storefront-dark">
       <div className="announcement announcement-dark"><Sparkles size={13} /> Privacy-focused hosting for onion sites and tutorials <ArrowRight size={13} /></div>
       <header className="store-header store-header-dark">
-        <a className="brand" href="#top"><span className="brand-mark">T</span>Tingi Hosting</a>
+        <div className="hosting-brand-group"><Link className="hosting-home-link" to="/">Back to home</Link><a className="brand" href="#top"><span className="brand-mark">T</span>Tingi Hosting</a></div>
         <nav className={menuOpen ? 'main-nav open' : 'main-nav'}>
           <a href="#plans" onClick={() => setMenuOpen(false)}>Plans</a>
           <a href="#buying-guide" onClick={() => setMenuOpen(false)}>Buying guide</a>
@@ -64,7 +65,7 @@ const Hosting = () => {
       <section className="buying-guide" id="buying-guide"><div className="section-heading"><div><p className="eyebrow">How to buy</p><h2>Choose a plan,<br /><em>keep your keys private.</em></h2></div><p>Use the secure checkout link for your plan. Tingi will never ask for a wallet private key, seed phrase, password, or secret token.</p></div><div className="guide-grid"><article className="guide-step"><span>01</span><h3>Choose a plan</h3><p>Open Plans, compare the features, and select the hosting tier that fits your site or lawful onion service.</p></article><article className="guide-step"><span>02</span><h3>Open checkout</h3><p>Select Choose plan or Buy now. You will be sent to the configured payment provider to complete your purchase.</p></article><article className="guide-step"><span>03</span><h3>Confirm access</h3><p>Keep your order confirmation and follow the onboarding instructions. Only share public wallet addresses when a supported payment method requires one.</p></article></div><div className="key-warning"><strong>Security rule:</strong> never paste a private key, seed phrase, recovery phrase, password, or API secret into a checkout form or support chat. If a payment needs a key, use only the provider's official signing prompt and verify the domain first.</div></section>
       <section className="story" id="why"><div className="story-mark"><LayoutGrid size={27} /></div><div><p className="eyebrow">Why brands choose Tingi</p><h2>Simple hosting,<br /><em>serious performance.</em></h2><p>We combine resilient infrastructure, live monitoring, and practical tutorials so your public site or lawful onion service stays stable, protected, and easier to manage.</p><div className="promise-list"><span><Check size={15} /> Managed hosting with daily backups</span><span><Check size={15} /> Free SSL, CDN, and security hardening</span><span><Check size={15} /> Direct support for launches and upgrades</span></div></div></section>
       <section className="newsletter" id="support"><p className="eyebrow">A helpful first step</p><h2>Get the next hosting update.</h2><p>One short email with launch offers, onion-site setup guidance, and practical security tutorials. No clutter.</p><form className="email-form" onSubmit={submitLead}><input type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" aria-label="Email address" required /><button className="button button-dark" disabled={leadState === 'sending'}>{leadState === 'sending' ? 'Joining...' : 'Join free'} <ArrowRight size={16} /></button></form>{leadState === 'success' && <p className="form-message">You’re on the list. Watch your inbox for launch updates.</p>}{leadState === 'error' && <p className="form-message">We couldn’t sign you up right now. Please try again.</p>}</section>
-      <footer><a className="brand" href="#top"><span className="brand-mark">T</span>Tingi Hosting</a><span>Privacy-focused infrastructure for sites, onion services, and tutorials.</span><div><a href="#plans">Plans</a><a href="#buying-guide">Buying guide</a><a href="#why">Why us</a><a href="#support">Updates</a></div></footer>
+      <footer><div className="hosting-footer-brand"><Link className="hosting-home-link" to="/">Back to home</Link><a className="brand" href="#top"><span className="brand-mark">T</span>Tingi Hosting</a></div><span>Privacy-focused infrastructure for sites, onion services, and tutorials.</span><div><a href="#plans">Plans</a><a href="#buying-guide">Buying guide</a><a href="#why">Why us</a><a href="#support">Updates</a></div></footer>
     </main>
   );
 };

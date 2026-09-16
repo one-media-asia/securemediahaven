@@ -71,8 +71,17 @@ virtual-host and service settings.
 ```bash
 sudo -i
 URL=https://www.aapanel.com/script/install_panel_en.sh
-curl -ksSO "$URL"
+rm -f install_panel_en.sh
+curl -fL --proto '=https' --tlsv1.2 -o install_panel_en.sh "$URL"
+head -n 1 install_panel_en.sh
 bash install_panel_en.sh ipssl
+```
+
+The `head` command should show a shell-script header such as `#!/bin/bash`.
+If it shows `<html>` or the download fails, stop and do not run the installer.
+After installation completes, verify that aaPanel created its service:
+```bash
+test -x /etc/init.d/bt && echo "aaPanel installed" || echo "aaPanel installation failed"
 ```
 
 Then open the admin URL shown in the installer output. The panel commonly uses

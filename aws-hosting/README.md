@@ -71,10 +71,12 @@ virtual-host and service settings.
 ```bash
 sudo -i
 URL=https://www.aapanel.com/script/install_panel_en.sh
-rm -f install_panel_en.sh
-curl -fL --proto '=https' --tlsv1.2 -o install_panel_en.sh "$URL"
-head -n 1 install_panel_en.sh
-bash install_panel_en.sh ipssl
+INSTALLER=/root/install_panel_en.sh
+rm -f "$INSTALLER"
+curl -fL --proto '=https' --tlsv1.2 -o "$INSTALLER" "$URL"
+test -s "$INSTALLER"
+head -n 1 "$INSTALLER"
+bash "$INSTALLER" ipssl
 ```
 
 The `head` command should show a shell-script header such as `#!/bin/bash`.

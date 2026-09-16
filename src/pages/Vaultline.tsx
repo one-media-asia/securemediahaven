@@ -1,5 +1,5 @@
 import { ChangeEvent, DragEvent, useEffect, useMemo, useRef, useState } from 'react';
-import { Archive, ArrowLeft, ChevronDown, File, FileImage, FileText, Folder, HardDrive, LockKeyhole, MoreHorizontal, Search, ShieldCheck, Upload } from 'lucide-react';
+import { Archive, ArrowLeft, ChevronDown, Download, File, FileImage, FileText, Folder, HardDrive, MoreHorizontal, Search, ShieldCheck, Upload } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { buildStoredFile, getStoredFiles, saveFiles, type StoredFile } from '@/lib/fileStorage';
 
@@ -12,15 +12,8 @@ const Vaultline = () => {
   const [query, setQuery] = useState('');
   const [files, setFiles] = useState<StoredFile[]>(initialFiles);
   const [uploading, setUploading] = useState(false);
-  const [hasAccess, setHasAccess] = useState(false);
   const [filesLoaded, setFilesLoaded] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const checkoutUrl = import.meta.env.VITE_STRIPE_ALL_ACCESS_URL || import.meta.env.VITE_STRIPE_LEARNKIT_URL;
-
-  useEffect(() => {
-    setHasAccess(sessionStorage.getItem('vaultline-paid') === 'true');
-  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -71,6 +64,16 @@ const Vaultline = () => {
 
   const onDrop = (event: DragEvent<HTMLDivElement>) => { event.preventDefault(); void addFiles(event.dataTransfer.files); };
   const onChange = (event: ChangeEvent<HTMLInputElement>) => void addFiles(event.target.files);
+  const downloadFile = (file: StoredFile) => {
+    if (!file.data) return;
+    const url = URL.createObjectURL(file.data);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = file.name;
+    anchor.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <main className="vaultline-page">
       <aside className="vaultline-sidebar">
@@ -78,13 +81,9 @@ const Vaultline = () => {
           <span>V</span> Vaultline
         </Link>
 
-        {hasAccess && <button type="button" className="vaultline-upload" onClick={() => inputRef.current?.click()}>
+        <button type="button" className="vaultline-upload" onClick={() => inputRef.current?.click()}>
           <Upload size={16} /> Upload files
-        </button>}
-
-        {!hasAccess && checkoutUrl && <a className="vaultline-cta" href={checkoutUrl}>
-          Unlock storage for $12 <LockKeyhole size={14} />
-        </a>}
+        </button>
 
         <nav className="vaultline-nav">
           {folders.map((folder, index) => (
@@ -175,23 +174,19 @@ const Vaultline = () => {
             </button>
           </div>
 
-          {hasAccess ? <div
-              className={uploading ? 'vaultline-dropzone uploading' : 'vaultline-dropzone'}
-              onDragOver={(event) => event.preventDefault()}
-              onDrop={onDrop}
-              onClick={() => inputRef.current?.click()}
-            >
-              <input ref={inputRef} type="file" multiple onChange={onChange} />
-              <div className="vaultline-drop-icon"><Upload size={21} /></div>
-              <div>
-                <strong>{uploading ? 'Adding your files...' : 'Drop files here or browse'}</strong>
-                <span>Up to 2 GB per file</span>
-              </div>
-            </div> : <div className="vaultline-preview-lock">
-              <div className="vaultline-drop-icon"><LockKeyhole size={21} /></div>
-              <div><strong>Your private storage is ready.</strong><span>Preview the workspace now. Unlock uploads and sharing for $12/month.</span></div>
-              {checkoutUrl && <a href={checkoutUrl}>Unlock Vaultline</a>}
-            </div>}
+          <div
+            className={uploading ? 'vaultline-dropzone uploading' : 'vaultline-dropzone'}
+            onDragOver={(event) => event.preventDefault()}
+            onDrop={onDrop}
+            onClick={() => inputRef.current?.click()}
+          >
+            <input ref={inputRef} type="file" multiple onChange={onChange} />
+            <div className="vaultline-drop-icon"><Upload size={21} /></div>
+            <div>
+              <strong>{uploading ? 'Adding your files...' : 'Drop files here or browse'}</strong>
+              <span>Saved in this browser</span>
+            </div>
+          </div>
 
           <div className="vaultline-table-head">
             <span>Name</span>
@@ -212,6 +207,9 @@ const Vaultline = () => {
                 </div>
                 <span>{file.updated}</span>
                 <span>{file.size}</span>
+                <button type="button" aria-label={`Download ${file.name}`} onClick={() => downloadFile(file)}>
+                  <Download size={17} />
+                </button>
               </article>
             ))}
           </div>

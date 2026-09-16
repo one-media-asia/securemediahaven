@@ -8,6 +8,7 @@ export type StoredFile = {
   updated: string;
   updatedAt: number;
   icon: StoredFileIcon;
+  data?: Blob;
 };
 
 const DB_NAME = 'securemediahaven-vaultline-empty';
@@ -35,6 +36,7 @@ export const buildStoredFile = (file: File): StoredFile => ({
   updated: 'Just now',
   updatedAt: Date.now(),
   icon: detectIcon(file),
+  data: file,
 });
 
 const normalizeFile = (file: Partial<StoredFile>): StoredFile => ({
@@ -45,6 +47,7 @@ const normalizeFile = (file: Partial<StoredFile>): StoredFile => ({
   updated: file.updated ?? 'Just now',
   updatedAt: file.updatedAt ?? Date.now(),
   icon: file.icon ?? 'file',
+  data: file.data,
 });
 
 const openDb = (): Promise<IDBDatabase> => new Promise((resolve, reject) => {

@@ -30,18 +30,25 @@ sudo ufw enable
 ```
 
 ## 5) Configure Nginx
+Nginx virtual hosts must be stored in `sites-available` and linked into
+`sites-enabled`. Do not paste a `server { ... }` block into `/etc/nginx/nginx.conf`
+or inside another `server` block.
+
+From this repository, copy the complete host configuration and replace the
+default site:
 ```bash
-sudo nano /etc/nginx/sites-available/default
+sudo cp aws-hosting/nginx-hosting.conf /etc/nginx/sites-available/onemedia.asia
+sudo rm -f /etc/nginx/sites-enabled/default
+sudo ln -sf /etc/nginx/sites-available/onemedia.asia /etc/nginx/sites-enabled/onemedia.asia
 ```
 
-Example:
-```nginx
-server {
-    listen 80;
-    server_name hosting.onemedia.asia;
-    root /var/www/html;
-    index index.html;
-}
+If Nginx currently reports `"server" directive is not allowed here`, repair the
+site from the EC2 shell with:
+```bash
+sudo rm -f /etc/nginx/sites-enabled/default
+sudo rm -f /etc/nginx/sites-enabled/onemedia.asia
+sudo cp aws-hosting/nginx-hosting.conf /etc/nginx/sites-available/onemedia.asia
+sudo ln -s /etc/nginx/sites-available/onemedia.asia /etc/nginx/sites-enabled/onemedia.asia
 ```
 
 Test and reload:

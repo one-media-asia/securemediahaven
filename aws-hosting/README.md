@@ -63,13 +63,34 @@ sudo certbot --nginx -d hosting.onemedia.asia
 ```
 
 ## 7) Free reseller-style panel: aaPanel
-For a free control panel, install aaPanel on the same Ubuntu EC2:
+aaPanel manages its own Nginx, PHP, and database stack. Install it on a fresh
+Ubuntu EC2 instance, or uninstall/disable the manually installed Nginx stack
+first. Installing aaPanel on top of an already configured server can overwrite
+virtual-host and service settings.
 
 ```bash
-wget -O install.sh http://www.aapanel.com/script/install-ubuntu_6.0.sh && bash install.sh
+sudo -i
+URL=https://www.aapanel.com/script/install_panel_en.sh
+curl -ksSO "$URL"
+bash install_panel_en.sh ipssl
 ```
 
-Then open the admin URL shown in the installer output.
+Then open the admin URL shown in the installer output. The panel commonly uses
+port `7800` or another port printed by the installer, so allow that exact TCP
+port in the EC2 security group and UFW only from your administrator IP.
+
+If the installer finishes without displaying a URL, print the saved panel
+login details from the server:
+```bash
+sudo bt default
+sudo systemctl status bt --no-pager
+sudo cat /www/server/panel/data/port.pl
+```
+
+The URL will normally be in the form `https://EC2_PUBLIC_IP:PORT`. Replace
+`EC2_PUBLIC_IP` with the instance public IPv4 address and allow the displayed
+`PORT` in the EC2 security group. Do not expose the panel port to the whole
+internet; restrict it to your administrator IP where possible.
 
 ## 8) Tor onion service (dark-web hosting)
 ```bash

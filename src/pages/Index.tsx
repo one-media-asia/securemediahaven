@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { FormEvent, useMemo, useState } from 'react';
 import { ArrowRight, Check, ChevronDown, ExternalLink, LayoutGrid, Menu, Search, ShoppingBag, Sparkles, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -44,6 +44,8 @@ const Index = () => {
   const [query, setQuery] = useState('');
   const [cart, setCart] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [email, setEmail] = useState('');
+  const [leadState, setLeadState] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
   const visibleProducts = useMemo(() => products.filter((product) => {
     const matchesCategory = category === 'All' || product.category === category;
     const matchesQuery = !query || `${product.name} ${product.category}`.toLowerCase().includes(query.toLowerCase());
@@ -59,6 +61,25 @@ const Index = () => {
     addToCart();
   };
 
+  const submitLead = async (event: FormEvent) => {
+    event.preventDefault();
+    setLeadState('sending');
+
+    try {
+      const response = await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!response.ok) throw new Error('Unable to subscribe');
+      setLeadState('success');
+      setEmail('');
+    } catch {
+      setLeadState('error');
+    }
+  };
+
   return <main className="storefront">
     <div className="announcement"><Sparkles size={13} /> Apps, labs, plugins, and cyber learning <ArrowRight size={13} /></div>
     <header className="store-header">
@@ -67,12 +88,11 @@ const Index = () => {
       <div className="header-actions"><button className="icon-button" aria-label="Focus search" onClick={() => document.getElementById('search')?.focus()}><Search size={18} /></button><button className="bag-button" onClick={addToCart}><ShoppingBag size={17} /><span>Cart ({cart})</span></button><button className="menu-button" aria-label="Toggle menu" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X size={20} /> : <Menu size={20} />}</button></div>
     </header>
 
-    <section className="hero" id="top"><div className="hero-copy"><p className="eyebrow">The practical cyber shelf</p><h1>Learn safely.<br /><em>Build boldly.</em></h1><p className="hero-text">Plugins, Linux setups, tutorials, lab blueprints, and authorized practice for people building real security skills.</p><a className="button button-dark" href="#shop">Explore the shelf <ArrowRight size={16} /></a><div className="hero-note"><span className="avatar-stack"><i>J</i><i>M</i><i>A</i></span><span>Made for curious, responsible builders</span></div></div><div className="hero-art"><div className="art-orbit orbit-one" /><div className="art-orbit orbit-two" /><div className="art-window"><div className="window-top"><span /><span /><span /></div><div className="window-lines"><b /><b /><b /><b /></div><div className="window-chip">PRACTICE WITH PURPOSE</div></div><div className="art-sticker sticker-one">BUILD<br /><strong>SAFELY</strong></div><div className="art-sticker sticker-two">✦</div></div></section>
+    <section className="hero" id="top"><div className="hero-copy"><p className="eyebrow">A practical security membership</p><h1>Protect what<br /><em>you’re building.</em></h1><p className="hero-text">Get the tools, learning paths, and private workspace to ship with more confidence, without hiring a security team.</p><div className="hero-actions"><a className="button button-dark" href={import.meta.env.VITE_STRIPE_ALL_ACCESS_URL || import.meta.env.VITE_STRIPE_LEARNKIT_URL || '#shop'}>Start All Access — $12/mo <ArrowRight size={16} /></a><a className="text-link" href="#shop">See what’s included <ArrowRight size={15} /></a></div><div className="hero-note"><span className="avatar-stack"><i>J</i><i>M</i><i>A</i></span><span>Built for freelancers and small teams</span></div></div><div className="hero-art"><div className="art-orbit orbit-one" /><div className="art-orbit orbit-two" /><div className="art-window"><div className="window-top"><span /><span /><span /></div><div className="window-lines"><b /><b /><b /><b /></div><div className="window-chip">PROTECT. LEARN. SHIP.</div></div><div className="art-sticker sticker-one">SHIP<br /><strong>SAFELY</strong></div><div className="art-sticker sticker-two">✦</div></div></section>
+    <section className="value-strip"><div><strong>One membership</strong><span>Vaultline, LearnKit, and the tools that keep your work moving.</span></div><div><strong>Cancel anytime</strong><span>Start with one useful workflow. Keep only what earns its place.</span></div><div><strong>Made for small teams</strong><span>Practical protection without enterprise pricing or jargon.</span></div></section>
     <section className="collection" id="shop"><div className="section-heading"><div><p className="eyebrow">The app shelf</p><h2>Tools with<br /><em>good energy.</em></h2></div><p>One-time clarity, useful features, and pricing you can understand before you click buy.</p></div><div className="shop-toolbar"><div className="filters">{categories.map((item) => <button className={category === item ? 'filter active' : 'filter'} key={item} onClick={() => setCategory(item)}>{item}</button>)}</div><label className="search-field"><Search size={16} /><input id="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search apps" /><ChevronDown size={15} /></label></div><div className="product-grid">{visibleProducts.map((product) => <article className="product-card" key={product.name}><div className={`product-visual ${product.color}`}><span className="product-symbol">{product.category === 'Security' ? '◈' : product.category === 'Creative tools' ? '✦' : '⌁'}</span>{product.featured && <span className="featured-tag">Most loved</span>}<div className="visual-grid" /></div><div className="product-info"><div><p className="product-category">{product.category}</p><h3>{product.name}</h3></div><span className="price">{product.price}<small>{product.period}</small></span></div><p className="product-description">{product.description}</p><div className="product-footer"><span className="product-detail"><Check size={14} /> {product.detail}</span><div className="product-actions">{product.appUrl && (product.appUrl.startsWith('/') ? <Link className="app-link" to={product.appUrl} aria-label={`Open ${product.name}`}><ExternalLink size={15} /></Link> : <a className="app-link" href={product.appUrl} target="_blank" rel="noreferrer" aria-label={`Open ${product.name}`}><ExternalLink size={15} /></a>)}<button className="add-button" aria-label={`Buy ${product.name}`} onClick={() => purchaseProduct(product.stripeUrl)}><ShoppingBag size={16} /></button></div></div></article>)}</div>{visibleProducts.length === 0 && <div className="empty-state">No apps match that search. Try a different phrase.</div>}</section>
-  <section className="collection" id="shop"><div className="section-heading"><div><p className="eyebrow">The app shelf</p><h2>Tools with<br /><em>good energy.</em></h2></div><p>One-time clarity, useful features, and pricing you can understand before you click buy.</p></div><div className="shop-toolbar"><div className="filters">{categories.map((item) => <button className={category === item ? 'filter active' : 'filter'} key={item} onClick={() => setCategory(item)}>{item}</button>)}</div><label className="search-field"><Search size={16} /><input id="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search apps" /><ChevronDown size={15} /></label></div><div className="product-grid">{visibleProducts.map((product) => <article className="product-card" key={product.name}><div className={`product-visual ${product.color}`}><span className="product-symbol">{product.category === 'Security' ? '◈' : product.category === 'Creative tools' ? '✦' : product.category === 'Tools' ? '+' : '⌁'}</span>{product.featured && <span className="featured-tag">Most loved</span>}<div className="visual-grid" /></div><div className="product-info"><div><p className="product-category">{product.category}</p><h3>{product.name}</h3></div><span className="price">{product.price}<small>{product.period}</small></span></div><p className="product-description">{product.description}</p><div className="product-footer"><span className="product-detail"><Check size={14} /> {product.detail}</span><div className="product-actions">{product.appUrl && (product.appUrl.startsWith('/') ? <Link className="app-link internal-app-link" to={product.appUrl} aria-label={`Open ${product.name}`}>Open app <ExternalLink size={15} /></Link> : <a className="app-link" href={product.appUrl} target="_blank" rel="noreferrer" aria-label={`Open ${product.name}`}><ExternalLink size={15} /></a>)}<button className="add-button" aria-label={`Buy ${product.name}`} onClick={() => purchaseProduct(product.stripeUrl)}><ShoppingBag size={16} /></button></div></div></article>)}</div>{visibleProducts.length === 0 && <div className="empty-state">No apps match that search. Try a different phrase.</div>}</section>
-
     <section className="story" id="why"><div className="story-mark"><LayoutGrid size={27} /></div><div><p className="eyebrow">The appfolk filter</p><h2>Useful is a <em>feature.</em></h2><p>Learn in isolated labs, use authorized targets, and build practical skills without turning curiosity into harm.</p><div className="promise-list"><span><Check size={15} /> Clear, responsible learning paths</span><span><Check size={15} /> Official links where platforms own the course</span><span><Check size={15} /> Practice targets designed for learning</span></div></div></section>
-    <section className="newsletter" id="support"><p className="eyebrow">A note from the shelf</p><h2>Good apps, occasionally.</h2><p>New finds and useful ideas, delivered without the inbox clutter.</p><div className="email-form"><input type="email" placeholder="you@example.com" aria-label="Email address" /><button className="button button-dark">Join the list <ArrowRight size={16} /></button></div></section>
+    <section className="newsletter" id="support"><p className="eyebrow">A useful first step</p><h2>Get the next practical move.</h2><p>One short email with security checks, useful tools, and new member drops. No inbox clutter.</p><form className="email-form" onSubmit={submitLead}><input type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" aria-label="Email address" required /><button className="button button-dark" disabled={leadState === 'sending'}>{leadState === 'sending' ? 'Joining...' : 'Join free' } <ArrowRight size={16} /></button></form>{leadState === 'success' && <p className="form-message">You’re on the list. Check your inbox soon.</p>}{leadState === 'error' && <p className="form-message">Couldn’t join right now. Please try again.</p>}</section>
     <footer><a className="brand" href="#top"><span className="brand-mark">A</span>appfolk</a><span>Small tools for a more considered day.</span><div><a href="#shop">Explore</a><a href="#why">About</a><a href="#support">Updates</a></div></footer>
   </main>;
 };

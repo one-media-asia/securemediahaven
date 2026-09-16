@@ -2,6 +2,7 @@ export type StoredFileIcon = 'image' | 'text' | 'archive' | 'file';
 
 export type StoredFile = {
   id: string;
+  key?: string;
   name: string;
   type: string;
   size: string;
@@ -30,7 +31,11 @@ const storageMode = (() => {
 
 const getApiBaseUrl = () => {
   const base = (import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/$/, '');
-  return base || null;
+  return base;
+};
+
+export type DownloadUrlResponse = {
+  downloadUrl: string;
 };
 
 const formatFileSize = (bytes: number) => {
@@ -57,10 +62,11 @@ export const buildStoredFile = (file: File): StoredFile => ({
   icon: detectIcon(file),
 });
 
-export const isAwsStorageEnabled = () => storageMode === AWS_MODE && !!getApiBaseUrl();
+export const isAwsStorageEnabled = () => storageMode === AWS_MODE;
 
 const normalizeFile = (file: Partial<StoredFile>): StoredFile => ({
   id: file.id ?? `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+  key: file.key,
   name: file.name ?? 'untitled',
   type: file.type ?? 'File',
   size: file.size ?? '0 KB',
@@ -71,7 +77,6 @@ const normalizeFile = (file: Partial<StoredFile>): StoredFile => ({
 
 const requestJson = async <T>(path: string, init?: RequestInit): Promise<T | null> => {
   const base = getApiBaseUrl();
-  if (!base) return null;
 
   const response = await fetch(`${base}${path}`, {
     ...init,
@@ -100,6 +105,13 @@ export const requestUploadUrl = async (file: File): Promise<UploadUrlResponse | 
   if (!response.ok) return null;
 
   return payload;
+};
+
+export const requestDownloadUrl = async (file: StoredFile): Promise<string | null> => {
+  if (!isAwsStorageEnabled() || !file.key) return null;
+
+  const payload = await requestJson<DownloadUrlResponse>(`/api/files/download-url?key=${encodeURIComponent(file.key)}`);
+  return payload?.downloadUrl ?? null;
 };
 
 const openDb = (): Promise<IDBDatabase> => new Promise((resolve, reject) => {

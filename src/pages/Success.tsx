@@ -7,7 +7,6 @@ const apps = [
   { name: 'Self Help', description: 'Guided practices for reflection and growth.', href: '/self-help', internal: true },
   { name: 'Vaultline', description: 'Private file storage for your important work.', href: '/vaultline', internal: true },
   { name: 'Positive', description: 'Daily prompts, gratitude, and better habits.', href: 'https://positive.onemedia.asia', internal: false },
-  { name: 'Scanner', description: 'Clear checks and reports for your digital work.', href: 'https://scanner.onemedia.asia', internal: false },
 ];
 
 const Success = () => {

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-DOMAIN="${1:-hosting.yourdomain.com}"
-EMAIL="${2:-admin@yourdomain.com}"
+DOMAIN="${1:-hosting.onemedia.asia}"
+EMAIL="${2:-admin@onemedia.asia}"
 
 if [[ "$EUID" -eq 0 ]]; then
   echo "This script should be run as a normal user with sudo."

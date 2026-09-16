@@ -38,7 +38,7 @@ Example:
 ```nginx
 server {
     listen 80;
-    server_name hosting.yourdomain.com;
+    server_name hosting.onemedia.asia;
     root /var/www/html;
     index index.html;
 }
@@ -52,7 +52,7 @@ sudo systemctl reload nginx
 
 ## 6) HTTPS with Let's Encrypt
 ```bash
-sudo certbot --nginx -d hosting.yourdomain.com
+sudo certbot --nginx -d hosting.onemedia.asia
 ```
 
 ## 7) Free reseller-style panel: aaPanel
@@ -98,9 +98,9 @@ Suggested:
 
 ## 10) DNS
 Create records in Route53 or your registrar:
-- hosting.yourdomain.com -> EC2 public IP
-- vpn.yourdomain.com -> VPN EC2 public IP
-- panel.yourdomain.com -> EC2 public IP
+- hosting.onemedia.asia -> EC2 public IP
+- vpn.onemedia.asia -> VPN EC2 public IP
+- panel.onemedia.asia -> EC2 public IP
 
 ## 11) Operational notes
 - Keep SSH locked to your IP

@@ -71,6 +71,15 @@
 .data-safety-grid span { color: #c9ed6a; font: 11px 'DM Mono', monospace; }
 .data-safety-grid h3 { margin: 16px 0 9px; font-size: 16px; letter-spacing: -.04em; }.data-safety-grid p { margin: 0; color: #c3cfca; font-size: 12px; line-height: 1.65; }
 .data-safety-note { max-width: 1180px; margin: 24px auto 0; padding: 16px 18px; border-left: 2px solid #fa6b4b; color: #c3cfca; background: rgba(250,107,75,.08); font-size: 12px; line-height: 1.65; }.data-safety-note strong { color: #fa6b4b; }
+.secure-access-guide { padding: 105px 5vw; background: #fffaf0; color: #18231f; }
+.secure-access-guide .section-heading { margin-bottom: 40px; }
+.secure-access-guide .section-heading > p { color: #66726b; }
+.secure-access-guide .eyebrow, .secure-access-guide h2 em { color: #fa6b4b; }
+.secure-access-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; max-width: 1180px; margin: auto; }
+.secure-access-grid article { padding: 20px; border: 1px solid #d9d5cc; background: #f4f0e8; }
+.secure-access-grid span { color: #fa6b4b; font: 11px 'DM Mono', monospace; }
+.secure-access-grid h3 { margin: 16px 0 9px; font-size: 16px; letter-spacing: -.04em; }
+.secure-access-grid p { margin: 0; color: #66726b; font-size: 12px; line-height: 1.65; }
 @media (max-width: 800px) { .guide-grid { grid-template-columns: 1fr; max-width: 500px; } }
 @media (max-width: 800px) { .safety-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 1000px) { .vpn-steps { grid-template-columns: repeat(3, 1fr); } }
@@ -79,6 +88,8 @@
 @media (max-width: 600px) { .proton-steps { grid-template-columns: 1fr; max-width: 500px; } }
 @media (max-width: 1000px) { .data-safety-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 600px) { .data-safety-grid { grid-template-columns: 1fr; } }
+@media (max-width: 1000px) { .secure-access-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 600px) { .secure-access-grid { grid-template-columns: 1fr; max-width: 500px; } }
 @media (max-width: 480px) { .safety-grid { grid-template-columns: 1fr; } }
 @media (max-width: 480px) { .announcement { padding: 7px 15px; text-align: center; font-size: 8px; }.bag-button span { display: none; }.hero { padding-left: 22px; padding-right: 22px; }.collection { padding-left: 22px; padding-right: 22px; }.filters { flex-wrap: wrap; }.hero-art { min-height: 315px; }.art-window { transform: scale(.8) rotate(-6deg); left: 16%; top: 17%; }.sticker-one { right: 1%; }.product-visual { height: 225px; }footer { display: grid; } }
 

@@ -8,6 +8,12 @@ describe('hostingPlans', () => {
     );
   });
 
+  it('includes a separate VPN product', () => {
+    expect(hostingPlans).toEqual(expect.arrayContaining([
+      expect.objectContaining({ name: 'AWS Ubuntu OpenVPN', badge: 'VPN' }),
+    ]));
+  });
+
   it('includes essentials customers expect from hosting packages', () => {
     const features = hostingPlans.flatMap((plan) => plan.features);
 

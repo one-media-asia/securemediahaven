@@ -3,8 +3,8 @@ import { ArrowRight, Check, ChevronDown, LayoutGrid, Menu, Search, ShoppingBag, 
 import { Link } from 'react-router-dom';
 import { hostingPlans } from '@/lib/hostingPlans';
 
-type Category = 'All' | 'Launch' | 'Growth' | 'Business';
-const categories: Category[] = ['All', 'Launch', 'Growth', 'Business'];
+type Category = 'All' | 'Launch' | 'Growth' | 'Business' | 'VPN';
+const categories: Category[] = ['All', 'Launch', 'Growth', 'Business', 'VPN'];
 
 const Hosting = () => {
   const [category, setCategory] = useState<Category>('All');

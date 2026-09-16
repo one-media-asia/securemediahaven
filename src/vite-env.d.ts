@@ -8,6 +8,7 @@ interface ImportMetaEnv {
 	readonly VITE_STRIPE_LEARNKIT_URL?: string;
 	readonly VITE_STRIPE_FOCUS_SCHOOL_URL?: string;
 	readonly VITE_STRIPE_DOMAIN_HOSTING_URL?: string;
+	readonly VITE_STRIPE_VPN_URL?: string;
 }
 
 interface ImportMeta {

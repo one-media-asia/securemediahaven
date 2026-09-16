@@ -1,0 +1,13 @@
+# Tor hidden service configuration for dark-web hosting
+# Use this on a dedicated Ubuntu EC2 instance or host that serves the public site.
+
+SOCKSPort 0
+RunAsDaemon 1
+DataDirectory /var/lib/tor
+PidFile /var/run/tor/tor.pid
+
+HiddenServiceDir /var/lib/tor/hidden_service/
+HiddenServicePort 80 127.0.0.1:80
+
+# Optional if you also want HTTPS through the same service:
+# HiddenServicePort 443 127.0.0.1:443

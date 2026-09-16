@@ -16,17 +16,24 @@ describe('hostingPlans', () => {
     );
   });
 
+  it('keeps the launch hosting offer free and request-based', () => {
+    const launchPlan = hostingPlans.find((plan) => plan.name === 'Launch Hosting');
+
+    expect(launchPlan?.price).toBe('Free');
+    expect(launchPlan?.stripeUrl).toBeUndefined();
+  });
+
   it('includes a separate VPN product', () => {
     expect(hostingPlans).toEqual(expect.arrayContaining([
       expect.objectContaining({ name: 'AWS Ubuntu OpenVPN', badge: 'VPN' }),
     ]));
   });
 
-  it('includes essentials customers expect from hosting packages', () => {
+  it('includes essentials customers expect from a free onboarding offer', () => {
     const features = hostingPlans.flatMap((plan) => plan.features);
 
-    expect(features).toContain('Free SSL + CDN');
-    expect(features).toContain('Daily backups');
+    expect(features).toContain('1 free starter site');
+    expect(features).toContain('Support onboarding');
     expect(hostingPlans.length).toBeGreaterThan(1);
   });
 });

@@ -13,6 +13,7 @@ import SelfHelp from "./pages/SelfHelp";
 import Vaultline from "./pages/Vaultline";
 import VaultlineSignup from "./pages/VaultlineSignup";
 import Success from "./pages/Success";
+import HostingSuccess from "./pages/HostingSuccess";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,6 +35,7 @@ const App = () => (
           <Route path="/vaultline" element={<Vaultline />} />
           <Route path="/vaultline/signup" element={<VaultlineSignup />} />
           <Route path="/success" element={<Success />} />
+          <Route path="/hosting/success" element={<HostingSuccess />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -10,7 +10,7 @@ export type StoredFile = {
   icon: StoredFileIcon;
 };
 
-const DB_NAME = 'securemediahaven-vaultline';
+const DB_NAME = 'securemediahaven-vaultline-empty';
 const STORE_NAME = 'files';
 
 const formatFileSize = (bytes: number) => {

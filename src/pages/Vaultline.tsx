@@ -3,13 +3,7 @@ import { Archive, ArrowLeft, ChevronDown, File, FileImage, FileText, Folder, Har
 import { Link } from 'react-router-dom';
 import { buildStoredFile, getStoredFiles, saveFiles, type StoredFile } from '@/lib/fileStorage';
 
-const initialFiles: StoredFile[] = [
-  { id: 'seed-guidelines', name: 'brand-guidelines.pdf', type: 'PDF document', size: '4.8 MB', updated: 'Today, 09:42', updatedAt: Date.now(), icon: 'text' },
-  { id: 'seed-homepage', name: 'homepage-final.png', type: 'Image', size: '2.1 MB', updated: 'Yesterday', updatedAt: Date.now() - 86400000, icon: 'image' },
-  { id: 'seed-archive', name: 'project-archive.zip', type: 'Archive', size: '18.4 MB', updated: 'Sep 12, 2026', updatedAt: Date.now() - 3 * 86400000, icon: 'archive' },
-  { id: 'seed-doc', name: 'content-plan.docx', type: 'Word document', size: '820 KB', updated: 'Sep 10, 2026', updatedAt: Date.now() - 5 * 86400000, icon: 'text' },
-  { id: 'seed-notes', name: 'meeting-notes.txt', type: 'Text file', size: '24 KB', updated: 'Sep 08, 2026', updatedAt: Date.now() - 7 * 86400000, icon: 'file' },
-];
+const initialFiles: StoredFile[] = [];
 
 const folders = ['All files', 'Shared with me', 'Design assets', 'Projects', 'Archives'];
 

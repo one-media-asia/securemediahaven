@@ -1,10 +1,18 @@
 import { describe, expect, it } from 'vitest';
+import { hostingCategories } from '../pages/Hosting';
 import { hostingPlans } from './hostingPlans';
 
 describe('hostingPlans', () => {
-  it('includes the main hosting tiers', () => {
+  it('only exposes the active storefront categories', () => {
+    expect(hostingCategories).toEqual(['All', 'Launch', 'VPN']);
+  });
+
+  it('includes the active hosting products', () => {
     expect(hostingPlans.map((plan) => plan.name)).toEqual(
-      expect.arrayContaining(['Launch Hosting', 'Studio Hosting', 'Business Hosting'])
+      expect.arrayContaining(['Launch Hosting', 'AWS Ubuntu OpenVPN'])
+    );
+    expect(hostingPlans.map((plan) => plan.name)).not.toEqual(
+      expect.arrayContaining(['Studio Hosting', 'Business Hosting'])
     );
   });
 

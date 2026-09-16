@@ -5,7 +5,7 @@ export type HostingPlan = {
   tagline: string;
   description: string;
   color: 'coral' | 'blue' | 'lime' | 'yellow' | 'purple';
-  badge: 'Launch' | 'Growth' | 'Business' | 'VPN';
+  badge: 'Launch' | 'VPN';
   featured?: boolean;
   stripeUrl?: string;
   features: string[];

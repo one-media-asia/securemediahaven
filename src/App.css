@@ -27,7 +27,19 @@
 .guide-step p { margin: 0; color: #c3cfca; font-size: 13px; line-height: 1.65; }
 .key-warning { max-width: 1180px; margin: 24px auto 0; padding: 16px 18px; border-left: 2px solid #f4d66d; color: #c3cfca; background: rgba(244,214,109,.08); font-size: 12px; line-height: 1.65; }
 .key-warning strong { color: #f4d66d; }
+.safety-guide { padding: 105px 5vw; background: #f4f0e8; color: #18231f; }
+.safety-guide .section-heading { margin-bottom: 40px; }
+.safety-guide .section-heading > p { color: #66726b; }
+.safety-guide .eyebrow { color: #fa6b4b; }
+.safety-guide h2 em { color: #fa6b4b; }
+.safety-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; max-width: 1180px; margin: auto; }
+.safety-grid article { padding: 22px; border: 1px solid #d9d5cc; background: #fffaf0; }
+.safety-grid span { color: #fa6b4b; font: 11px 'DM Mono', monospace; }
+.safety-grid h3 { margin: 16px 0 9px; font-size: 17px; letter-spacing: -.04em; }
+.safety-grid p { margin: 0; color: #66726b; font-size: 12px; line-height: 1.65; }
 @media (max-width: 800px) { .guide-grid { grid-template-columns: 1fr; max-width: 500px; } }
+@media (max-width: 800px) { .safety-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .safety-grid { grid-template-columns: 1fr; } }
 @media (max-width: 480px) { .announcement { padding: 7px 15px; text-align: center; font-size: 8px; }.bag-button span { display: none; }.hero { padding-left: 22px; padding-right: 22px; }.collection { padding-left: 22px; padding-right: 22px; }.filters { flex-wrap: wrap; }.hero-art { min-height: 315px; }.art-window { transform: scale(.8) rotate(-6deg); left: 16%; top: 17%; }.sticker-one { right: 1%; }.product-visual { height: 225px; }footer { display: grid; } }
 
 .learnkit-page { min-height: 100vh; background: #f7f4ed; color: #1d2633; }

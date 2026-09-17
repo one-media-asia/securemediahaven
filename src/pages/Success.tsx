@@ -12,6 +12,7 @@ const apps = [
 const Success = () => {
   useEffect(() => {
     sessionStorage.setItem('vaultline-paid', 'true');
+    sessionStorage.setItem('all-access-paid', 'true');
   }, []);
 
   return <main className="success-page">

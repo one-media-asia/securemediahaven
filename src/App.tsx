@@ -11,6 +11,7 @@ import Services from "./pages/Services";
 import LearnKit from "./pages/LearnKit";
 import SmsPhish from "./pages/SmsPhish";
 import DeepfakeAwareness from "./pages/DeepfakeAwareness";
+import VoicePhishingAwareness from "./pages/VoicePhishingAwareness";
 import SelfHelp from "./pages/SelfHelp";
 import Vaultline from "./pages/Vaultline";
 import VaultlineSignup from "./pages/VaultlineSignup";
@@ -35,6 +36,7 @@ const App = () => (
           <Route path="/learnkit" element={<LearnKit />} />
           <Route path="/sms-phish" element={<SmsPhish />} />
           <Route path="/deepfake" element={<DeepfakeAwareness />} />
+          <Route path="/voice-phishing" element={<VoicePhishingAwareness />} />
           <Route path="/self-help" element={<SelfHelp />} />
           <Route path="/vaultline" element={<Vaultline />} />
           <Route path="/vaultline/signup" element={<VaultlineSignup />} />

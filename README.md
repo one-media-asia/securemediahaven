@@ -20,6 +20,18 @@ The original site remains on the primary domain. The hosting storefront is avail
 
 To publish it as a subdomain, deploy this project to Vercel, add `hosting.yourdomain.com` under the project's Domains settings, and create the DNS record Vercel provides (usually a CNAME to `cname.vercel-dns.com`).
 
+## Resend sender address
+
+The email sender is configured server-side with `RESEND_FROM_EMAIL`. Change it in your local `.env.local` or in Vercel Project Settings -> Environment Variables. The address must use a domain verified in Resend, for example:
+
+```env
+RESEND_FROM_EMAIL=security@onemedia.asia
+RESEND_FROM_NAME=appfolk Security
+ALLOWED_ORIGIN=https://phish.onemedia.asia
+```
+
+Keep `RESEND_API_KEY` server-side and never prefix it with `VITE_`.
+
 **Use your preferred IDE**
 
 If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.

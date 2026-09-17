@@ -9,6 +9,7 @@ import Hosting from "./pages/Hosting";
 import Kicks from "./pages/Kicks";
 import Services from "./pages/Services";
 import LearnKit from "./pages/LearnKit";
+import SmsPhish from "./pages/SmsPhish";
 import SelfHelp from "./pages/SelfHelp";
 import Vaultline from "./pages/Vaultline";
 import VaultlineSignup from "./pages/VaultlineSignup";
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/kicks" element={<Kicks />} />
           <Route path="/services" element={<Services />} />
           <Route path="/learnkit" element={<LearnKit />} />
+          <Route path="/sms-phish" element={<SmsPhish />} />
           <Route path="/self-help" element={<SelfHelp />} />
           <Route path="/vaultline" element={<Vaultline />} />
           <Route path="/vaultline/signup" element={<VaultlineSignup />} />

@@ -123,7 +123,8 @@ sudo systemctl status tor
 
 Get the onion address:
 ```bash
-sudo cat /var/lib/tor/hidden_service/hostname
+
+
 ```
 
 ## 9) VPN server

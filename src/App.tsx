@@ -14,6 +14,7 @@ import DeepfakeAwareness from "./pages/DeepfakeAwareness";
 import VoicePhishingAwareness from "./pages/VoicePhishingAwareness";
 import AwarenessLab from "./pages/AwarenessLab";
 import SelfHelp from "./pages/SelfHelp";
+import VulnScanner from "./pages/VulnScanner";
 import Vaultline from "./pages/Vaultline";
 import VaultlineSignup from "./pages/VaultlineSignup";
 import Success from "./pages/Success";
@@ -40,6 +41,7 @@ const App = () => (
           <Route path="/voice-phishing" element={<VoicePhishingAwareness />} />
           <Route path="/awareness-lab" element={<AwarenessLab />} />
           <Route path="/self-help" element={<SelfHelp />} />
+<Route path="/vuln-scan" element={<VulnScanner />} />
           <Route path="/vaultline" element={<Vaultline />} />
           <Route path="/vaultline/signup" element={<VaultlineSignup />} />
           <Route path="/success" element={<Success />} />

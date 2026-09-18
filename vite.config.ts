@@ -15,6 +15,18 @@ export default defineConfig(({ mode }) => ({
       },
     },
   },
+  optimizeDeps: {
+    exclude: [
+      "@aws-sdk/client-cognito-identity-provider",
+      "amazon-cognito-identity-js",
+    ],
+  },
+  ssr: {
+    noExternal: [
+      "@aws-sdk/client-cognito-identity-provider",
+      "amazon-cognito-identity-js",
+    ],
+  },
   plugins: [
     react(),
     mode === 'development' &&

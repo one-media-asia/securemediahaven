@@ -1,19 +1,31 @@
-import { CognitoIdentityProviderClient, InitiateAuthCommand, GetUserCommand } from '@aws-sdk/client-cognito-identity-provider';
 import Stripe from 'stripe';
 import crypto from 'node:crypto';
 
-const cognito = new CognitoIdentityProviderClient({
-  region: process.env.VITE_COGNITO_REGION || 'us-east-1',
-});
+let stripe;
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2024-06-20',
-});
+function getStripe() {
+  if (!stripe && process.env.STRIPE_SECRET_KEY && process.env.STRIPE_SECRET_KEY.startsWith('sk_')) {
+    stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: '2024-06-20',
+    });
+  }
+  return stripe;
+}
 
 const AUTH_SECRET = process.env.AUTH_SECRET;
+const CLIENT_SECRET = process.env.COGNITO_CLIENT_SECRET;
 const SESSION_DAYS = 7;
 
-// Simple HMAC-signed session token (compact JWT-like)
+const COGNITO_REGION = process.env.VITE_COGNITO_REGION || 'eu-north-1';
+const CLIENT_ID = process.env.COGNITO_CLIENT_ID || process.env.VITE_COGNITO_CLIENT_ID;
+
+function computeSecretHash(username) {
+  if (!CLIENT_SECRET) return undefined;
+  const hmac = crypto.createHmac('sha256', CLIENT_SECRET);
+  hmac.update(username + CLIENT_ID);
+  return hmac.digest('base64');
+}
+
 function signSession(payload) {
   const header = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url');
   const body = Buffer.from(JSON.stringify({
@@ -25,9 +37,37 @@ function signSession(payload) {
   return `${header}.${body}.${sig}`;
 }
 
+async function cognitoFetch(operation, body) {
+  const url = `https://cognito-idp.${COGNITO_REGION}.amazonaws.com/`;
+
+  const headers = {
+    'X-Amz-Target': `AWSCognitoIdentityProviderService.${operation}`,
+    'Content-Type': 'application/x-amz-json-1.1',
+  };
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(body),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    const err = new Error(data.message || data.Message);
+    err.name = data.__type || 'UnknownError';
+    throw err;
+  }
+
+  return data;
+}
+
 async function checkStripeMembership(email) {
+  const stripe = getStripe();
+  if (!stripe) {
+    return { active: false };
+  }
   try {
-    // Look up customer by email
     const customers = await stripe.customers.list({ email, limit: 1 });
     if (customers.data.length === 0) return { active: false };
 
@@ -38,24 +78,11 @@ async function checkStripeMembership(email) {
       limit: 1,
     });
 
-    if (subs.data.length === 0) {
-      // Also check for completed one-time payments that include membership
-      const sessions = await stripe.checkout.sessions.list({
-        customer: customerId,
-        limit: 10,
-      });
-      const hasMembership = sessions.data.some(
-        s => s.payment_status === 'paid' && s.metadata?.membership === 'all-access'
-      );
-      return { active: hasMembership, plan: 'all-access' };
+    if (subs.data.length > 0) {
+      return { active: true, plan: 'subscription' };
     }
 
-    const sub = subs.data[0];
-    return {
-      active: true,
-      plan: sub.items.data[0]?.price?.lookup_key || 'subscription',
-      currentPeriodEnd: sub.current_period_end,
-    };
+    return { active: false };
   } catch (err) {
     console.error('Stripe check error:', err);
     return { active: false };
@@ -83,22 +110,26 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 1. Authenticate with Cognito
-    const authResult = await cognito.send(new InitiateAuthCommand({
-      AuthFlow: 'USER_PASSWORD_AUTH',
-      ClientId: process.env.VITE_COGNITO_CLIENT_ID,
-      AuthParameters: {
-        USERNAME: email.trim().toLowerCase(),
-        PASSWORD: password,
-      },
-    }));
+    const emailLower = email.trim().toLowerCase();
+    const secretHash = computeSecretHash(emailLower);
 
-    const { AccessToken, IdToken } = authResult.AuthenticationResult;
+    // 1. Authenticate with Cognito
+    const authResult = await cognitoFetch('InitiateAuth', {
+      AuthFlow: 'USER_PASSWORD_AUTH',
+      ClientId: CLIENT_ID,
+      AuthParameters: {
+        USERNAME: emailLower,
+        PASSWORD: password,
+        ...(secretHash && { SECRET_HASH: secretHash }),
+      },
+    });
+
+    const { AccessToken } = authResult.AuthenticationResult;
 
     // 2. Get user details
-    const userResult = await cognito.send(new GetUserCommand({
+    const userResult = await cognitoFetch('GetUser', {
       AccessToken: AccessToken,
-    }));
+    });
 
     const userEmail = userResult.UserAttributes.find(a => a.Name === 'email')?.Value;
     const sub = userResult.UserAttributes.find(a => a.Name === 'sub')?.Value;
@@ -116,7 +147,6 @@ export default async function handler(req, res) {
       membershipPlan: membership.plan || null,
     });
 
-    // Set httpOnly cookie + return token
     res.setHeader('Set-Cookie', `session=${sessionToken}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${SESSION_DAYS * 86400}`);
 
     return res.status(200).json({
@@ -127,7 +157,7 @@ export default async function handler(req, res) {
         membershipActive: membership.active,
         membershipPlan: membership.plan,
       },
-      sessionToken, // For SPA localStorage fallback
+      sessionToken,
     });
   } catch (err) {
     console.error('Login error:', err);

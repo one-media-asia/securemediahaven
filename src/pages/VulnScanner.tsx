@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Search, Shield, AlertTriangle, Bug, CheckCircle, XCircle, Loader2, Lock, Eye, Globe, FileCode, LogIn, LogOut, User as UserIcon } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Search, Shield, AlertTriangle, Bug, CheckCircle, XCircle, Loader2, Lock, Eye, Globe, FileCode, LogIn, LogOut, User as UserIcon, CreditCard } from 'lucide-react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 type VulnCategory = 'critical' | 'high' | 'medium' | 'low' | 'info';
@@ -59,6 +59,7 @@ const iconMap: Record<string, typeof Lock> = {
 
 const VulnScanner = () => {
   const { user, login, logout, authLoading } = useAuth();
+  const [searchParams] = useSearchParams();
   const [url, setUrl] = useState('');
   const [scanning, setScanning] = useState(false);
   const [scanResult, setScanResult] = useState<ScanResult | null>(null);
@@ -68,6 +69,40 @@ const VulnScanner = () => {
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
   const [showLogin, setShowLogin] = useState(false);
+  const [subscriptionStatus, setSubscriptionStatus] = useState<'idle' | 'verifying' | 'success' | 'failed'>('idle');
+
+  // Handle Stripe subscription return
+  useEffect(() => {
+    const subscription = searchParams.get('subscription');
+    const sessionId = searchParams.get('session_id');
+
+    if (subscription === 'success' && sessionId) {
+      setSubscriptionStatus('verifying');
+      verifySubscription(sessionId);
+    } else if (subscription === 'cancelled') {
+      setError('Subscription cancelled. Try again when you\'re ready.');
+    }
+  }, [searchParams]);
+
+  const verifySubscription = async (sessionId: string) => {
+    try {
+      const res = await fetch('/api/verify-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId }),
+      });
+      const data = await res.json();
+      if (data.valid) {
+        setSubscriptionStatus('success');
+        // Re-verify auth to pick up new membership
+        // The user might need to log in with the email they used
+      } else {
+        setSubscriptionStatus('failed');
+      }
+    } catch {
+      setSubscriptionStatus('failed');
+    }
+  };
 
   const runScan = async (targetUrl: string) => {
     setError('');
@@ -106,7 +141,7 @@ const VulnScanner = () => {
           setError('Please log in to scan.');
           setShowLogin(true);
         } else if (res.status === 403) {
-          setError('Active membership required. Please subscribe to $12/month.');
+          setError('Active membership required. Subscribe to unlock scanning.');
         } else {
           setError(data.error || 'Scan failed');
         }
@@ -128,7 +163,7 @@ const VulnScanner = () => {
       return;
     }
     if (!user.membershipActive) {
-      setError('Active membership required. Subscribe to $12/month to unlock scanning.');
+      setError('Active membership required. Subscribe to unlock scanning.');
       return;
     }
     runScan(url);
@@ -153,6 +188,24 @@ const VulnScanner = () => {
     }
   };
 
+  const handleSubscribe = async () => {
+    setError('');
+    try {
+      const res = await fetch('/api/stripe-subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.assign(data.url);
+      } else {
+        setError(data.error || 'Failed to start subscription');
+      }
+    } catch {
+      setError('Could not connect to payment service');
+    }
+  };
+
   return (
     <main className="vulnscan-page">
       <header className="vulnscan-header">
@@ -168,6 +221,9 @@ const VulnScanner = () => {
             <div className="vulnscan-user">
               <UserIcon size={14} />
               <span>{user.email}</span>
+              <span className={`vulnscan-badge ${user.membershipActive ? 'active' : 'inactive'}`}>
+                {user.membershipActive ? 'Active' : 'No membership'}
+              </span>
               <button className="vulnscan-logout" onClick={logout}><LogOut size={14} /></button>
             </div>
           ) : (
@@ -185,7 +241,9 @@ const VulnScanner = () => {
         {!user?.membershipActive && (
           <p className="vulnscan-cta">
             <strong>$12/month</strong> — Included with All Access
-            <a className="vulnscan-subscribe-link" href={import.meta.env.VITE_STRIPE_ALL_ACCESS_URL}>Subscribe →</a>
+            <button className="vulnscan-subscribe-btn" onClick={handleSubscribe}>
+              <CreditCard size={14} /> Subscribe now
+            </button>
           </p>
         )}
       </section>
@@ -197,6 +255,8 @@ const VulnScanner = () => {
             <p>Enter your appfolk account to start scanning.</p>
             <form onSubmit={handleLogin}>
               <input
+                id="login-email"
+                name="email"
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
@@ -204,6 +264,8 @@ const VulnScanner = () => {
                 required
               />
               <input
+                id="login-password"
+                name="password"
                 type="password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
@@ -220,6 +282,18 @@ const VulnScanner = () => {
         </div>
       )}
 
+      {subscriptionStatus === 'verifying' && (
+        <div className="vulnscan-subscription-status verifying">
+          <Loader2 size={16} className="spin" /> Verifying your subscription...
+        </div>
+      )}
+
+      {subscriptionStatus === 'success' && (
+        <div className="vulnscan-subscription-status success">
+          <CheckCircle size={16} /> Subscription active! {user ? 'You can now scan.' : 'Please log in to start scanning.'}
+        </div>
+      )}
+
       <section className="vulnscan-input-section">
         <div className="vulnscan-input-row">
           <div className="vulnscan-input-wrap">
@@ -229,7 +303,7 @@ const VulnScanner = () => {
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && startScan()}
-              placeholder="Enter URL to scan (e.g., https://example.com)"
+              placeholder={user?.membershipActive ? "Enter URL to scan (e.g., https://example.com)" : "Subscribe to unlock scanning"}
               spellCheck={false}
               autoComplete="off"
               disabled={!user?.membershipActive}
@@ -238,7 +312,7 @@ const VulnScanner = () => {
           <button
             className="vulnscan-scan-btn"
             onClick={startScan}
-            disabled={scanning || !url.trim()}
+            disabled={scanning || !url.trim() || !user?.membershipActive}
           >
             {scanning ? <><Loader2 size={16} className="spin" /> Scanning...</> : <><Shield size={16} /> Scan</>}
           </button>

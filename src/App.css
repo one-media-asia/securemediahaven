@@ -358,6 +358,14 @@
 .vulnscan-login-modal button:disabled { opacity: .6; }
 .vulnscan-forgot { display: block; margin-top: 12px; color: #e85e4b; font-size: 12px; text-decoration: none; }
 .vulnscan-forgot:hover { text-decoration: underline; }
+.vulnscan-badge { padding: 2px 6px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; border-radius: 4px; }
+.vulnscan-badge.active { background: #f0fdf4; color: #166534; }
+.vulnscan-badge.inactive { background: #fef2f2; color: #b91c1c; }
+.vulnscan-subscribe-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border: 0; background: #e85e4b; color: #fff; font: 600 12px 'Manrope', sans-serif; cursor: pointer; border-radius: 6px; }
+.vulnscan-subscribe-btn:hover { background: #d14a3a; }
+.vulnscan-subscription-status { margin: 20px auto; max-width: 600px; padding: 14px 20px; border-radius: 8px; display: flex; align-items: center; gap: 10px; font-size: 13px; }
+.vulnscan-subscription-status.verifying { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+.vulnscan-subscription-status.success { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
 .vulnscan-hero { max-width: 1180px; margin: auto; padding: 80px 5vw 40px; }
 .vulnscan-hero h1 { margin: 0 0 18px; font-size: clamp(46px, 6vw, 74px); line-height: .97; letter-spacing: -.08em; }
 .vulnscan-hero h1 em { color: #e85e4b; font-family: Georgia, serif; font-weight: 400; }

@@ -423,6 +423,11 @@
 .vulnscan-finding-section h4 { display: flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 8px; }
 .vulnscan-finding-section p { font-size: 13px; line-height: 1.65; color: #4a5060; }
 .vulnscan-finding-section.exploit p { color: #b91c1c; }
+.vulnscan-tools { display: grid; gap: 6px; margin-top: 12px; padding: 11px 12px; border-left: 2px solid #e85e4b; color: #7c2d12; background: #fff7ed; font-size: 12px; line-height: 1.5; }
+.vulnscan-tools strong { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; }
+.vulnscan-tools span { color: #9a3412; }
+.vulnscan-finding-section .vulnscan-validation { margin-top: 12px; color: #4a5060; }
+.vulnscan-validation strong { color: #1a1f2e; }
 .vulnscan-finding-section.fix p { color: #166534; }
 .vulnscan-owasp { display: inline-block; margin-top: 8px; padding: 3px 8px; font-size: 10px; font-weight: 700; background: #eff6ff; color: #2563eb; border-radius: 4px; }
 .vulnscan-disclaimer { display: flex; align-items: center; gap: 10px; margin-top: 30px; padding: 16px; color: #9a9fa8; background: #fff; border: 1px solid #d8d4ca; font-size: 12px; line-height: 1.5; }

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, Shield, AlertTriangle, Bug, CheckCircle, XCircle, Loader2, Lock, Eye, Globe, FileCode, CreditCard } from 'lucide-react';
+import { Search, Shield, AlertTriangle, Bug, CheckCircle, XCircle, Loader2, Lock, Eye, Globe, FileCode, CreditCard, Crosshair, Wrench } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 type VulnCategory = 'critical' | 'high' | 'medium' | 'low' | 'info';
@@ -14,6 +14,9 @@ type Finding = {
   cwe?: string;
   owasp?: string;
   details?: unknown;
+  attackerView?: string;
+  tools?: string[];
+  validation?: string;
 };
 
 type ScanResult = {
@@ -283,6 +286,21 @@ const VulnScanner = () => {
                           <h4><AlertTriangle size={14} /> Description</h4>
                           <p>{finding.description}</p>
                         </div>
+                        {finding.attackerView && (
+                          <div className="vulnscan-finding-section exploit">
+                            <h4><Crosshair size={14} /> Attacker view</h4>
+                            <p>{finding.attackerView}</p>
+                            {finding.tools && (
+                              <div className="vulnscan-tools">
+                                <strong><Wrench size={13} /> Common tools</strong>
+                                <span>{finding.tools.join(' / ')}</span>
+                              </div>
+                            )}
+                            {finding.validation && (
+                              <p className="vulnscan-validation"><strong>Safe validation:</strong> {finding.validation}</p>
+                            )}
+                          </div>
+                        )}
                         {finding.fix && (
                           <div className="vulnscan-finding-section fix">
                             <h4><CheckCircle size={14} /> How to fix</h4>

@@ -227,6 +227,51 @@ function detectTechnologies(headers, body) {
   });
 }
 
+function addAttackerContext(findings) {
+  const context = {
+    'no-https': {
+      attackerView: 'An attacker on the same network could observe or alter traffic, including data submitted to this site.',
+      tools: ['Browser developer tools', 'Network traffic inspection tools'],
+      validation: 'Open the site over an untrusted network and confirm whether the address remains HTTP or upgrades to HTTPS.'
+    },
+    'missing-security-headers': {
+      attackerView: 'These missing browser controls remove layers of defense that help limit clickjacking, script injection, and downgrade attacks.',
+      tools: ['curl or browser developer tools', 'Security header checkers'],
+      validation: 'Inspect the response headers in browser developer tools and confirm the listed headers are absent.'
+    },
+    'info-disclosure': {
+      attackerView: 'The disclosed server or framework version helps an attacker narrow their research to software-specific weaknesses and known advisories.',
+      tools: ['curl or browser developer tools', 'Technology fingerprinting tools'],
+      validation: 'Review the response headers and confirm that version-bearing `Server` or framework headers are visible.'
+    },
+    'exposed-sensitive': {
+      attackerView: 'An attacker could request these public paths to look for credentials, source code, deployment metadata, or internal configuration.',
+      tools: ['Browser or curl', 'Content discovery tools'],
+      validation: 'Review each reported path with an authorized request and confirm it returns a non-error response without exposing sensitive content.'
+    },
+    'exposed-info-paths': {
+      attackerView: 'These paths reveal useful entry points, site structure, or administrative surfaces that an attacker may investigate further.',
+      tools: ['Browser or curl', 'Content discovery tools'],
+      validation: 'Open each reported path while authorized and confirm whether it should be public and whether authentication is enforced.'
+    },
+    'cookie-security': {
+      attackerView: 'Weak cookie flags can make session tokens easier to read through client-side bugs, send over plaintext, or reuse across unwanted request contexts.',
+      tools: ['Browser developer tools', 'Cookie inspection tools'],
+      validation: 'Inspect `Set-Cookie` response headers and confirm every session cookie has the appropriate HttpOnly, Secure, and SameSite attributes.'
+    },
+    'directory-listing': {
+      attackerView: 'A directory index gives away filenames and folder structure, which can expose backups, old builds, and forgotten endpoints.',
+      tools: ['Browser or curl', 'Content discovery tools'],
+      validation: 'Visit the reported directory while authorized and confirm it returns an index page instead of a 403 or a controlled application response.'
+    }
+  };
+
+  return findings.map((finding) => ({
+    ...finding,
+    ...(context[finding.id] || {})
+  }));
+}
+
 async function scanTarget(inputUrl) {
   const startTime = Date.now();
   const findings = [];
@@ -460,7 +505,7 @@ async function scanTarget(inputUrl) {
     target: response.url,
     hostname,
     scanTime,
-    findings,
+    findings: addAttackerContext(findings),
     score,
     summary: {
       critical: findings.filter(f => f.category === 'critical').length,

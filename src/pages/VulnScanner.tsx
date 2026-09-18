@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Search, Shield, AlertTriangle, Bug, CheckCircle, XCircle, Loader2, Lock, Eye, Globe, FileCode, ExternalLink, CreditCard } from 'lucide-react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Search, Shield, AlertTriangle, Bug, CheckCircle, XCircle, Loader2, Lock, Eye, Globe, FileCode, LogIn, LogOut, User as UserIcon } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 type VulnCategory = 'critical' | 'high' | 'medium' | 'low' | 'info';
 
@@ -14,7 +15,6 @@ type Finding = {
   cwe?: string;
   owasp?: string;
   details?: unknown;
-  exploit?: string;
 };
 
 type ScanResult = {
@@ -58,58 +58,20 @@ const iconMap: Record<string, typeof Lock> = {
 };
 
 const VulnScanner = () => {
-  const [searchParams] = useSearchParams();
+  const { user, login, logout, authLoading } = useAuth();
   const [url, setUrl] = useState('');
   const [scanning, setScanning] = useState(false);
   const [scanResult, setScanResult] = useState<ScanResult | null>(null);
   const [error, setError] = useState('');
   const [expanded, setExpanded] = useState<string[]>([]);
-  const [unlocked, setUnlocked] = useState(false);
-  const [paymentStatus, setPaymentStatus] = useState<'idle' | 'verifying' | 'success' | 'failed'>('idle');
-  const [scanUrl, setScanUrl] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [showLogin, setShowLogin] = useState(false);
 
-  // Check for Stripe return
-  useEffect(() => {
-    const sessionId = searchParams.get('session_id');
-    const payment = searchParams.get('payment');
-
-    if (payment === 'success' && sessionId) {
-      setPaymentStatus('verifying');
-      verifyPayment(sessionId);
-    } else if (payment === 'cancelled') {
-      setError('Payment cancelled. Try again when you\'re ready.');
-    }
-  }, [searchParams]);
-
-  const verifyPayment = async (sessionId: string) => {
-    try {
-      const res = await fetch('/api/verify-payment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sessionId }),
-      });
-      const data = await res.json();
-      if (data.valid) {
-        setPaymentStatus('success');
-        setUnlocked(true);
-        // Re-run the scan to show full results
-        if (data.targetUrl) {
-          runScan(data.targetUrl, true);
-        }
-      } else {
-        setPaymentStatus('failed');
-      }
-    } catch {
-      setPaymentStatus('failed');
-    }
-  };
-
-  const runScan = async (targetUrl: string, isRetry = false) => {
+  const runScan = async (targetUrl: string) => {
     setError('');
-    if (!targetUrl.trim()) {
-      setError('Please enter a URL to scan');
-      return;
-    }
+    setScanResult(null);
 
     let formattedUrl = targetUrl.trim();
     if (!formattedUrl.startsWith('http://') && !formattedUrl.startsWith('https://')) {
@@ -124,24 +86,30 @@ const VulnScanner = () => {
     }
 
     setScanning(true);
-    if (!isRetry) {
-      setScanResult(null);
-      setUnlocked(false);
-      setExpanded([]);
-    }
-    setScanUrl(formattedUrl);
+    setExpanded([]);
 
     try {
+      const token = localStorage.getItem('sessionToken');
       const res = await fetch('/api/scan', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token ? `Bearer ${token}` : '',
+        },
         body: JSON.stringify({ url: formattedUrl }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || 'Scan failed');
+        if (res.status === 401) {
+          setError('Please log in to scan.');
+          setShowLogin(true);
+        } else if (res.status === 403) {
+          setError('Active membership required. Please subscribe to $12/month.');
+        } else {
+          setError(data.error || 'Scan failed');
+        }
         setScanning(false);
         return;
       }
@@ -154,32 +122,34 @@ const VulnScanner = () => {
     }
   };
 
-  const startScan = () => runScan(url);
+  const startScan = () => {
+    if (!user) {
+      setShowLogin(true);
+      return;
+    }
+    if (!user.membershipActive) {
+      setError('Active membership required. Subscribe to $12/month to unlock scanning.');
+      return;
+    }
+    runScan(url);
+  };
 
   const toggleExpanded = (id: string) => {
-    if (!unlocked) return;
     setExpanded(prev =>
       prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
     );
   };
 
-  const handleStripeCheckout = async () => {
-    if (!scanResult) return;
-    setPaymentStatus('idle');
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginError('');
     try {
-      const res = await fetch('/api/stripe-checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ targetUrl: scanResult.target }),
-      });
-      const data = await res.json();
-      if (data.url) {
-        window.location.assign(data.url);
-      } else {
-        setError(data.error || 'Failed to start checkout');
-      }
-    } catch {
-      setError('Could not connect to payment service');
+      await login(email, password);
+      setShowLogin(false);
+      setEmail('');
+      setPassword('');
+    } catch (err) {
+      setLoginError(err.message);
     }
   };
 
@@ -190,16 +160,65 @@ const VulnScanner = () => {
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
           appfolk
         </Link>
-        <div className="vulnscan-logo">
-          <Shield size={18} /> VulnScan
+        <div className="vulnscan-header-right">
+          <div className="vulnscan-logo">
+            <Shield size={18} /> VulnScan
+          </div>
+          {user ? (
+            <div className="vulnscan-user">
+              <UserIcon size={14} />
+              <span>{user.email}</span>
+              <button className="vulnscan-logout" onClick={logout}><LogOut size={14} /></button>
+            </div>
+          ) : (
+            <button className="vulnscan-login-btn" onClick={() => setShowLogin(true)}>
+              <LogIn size={14} /> Log in
+            </button>
+          )}
         </div>
       </header>
 
       <section className="vulnscan-hero">
         <p className="eyebrow">Security scanning tool</p>
         <h1>Know your<br/><em>attack surface.</em></h1>
-        <p className="vulnscan-intro">Real passive analysis. Checks headers, SSL, exposed paths, and server misconfigurations the way an attacker would look.</p>
+        <p className="vulnscan-intro">Real passive analysis for members. Checks headers, SSL, exposed paths, and server misconfigurations the way an attacker would look.</p>
+        {!user?.membershipActive && (
+          <p className="vulnscan-cta">
+            <strong>$12/month</strong> — Included with All Access
+            <a className="vulnscan-subscribe-link" href={import.meta.env.VITE_STRIPE_ALL_ACCESS_URL}>Subscribe →</a>
+          </p>
+        )}
       </section>
+
+      {showLogin && (
+        <div className="vulnscan-login-overlay" onClick={() => setShowLogin(false)}>
+          <div className="vulnscan-login-modal" onClick={e => e.stopPropagation()}>
+            <h2>Log in to scan</h2>
+            <p>Enter your appfolk account to start scanning.</p>
+            <form onSubmit={handleLogin}>
+              <input
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="Email"
+                required
+              />
+              <input
+                type="password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                placeholder="Password"
+                required
+              />
+              {loginError && <div className="vulnscan-error">{loginError}</div>}
+              <button type="submit" disabled={authLoading}>
+                {authLoading ? <><Loader2 size={14} className="spin" /> Logging in...</> : 'Log in'}
+              </button>
+            </form>
+            <Link className="vulnscan-forgot" to="/vaultline/signup">Don't have an account? Sign up →</Link>
+          </div>
+        </div>
+      )}
 
       <section className="vulnscan-input-section">
         <div className="vulnscan-input-row">
@@ -213,9 +232,14 @@ const VulnScanner = () => {
               placeholder="Enter URL to scan (e.g., https://example.com)"
               spellCheck={false}
               autoComplete="off"
+              disabled={!user?.membershipActive}
             />
           </div>
-          <button className="vulnscan-scan-btn" onClick={startScan} disabled={scanning}>
+          <button
+            className="vulnscan-scan-btn"
+            onClick={startScan}
+            disabled={scanning || !url.trim()}
+          >
             {scanning ? <><Loader2 size={16} className="spin" /> Scanning...</> : <><Shield size={16} /> Scan</>}
           </button>
         </div>
@@ -270,32 +294,6 @@ const VulnScanner = () => {
             </div>
           </div>
 
-          {/* Unlock prompt */}
-          {!unlocked && (scanResult.summary.critical + scanResult.summary.high + scanResult.summary.medium > 0) && (
-            <div className="vulnscan-unlock">
-              <Lock size={20} />
-              <div className="vulnscan-unlock-text">
-                <strong>{scanResult.findings.filter(f => f.category !== 'info').length} issues found</strong>
-                <span>Unlock the full report to see exactly what's wrong and how to fix it.</span>
-              </div>
-              <button className="vulnscan-unlock-btn" onClick={handleStripeCheckout}>
-                <CreditCard size={16} /> Unlock Report — $19.99
-              </button>
-            </div>
-          )}
-
-          {paymentStatus === 'verifying' && (
-            <div className="vulnscan-unlock verifying">
-              <Loader2 size={16} className="spin" /> Verifying payment...
-            </div>
-          )}
-
-          {paymentStatus === 'success' && (
-            <div className="vulnscan-unlock success">
-              <CheckCircle size={16} /> Payment confirmed. Full report unlocked.
-            </div>
-          )}
-
           <div className="vulnscan-findings">
             {scanResult.findings
               .sort((a, b) => {
@@ -306,14 +304,11 @@ const VulnScanner = () => {
                 const IconComp = finding.icon ? iconMap[finding.icon] || Shield : Shield;
                 const isExpanded = expanded.includes(finding.id);
                 return (
-                  <div key={finding.id} className={`vulnscan-finding ${isExpanded ? 'expanded' : ''} ${!unlocked ? 'locked' : ''}`}>
-                    <button
-                      className="vulnscan-finding-head"
-                      onClick={() => toggleExpanded(finding.id)}
-                    >
+                  <div key={finding.id} className={`vulnscan-finding ${isExpanded ? 'expanded' : ''}`}>
+                    <button className="vulnscan-finding-head" onClick={() => toggleExpanded(finding.id)}>
                       <div className="vulnscan-finding-left">
                         <span className={`vulnscan-finding-icon ${finding.category}`}>
-                          {unlocked ? <IconComp size={16} /> : <Lock size={16} />}
+                          <IconComp size={16} />
                         </span>
                         <span className="vulnscan-finding-title">{finding.title}</span>
                         {finding.cwe && <span className="vulnscan-finding-cve">{finding.cwe}</span>}
@@ -322,7 +317,7 @@ const VulnScanner = () => {
                         {categoryLabels[finding.category]}
                       </span>
                     </button>
-                    {isExpanded && unlocked && (
+                    {isExpanded && (
                       <div className="vulnscan-finding-body">
                         <div className="vulnscan-finding-section">
                           <h4><AlertTriangle size={14} /> Description</h4>
@@ -352,11 +347,9 @@ const VulnScanner = () => {
               })}
           </div>
 
-          {unlocked && (
-            <div className="vulnscan-meta">
-              Scanned {scanResult.target} in {scanResult.scanTime}ms
-            </div>
-          )}
+          <div className="vulnscan-meta">
+            Scanned {scanResult.target} in {scanResult.scanTime}ms
+          </div>
 
           <div className="vulnscan-disclaimer">
             <XCircle size={16} />

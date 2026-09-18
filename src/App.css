@@ -337,7 +337,27 @@
 .vulnscan-page { min-height: 100vh; color: #1a1f2e; background: #f4f2ed; }
 .vulnscan-header { height: 76px; display: flex; align-items: center; justify-content: space-between; padding: 0 5vw; border-bottom: 1px solid #d8d4ca; background: rgba(244,242,237,.93); position: sticky; top: 0; z-index: 5; backdrop-filter: blur(15px); }
 .vulnscan-back { display: inline-flex; align-items: center; gap: 8px; color: inherit; font-size: 12px; font-weight: 800; text-decoration: none; }
-.vulnscan-logo { display: inline-flex; align-items: center; gap: 9px; font-size: 18px; font-weight: 800; letter-spacing: -.05em; }
+.vulnscan-header-right { display: flex; align-items: center; gap: 16px; }
+.vulnscan-user { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; background: #fff; border: 1px solid #d8d4ca; border-radius: 6px; font-size: 12px; font-weight: 600; }
+.vulnscan-user span { color: #5a5f6e; }
+.vulnscan-logout { background: none; border: 0; color: #9a9fa8; cursor: pointer; padding: 2px; }
+.vulnscan-logout:hover { color: #b91c1c; }
+.vulnscan-login-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border: 1px solid #d8d4ca; background: #fff; font: 600 12px 'Manrope', sans-serif; cursor: pointer; border-radius: 6px; }
+.vulnscan-login-btn:hover { border-color: #1a1f2e; }
+.vulnscan-cta { margin-top: 16px; display: flex; align-items: center; gap: 12px; font-size: 14px; }
+.vulnscan-subscribe-link { color: #e85e4b; font-weight: 600; text-decoration: none; }
+.vulnscan-subscribe-link:hover { text-decoration: underline; }
+.vulnscan-login-overlay { position: fixed; inset: 0; display: grid; place-items: center; background: rgba(0,0,0,.4); z-index: 100; backdrop-filter: blur(4px); }
+.vulnscan-login-modal { width: 360px; max-width: 90vw; padding: 32px; background: #fff; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,.15); }
+.vulnscan-login-modal h2 { font-size: 20px; margin-bottom: 4px; }
+.vulnscan-login-modal p { color: #5a5f6e; font-size: 13px; margin-bottom: 20px; }
+.vulnscan-login-modal form { display: grid; gap: 10px; }
+.vulnscan-login-modal input { padding: 12px; border: 1px solid #d8d4ca; border-radius: 6px; font-size: 14px; outline: none; }
+.vulnscan-login-modal input:focus { border-color: #1a1f2e; }
+.vulnscan-login-modal button { padding: 12px; border: 0; background: #1a1f2e; color: #fff; font: 700 13px 'Manrope', sans-serif; border-radius: 6px; cursor: pointer; }
+.vulnscan-login-modal button:disabled { opacity: .6; }
+.vulnscan-forgot { display: block; margin-top: 12px; color: #e85e4b; font-size: 12px; text-decoration: none; }
+.vulnscan-forgot:hover { text-decoration: underline; }
 .vulnscan-hero { max-width: 1180px; margin: auto; padding: 80px 5vw 40px; }
 .vulnscan-hero h1 { margin: 0 0 18px; font-size: clamp(46px, 6vw, 74px); line-height: .97; letter-spacing: -.08em; }
 .vulnscan-hero h1 em { color: #e85e4b; font-family: Georgia, serif; font-weight: 400; }

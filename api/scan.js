@@ -2,7 +2,6 @@ import http from 'node:http';
 import https from 'node:https';
 import dns from 'node:dns/promises';
 import { URL } from 'node:url';
-import crypto from 'node:crypto';
 
 const EXPOSED_PATHS = [
   '/.env',
@@ -44,42 +43,9 @@ const DISCLOSURE_HEADERS = [
   'x-generator',
 ];
 
-const AUTH_SECRET = process.env.AUTH_SECRET;
-
-// Verify session token from Authorization header or Cookie
-function verifySession(req) {
-  // Check Authorization header first
-  const authHeader = req.headers.authorization;
-  let token;
-  if (authHeader?.startsWith('Bearer ')) {
-    token = authHeader.slice(7);
-  } else {
-    // Check cookie
-    const cookie = req.headers.cookie?.split(';').find(c => c.trim().startsWith('session='));
-    if (cookie) token = cookie.split('=').slice(1).join('=').trim();
-  }
-
-  if (!token) return null;
-
-  try {
-    const [header, body, sig] = token.split('.');
-    if (!header || !body || !sig) return null;
-
-    const expectedSig = crypto.createHmac('sha256', AUTH_SECRET).update(`${header}.${body}`).digest('base64url');
-    if (sig !== expectedSig) return null;
-
-    const payload = JSON.parse(Buffer.from(body, 'base64url').toString());
-    if (payload.exp < Date.now()) return null;
-
-    return payload;
-  } catch {
-    return null;
-  }
-}
-
-// Rate limiting
+// Simple in-memory rate limiting per IP
 const scanHistory = new Map();
-const MAX_SCANS_PER_HOUR = 20;
+const MAX_SCANS_PER_HOUR = 10;
 const HOUR_MS = 60 * 60 * 1000;
 
 function checkRateLimit(ip) {
@@ -507,10 +473,9 @@ async function scanTarget(inputUrl) {
 }
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', process.env.ALLOWED_ORIGIN || '*');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
 
   if (req.method === 'OPTIONS') {
     return res.status(204).end();
@@ -520,32 +485,21 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // 1. Verify authentication
-  const session = verifySession(req);
-  if (!session) {
-    return res.status(401).json({ error: 'Authentication required. Please log in.' });
-  }
-
-  // 2. Check membership
-  if (!session.membershipActive) {
-    return res.status(403).json({ error: 'Active membership required. Please subscribe to scan.' });
-  }
-
   const { url } = req.body || {};
   if (!url || typeof url !== 'string') {
     return res.status(400).json({ error: 'URL is required' });
   }
 
-  // Validate not localhost
-  const targetUrl = url.trim().toLowerCase();
-  if (targetUrl.includes('localhost') || targetUrl.includes('127.0.0.1') || targetUrl.includes('192.168.') || targetUrl.includes('10.')) {
-    return res.status(400).json({ error: 'Scanning internal/localhost URLs is not allowed' });
-  }
-
-  // 3. Rate limit
+  // Rate limit
   const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.headers['x-real-ip'] || 'unknown';
   if (!checkRateLimit(ip)) {
     return res.status(429).json({ error: 'Rate limit exceeded. Try again later.' });
+  }
+
+  // Block internal/localhost
+  const targetUrl = url.trim().toLowerCase();
+  if (targetUrl.includes('localhost') || targetUrl.includes('127.0.0.1') || targetUrl.includes('192.168.') || targetUrl.includes('10.')) {
+    return res.status(400).json({ error: 'Scanning internal/localhost URLs is not allowed' });
   }
 
   try {

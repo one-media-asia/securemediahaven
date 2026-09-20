@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { ArrowLeft, ArrowRight, BookOpen, Check, Clock3, CreditCard, FileText, Lock, Search, Sparkles, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { paymentUrl } from '@/lib/payment';
 
 type Resource = {
   title: string;
@@ -35,7 +36,7 @@ const LearnKit = () => {
     const matchesQuery = !query || `${resource.title} ${resource.topic} ${resource.type}`.toLowerCase().includes(query.toLowerCase());
     return matchesTopic && matchesQuery;
   }), [topic, query]);
-  const checkoutUrl = '/api/all-access-checkout';
+  const checkoutUrl = paymentUrl;
   const openMembership = () => setMembershipOpen(true);
   const openResource = (resource: Resource) => resource.preview ? setSelectedResource(resource) : openMembership();
 

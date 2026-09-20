@@ -1,10 +1,11 @@
 import { AlertTriangle, Check, Ear, Eye, LockKeyhole, Phone, ShieldAlert, ShieldCheck } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { paymentUrl } from '@/lib/payment';
 
 const VoicePhishingAwareness = () => {
   const [hasAccess] = useState(() => sessionStorage.getItem('all-access-paid') === 'true');
-  const checkoutUrl = '/api/all-access-checkout';
+  const checkoutUrl = paymentUrl;
   const openExternalTool = () => {
     if (!hasAccess) {
       if (checkoutUrl) window.location.assign(checkoutUrl);

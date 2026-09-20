@@ -1,6 +1,7 @@
 import { Check, CirclePlay, Eye, LockKeyhole, Pause, ShieldAlert, ShieldCheck, Volume2 } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { paymentUrl } from '@/lib/payment';
 
 type Scenario = { title: string; context: string; color: string; cue: string };
 
@@ -15,7 +16,7 @@ const DeepfakeAwareness = () => {
   const [playing, setPlaying] = useState(false);
   const [hasAccess, setHasAccess] = useState(() => sessionStorage.getItem('all-access-paid') === 'true');
   const scenario = scenarios[selected];
-  const checkoutUrl = '/api/all-access-checkout';
+  const checkoutUrl = paymentUrl;
   const openExternalTool = () => {
     if (!hasAccess) {
       if (checkoutUrl) window.location.assign(checkoutUrl);

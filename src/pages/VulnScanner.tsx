@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Search, Shield, AlertTriangle, Bug, CheckCircle, XCircle, Loader2, Lock, Eye, Globe, FileCode, CreditCard, Crosshair, Wrench } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { trackToolUsage } from '@/lib/clickTracking';
+import { paymentUrl } from '@/lib/payment';
 
 type VulnCategory = 'critical' | 'high' | 'medium' | 'low' | 'info';
 
@@ -189,21 +190,7 @@ const VulnScanner = () => {
   };
 
   async function handleCheckout() {
-    setError('');
-    try {
-      const res = await fetch('/api/stripe-checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-      });
-      const data = await res.json();
-      if (data.url) {
-        window.location.assign(data.url);
-      } else {
-        setError(data.error || 'Failed to start checkout');
-      }
-    } catch {
-      setError('Could not connect to payment service');
-    }
+    window.location.assign(paymentUrl);
   }
 
   async function handleOwnerUnlock() {

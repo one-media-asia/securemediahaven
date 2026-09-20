@@ -23,6 +23,7 @@ import Success from "./pages/Success";
 import HostingSuccess from "./pages/HostingSuccess";
 import NotFound from "./pages/NotFound";
 import Admin from "./pages/Admin";
+import Contact from "./pages/Contact";
 import { startClickTracking } from "./lib/clickTracking";
 
 const queryClient = new QueryClient();
@@ -54,6 +55,7 @@ const App = () => {
             <Route path="/success" element={<Success />} />
             <Route path="/hosting/success" element={<HostingSuccess />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/contact" element={<Contact />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

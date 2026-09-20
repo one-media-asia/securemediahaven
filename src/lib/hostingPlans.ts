@@ -20,7 +20,7 @@ export const hostingPlans: HostingPlan[] = [
     description: 'Launch a managed hosting slot for lawful, privacy-first projects and early testing.',
     color: 'coral',
     badge: 'Launch',
-    stripeUrl: import.meta.env.VITE_STRIPE_LAUNCH_HOSTING_URL,
+    stripeUrl: 'https://buy.stripe.com/00w3cvdBS2K6gRe1PN7EQ0b',
     features: ['1 starter site', 'Tor-ready setup guidance', 'Basic monitoring', 'Support onboarding', 'Monthly billing'],
   },
   {

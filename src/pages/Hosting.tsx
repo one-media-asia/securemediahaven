@@ -1,7 +1,6 @@
 import { FormEvent, useMemo, useState } from 'react';
 import { ArrowRight, Check, ChevronDown, LayoutGrid, Menu, MessageCircle, Search, ShoppingBag, Sparkles, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { paymentUrl } from '@/lib/payment';
 import { hostingPlans } from '@/lib/hostingPlans';
 
 type Category = 'All' | 'Launch' | 'VPN';
@@ -23,7 +22,7 @@ const Hosting = () => {
     return matchesCategory && matchesQuery;
   }), [category, query]);
   const purchasePlan = (stripeUrl?: string) => {
-    if (stripeUrl) { window.location.assign(paymentUrl); return; }
+    if (stripeUrl) { window.location.assign(stripeUrl); return; }
     window.location.href = 'mailto:support@tingi.host?subject=Free%20hosting%20request';
   };
   const submitLead = async (event: FormEvent) => {

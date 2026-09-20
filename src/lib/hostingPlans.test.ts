@@ -21,7 +21,7 @@ describe('hostingPlans', () => {
 
     expect(launchPlan?.price).toBe('$12');
     expect(launchPlan?.period).toBe('/ month');
-    expect(launchPlan?.stripeUrl).toBe('https://buy.stripe.com/8x2eVd8hyacyeJ61PN7EQ0c');
+    expect(launchPlan?.stripeUrl).toBe('https://buy.stripe.com/00w3cvdBS2K6gRe1PN7EQ0b');
   });
 
   it('includes a separate VPN product', () => {

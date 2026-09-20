@@ -1,6 +1,6 @@
 type Request = {
   method?: string;
-  body?: { email?: unknown; consent?: unknown };
+  body?: unknown;
 };
 
 type Response = {
@@ -10,6 +10,18 @@ type Response = {
 };
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const parseBody = (body: unknown) => {
+  if (typeof body === 'string') {
+    try {
+      return JSON.parse(body);
+    } catch {
+      return {};
+    }
+  }
+
+  return body && typeof body === 'object' ? body : {};
+};
 
 export default async function handler(request: Request, response: Response) {
   response.setHeader('Access-Control-Allow-Origin', process.env.ALLOWED_ORIGIN || 'https://phish.onemedia.asia');
@@ -26,8 +38,9 @@ export default async function handler(request: Request, response: Response) {
     return;
   }
 
-  const email = typeof request.body?.email === 'string' ? request.body.email.trim().toLowerCase() : '';
-  const consent = request.body?.consent === true;
+  const payload = parseBody(request.body);
+  const email = typeof payload?.email === 'string' ? payload.email.trim().toLowerCase() : '';
+  const consent = payload && typeof payload === 'object' && 'consent' in payload ? payload.consent === true : false;
   const apiKey = process.env.RESEND_API_KEY;
   const fromEmail = process.env.RESEND_FROM_EMAIL;
   const fromName = process.env.RESEND_FROM_NAME || 'appfolk Security';

@@ -263,7 +263,7 @@ const VulnScanner = () => {
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && startScan()}
-              placeholder="Enter URL to scan (e.g., https://example.com)"
+              placeholder="Enter a domain to scan (e.g., example.com)"
               spellCheck={false}
               autoComplete="off"
             />
@@ -276,6 +276,7 @@ const VulnScanner = () => {
             {scanning ? <><Loader2 size={16} className="spin" /> Scanning...</> : <><Shield size={16} /> Scan</>}
           </button>
         </div>
+        <p className="vulnscan-input-help">Enter a domain like example.com. You do not need to type https://</p>
         {error && <div className="vulnscan-error">{error}</div>}
         {requiresPayment && paymentPrompt}
       </section>

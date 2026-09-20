@@ -44,6 +44,7 @@ export default async function handler(request: Request, response: Response) {
   const apiKey = process.env.RESEND_API_KEY;
   const fromEmail = process.env.RESEND_FROM_EMAIL;
   const fromName = process.env.RESEND_FROM_NAME || 'appfolk Security';
+  const adminEmail = process.env.RESEND_ADMIN_EMAIL || process.env.RESEND_FROM_EMAIL;
 
   if (!emailPattern.test(email) || email.length > 254 || !consent) {
     response.status(400).json({ error: 'Enter a valid email address' });
@@ -56,6 +57,11 @@ export default async function handler(request: Request, response: Response) {
   }
 
   try {
+    const recipients = [email];
+    if (adminEmail && adminEmail !== email) {
+      recipients.push(adminEmail);
+    }
+
     const resendResponse = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
@@ -64,7 +70,7 @@ export default async function handler(request: Request, response: Response) {
       },
       body: JSON.stringify({
         from: `${fromName} <${fromEmail}>`,
-        to: [email],
+        to: recipients,
         subject: 'Your appfolk practical security updates',
         text: 'Thanks for joining appfolk updates. You will receive occasional security checks, useful tools, and new member drops. Reply to this email to unsubscribe.',
       }),

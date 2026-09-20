@@ -121,14 +121,21 @@ const VulnScanner = () => {
     setScanning(true);
     setExpanded([]);
 
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), 45000);
+
     try {
       const res = await fetch('/api/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url: formattedUrl }),
+        signal: controller.signal,
       });
 
-      const data = await res.json();
+      const contentType = res.headers.get('content-type') || '';
+      const data = contentType.includes('application/json')
+        ? await res.json()
+        : { error: 'The scanning service returned an invalid response. Please try again.' };
 
       if (!res.ok) {
         if (res.status === 402) {
@@ -150,9 +157,13 @@ const VulnScanner = () => {
       const newCount = scanCount + 1;
       setScanCount(newCount);
       localStorage.setItem('vulnscan_count', newCount.toString());
-    } catch {
-      setError('Could not connect to scanning service');
+    } catch (scanError) {
+      setError(scanError instanceof DOMException && scanError.name === 'AbortError'
+        ? 'The scan took too long. Please try again.'
+        : 'Could not connect to scanning service');
       setScanning(false);
+    } finally {
+      window.clearTimeout(timeoutId);
     }
   };
 

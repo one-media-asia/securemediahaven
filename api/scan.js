@@ -95,7 +95,7 @@ function fetchUrl(targetUrl, redirectCount = 0) {
           'User-Agent': 'VulnScan-Passive-Scanner/1.0 (+https://onemedia.asia)',
           Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
         },
-        timeout: 15000,
+        timeout: 8000,
         rejectUnauthorized: false,
       },
       (res) => {

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Search, Shield, AlertTriangle, Bug, CheckCircle, XCircle, Loader2, Lock, Eye, Globe, FileCode, CreditCard, Crosshair, Wrench } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { trackToolUsage } from '@/lib/clickTracking';
 
 type VulnCategory = 'critical' | 'high' | 'medium' | 'low' | 'info';
 
@@ -120,6 +121,7 @@ const VulnScanner = () => {
 
       setScanResult(data);
       setScanning(false);
+      trackToolUsage('VulnScan', new URL(formattedUrl).hostname);
 
       // Increment scan count
       const newCount = scanCount + 1;

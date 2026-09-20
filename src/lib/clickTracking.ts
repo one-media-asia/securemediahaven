@@ -4,6 +4,8 @@ export type ClickEvent = {
   target: string;
   page: string;
   timestamp: string;
+  kind?: 'click' | 'tool';
+  tool?: string;
 };
 
 const storageKey = 'securemediahaven-click-events';
@@ -30,6 +32,22 @@ const saveEvents = (events: ClickEvent[]) => {
 
 export const getClickEvents = () => readEvents();
 
+export const trackToolUsage = (tool: string, detail: string) => {
+  if (typeof window === 'undefined') return;
+
+  const usageEvent: ClickEvent = {
+    id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    label: `${tool} completed`,
+    target: detail,
+    page: window.location.pathname,
+    timestamp: new Date().toISOString(),
+    kind: 'tool',
+    tool,
+  };
+
+  saveEvents([usageEvent, ...readEvents()]);
+};
+
 export const startClickTracking = () => {
   if (typeof document === 'undefined') return () => undefined;
 
@@ -45,6 +63,7 @@ export const startClickTracking = () => {
       target: href || element.tagName.toLowerCase(),
       page: window.location.pathname,
       timestamp: new Date().toISOString(),
+      kind: 'click',
     };
 
     saveEvents([nextEvent, ...readEvents()]);

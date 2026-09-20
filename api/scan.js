@@ -549,6 +549,12 @@ export default async function handler(req, res) {
 
   try {
     const results = await scanTarget(url);
+    console.log(JSON.stringify({
+      event: 'tool_used',
+      tool: 'VulnScan',
+      hostname: new URL(url).hostname,
+      timestamp: new Date().toISOString(),
+    }));
     return res.status(200).json(results);
   } catch (err) {
     return res.status(500).json({ error: err.message || 'Scan failed' });

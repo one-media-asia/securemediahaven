@@ -15,7 +15,7 @@ const DeepfakeAwareness = () => {
   const [playing, setPlaying] = useState(false);
   const [hasAccess, setHasAccess] = useState(() => sessionStorage.getItem('all-access-paid') === 'true');
   const scenario = scenarios[selected];
-  const checkoutUrl = import.meta.env.VITE_STRIPE_ALL_ACCESS_URL || import.meta.env.VITE_STRIPE_LEARNKIT_URL;
+  const checkoutUrl = '/api/all-access-checkout';
   const openExternalTool = () => {
     if (!hasAccess) {
       if (checkoutUrl) window.location.assign(checkoutUrl);

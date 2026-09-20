@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 const VoicePhishingAwareness = () => {
   const [hasAccess] = useState(() => sessionStorage.getItem('all-access-paid') === 'true');
-  const checkoutUrl = import.meta.env.VITE_STRIPE_ALL_ACCESS_URL || import.meta.env.VITE_STRIPE_LEARNKIT_URL;
+  const checkoutUrl = '/api/all-access-checkout';
   const openExternalTool = () => {
     if (!hasAccess) {
       if (checkoutUrl) window.location.assign(checkoutUrl);

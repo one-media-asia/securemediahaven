@@ -27,6 +27,7 @@ export default async function handler(req, res) {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
 
     if (session.payment_status === 'paid') {
+      res.setHeader('Set-Cookie', `vulnscan_paid=1; Path=/; HttpOnly; SameSite=Lax; ${process.env.NODE_ENV === 'production' ? 'Secure; ' : ''}Max-Age=31536000`);
       return res.status(200).json({
         valid: true,
       });

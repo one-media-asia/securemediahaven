@@ -48,6 +48,16 @@ const scanHistory = new Map();
 const MAX_SCANS_PER_HOUR = 10;
 const HOUR_MS = 60 * 60 * 1000;
 
+function getCookie(req, name) {
+  const cookies = req.headers.cookie || '';
+  const entry = cookies.split(';').map((part) => part.trim()).find((part) => part.startsWith(`${name}=`));
+  return entry ? decodeURIComponent(entry.slice(name.length + 1)) : null;
+}
+
+function setCookie(res, name, value) {
+  res.setHeader('Set-Cookie', `${name}=${encodeURIComponent(value)}; Path=/; HttpOnly; SameSite=Lax; ${process.env.NODE_ENV === 'production' ? 'Secure; ' : ''}Max-Age=31536000`);
+}
+
 function checkRateLimit(ip) {
   const now = Date.now();
   const record = scanHistory.get(ip);
@@ -547,11 +557,19 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Scanning internal/localhost URLs is not allowed' });
   }
 
+  const isPaid = getCookie(req, 'vulnscan_paid') === '1';
+  const hasUsedFreeScan = getCookie(req, 'vulnscan_free_used') === '1';
+  if (!isPaid && hasUsedFreeScan) {
+    return res.status(402).json({ error: 'Your free scan has been used. Payment is required for another scan.', requiresPayment: true });
+  }
+
   try {
     const results = await scanTarget(url);
+    if (!isPaid) setCookie(res, 'vulnscan_free_used', '1');
     console.log(JSON.stringify({
       event: 'tool_used',
       tool: 'VulnScan',
+      access: isPaid ? 'paid' : 'free',
       hostname: new URL(url).hostname,
       timestamp: new Date().toISOString(),
     }));

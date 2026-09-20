@@ -71,17 +71,33 @@ const VulnScanner = () => {
     return stored ? parseInt(stored, 10) : 0;
   });
   const [paymentStatus, setPaymentStatus] = useState<'idle' | 'verifying' | 'success'>('idle');
+  const [requiresPayment, setRequiresPayment] = useState(false);
 
   const hasFreeScan = scanCount === 0;
 
   // Check for successful payment
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get('payment') === 'success') {
-      setScanCount(0);
-      localStorage.removeItem('vulnscan_count');
-      // Clear the URL
-      window.history.replaceState({}, '', '/vuln-scan');
+    const sessionId = params.get('session_id');
+    if (params.get('payment') === 'success' && sessionId) {
+      setPaymentStatus('verifying');
+      fetch('/api/verify-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ sessionId }),
+      }).then((response) => response.json()).then((data) => {
+        if (data.valid) {
+          setPaymentStatus('success');
+          setRequiresPayment(false);
+          setScanCount(0);
+          localStorage.removeItem('vulnscan_count');
+        } else {
+          setError('Payment could not be verified. Please contact support.');
+        }
+      }).catch(() => setError('Could not verify payment. Please try again.')).finally(() => {
+        window.history.replaceState({}, '', '/vuln-scan');
+      });
     }
   }, []);
 
@@ -114,6 +130,11 @@ const VulnScanner = () => {
       const data = await res.json();
 
       if (!res.ok) {
+        if (res.status === 402) {
+          setRequiresPayment(true);
+          setScanCount(1);
+          localStorage.setItem('vulnscan_count', '1');
+        }
         setError(data.error || 'Scan failed');
         setScanning(false);
         return;
@@ -121,6 +142,7 @@ const VulnScanner = () => {
 
       setScanResult(data);
       setScanning(false);
+      setRequiresPayment(false);
       trackToolUsage('VulnScan', new URL(formattedUrl).hostname);
 
       // Increment scan count
@@ -132,6 +154,19 @@ const VulnScanner = () => {
       setScanning(false);
     }
   };
+
+  const paymentPrompt = (requiresPayment || !hasFreeScan) && (
+    <div className="vulnscan-paywall">
+      <CreditCard size={20} />
+      <div className="vulnscan-paywall-text">
+        <strong>Want to scan another site?</strong>
+        <span>One-time payment unlocks unlimited scans.</span>
+      </div>
+      <button className="vulnscan-unlock-btn" onClick={handleCheckout} disabled={paymentStatus === 'verifying'}>
+        <CreditCard size={16} /> {paymentStatus === 'verifying' ? 'Verifying...' : 'Pay $19.99'}
+      </button>
+    </div>
+  );
 
   const startScan = () => {
     if (!url.trim()) {
@@ -209,6 +244,7 @@ const VulnScanner = () => {
           </button>
         </div>
         {error && <div className="vulnscan-error">{error}</div>}
+        {requiresPayment && paymentPrompt}
       </section>
 
       {scanning && (
@@ -332,18 +368,7 @@ const VulnScanner = () => {
           </div>
 
           {/* Paywall for subsequent scans */}
-          {!hasFreeScan && (
-            <div className="vulnscan-paywall">
-              <CreditCard size={20} />
-              <div className="vulnscan-paywall-text">
-                <strong>Want to scan another site?</strong>
-                <span>One-time payment unlocks unlimited scans for this browser.</span>
-              </div>
-              <button className="vulnscan-unlock-btn" onClick={handleCheckout}>
-                <CreditCard size={16} /> Pay $19.99
-              </button>
-            </div>
-          )}
+          {!hasFreeScan && paymentPrompt}
 
           <div className="vulnscan-disclaimer">
             <XCircle size={16} />

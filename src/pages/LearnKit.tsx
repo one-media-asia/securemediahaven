@@ -66,7 +66,7 @@ const LearnKit = () => {
       </section>
 
       <section className="learnkit-embedded">
-        <div className="learnkit-embedded-heading"><div><p className="eyebrow">Live repository</p><h2>LearnKit, <em>inside.</em></h2></div><p>Browse the live LearnKit repository without leaving this page.</p></div>
+        <div className="learnkit-embedded-heading"><div><p className="eyebrow">Live repository</p><h2>LearnKit, <em>inside.</em></h2></div><div className="learnkit-embedded-note"><p>Browse the live LearnKit repository without leaving this page.</p><a href="https://learn.onemedia.asia" target="_blank" rel="noreferrer">Open LearnKit directly <ArrowRight size={14} /></a></div></div>
         <div className="learnkit-embedded-frame"><iframe src="https://learn.onemedia.asia" title="LearnKit live repository" loading="lazy" /></div>
       </section>
 

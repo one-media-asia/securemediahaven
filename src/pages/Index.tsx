@@ -91,7 +91,7 @@ const Index = () => {
     <div className="announcement"><Sparkles size={13} /> Apps, labs, plugins, and cyber learning <ArrowRight size={13} /></div>
     <header className="store-header">
       <a className="brand" href="#top"><span className="brand-mark">A</span>appfolk</a>
-      <nav className={menuOpen ? 'main-nav open' : 'main-nav'}><a href="#shop" onClick={() => setMenuOpen(false)}>Explore apps</a><Link to="/hosting" onClick={() => setMenuOpen(false)}>Hosting</Link><a href="#why" onClick={() => setMenuOpen(false)}>Our approach</a><a href="#support" onClick={() => setMenuOpen(false)}>Stay in the loop</a></nav>
+      <nav className={menuOpen ? 'main-nav open' : 'main-nav'}><a href="#shop" onClick={() => setMenuOpen(false)}>Explore apps</a><Link to="/hosting" onClick={() => setMenuOpen(false)}>Hosting</Link><a href="#why" onClick={() => setMenuOpen(false)}>Our approach</a><a href="#support" onClick={() => setMenuOpen(false)}>Stay in the loop</a><Link to="/contact" onClick={() => setMenuOpen(false)}>Contact</Link></nav>
       <div className="header-actions"><button className="icon-button" aria-label="Focus search" onClick={() => document.getElementById('search')?.focus()}><Search size={18} /></button><button className="bag-button" onClick={addToCart}><ShoppingBag size={17} /><span>Cart ({cart})</span></button><button className="menu-button" aria-label="Toggle menu" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X size={20} /> : <Menu size={20} />}</button></div>
     </header>
 

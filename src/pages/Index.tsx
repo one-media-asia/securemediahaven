@@ -57,7 +57,7 @@ const Index = () => {
     const matchesCategory = category === 'All' || product.category === category;
     const matchesQuery = !query || `${product.name} ${product.category}`.toLowerCase().includes(query.toLowerCase());
     return matchesCategory && matchesQuery;
-  }), [category, query]);
+  }).map((product) => ({ ...product, period: ' one time' })), [category, query]);
 
   const addToCart = () => setCart((count) => count + 1);
   const purchaseProduct = (stripeUrl?: string) => {

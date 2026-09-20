@@ -165,6 +165,7 @@ const VulnScanner = () => {
       <button className="vulnscan-unlock-btn" onClick={handleCheckout} disabled={paymentStatus === 'verifying'}>
         <CreditCard size={16} /> {paymentStatus === 'verifying' ? 'Verifying...' : 'Pay $19.99'}
       </button>
+      <button className="vulnscan-owner-btn" onClick={handleOwnerUnlock}>Owner access</button>
     </div>
   );
 
@@ -202,6 +203,33 @@ const VulnScanner = () => {
       }
     } catch {
       setError('Could not connect to payment service');
+    }
+  }
+
+  async function handleOwnerUnlock() {
+    const key = window.prompt('Enter your owner access key');
+    if (!key) return;
+
+    setError('');
+    try {
+      const response = await fetch('/api/admin-unlock', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ key }),
+      });
+      const data = await response.json();
+      if (!response.ok || !data.valid) {
+        setError(data.error || 'Owner access denied');
+        return;
+      }
+
+      setPaymentStatus('success');
+      setRequiresPayment(false);
+      setScanCount(0);
+      localStorage.removeItem('vulnscan_count');
+    } catch {
+      setError('Could not verify owner access');
     }
   }
 

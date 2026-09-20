@@ -187,7 +187,7 @@ const VulnScanner = () => {
     );
   };
 
-  const handleCheckout = async () => {
+  async function handleCheckout() {
     setError('');
     try {
       const res = await fetch('/api/stripe-checkout', {
@@ -203,7 +203,7 @@ const VulnScanner = () => {
     } catch {
       setError('Could not connect to payment service');
     }
-  };
+  }
 
   return (
     <main className="vulnscan-page">

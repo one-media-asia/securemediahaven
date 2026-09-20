@@ -1,7 +1,7 @@
 import { ArrowLeft, ArrowUpRight, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const contactEmail = 'contact!@onenedia.asia';
+const contactEmail = 'contact@onemedia.asia';
 
 const Contact = () => (
   <main className="contact-page">

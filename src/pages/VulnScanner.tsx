@@ -122,7 +122,7 @@ const VulnScanner = () => {
     setExpanded([]);
 
     const controller = new AbortController();
-    const timeoutId = window.setTimeout(() => controller.abort(), 45000);
+    const timeoutId = window.setTimeout(() => controller.abort(), 10000);
 
     try {
       const res = await fetch('/api/scan', {
@@ -135,7 +135,9 @@ const VulnScanner = () => {
       const contentType = res.headers.get('content-type') || '';
       const data = contentType.includes('application/json')
         ? await res.json()
-        : { error: 'The scanning service returned an invalid response. Please try again.' };
+        : { error: res.status === 429
+          ? 'The scanning service is protected by a security checkpoint on this domain. Please try again later or use another deployment.'
+          : 'The scanning service returned an invalid response. Please try again.' };
 
       if (!res.ok) {
         if (res.status === 402) {

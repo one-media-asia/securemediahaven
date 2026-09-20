@@ -330,6 +330,7 @@ const VulnScanner = () => {
           </div>
 
           <div className="vulnscan-findings">
+            <p className="vulnscan-findings-help">Click a scan result to see how to fix it and how a bad actor would see it.</p>
             {scanResult.findings
               .sort((a, b) => {
                 const order: Record<VulnCategory, number> = { critical: 0, high: 1, medium: 2, low: 3, info: 4 };

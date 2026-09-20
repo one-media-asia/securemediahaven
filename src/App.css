@@ -456,6 +456,7 @@
 .vulnscan-unlock-btn:hover { background: #d14a3a; }
 .vulnscan-owner-btn { padding: 8px 0; border: 0; color: #75827f; background: transparent; font: 9px 'DM Mono', monospace; cursor: pointer; white-space: nowrap; }.vulnscan-owner-btn:hover { color: #263b39; text-decoration: underline; }
 .vulnscan-input-help { margin: 10px 0 0; color: #81908b; font: 10px 'DM Mono', monospace; }
+.vulnscan-findings-help { margin: 0 0 14px; color: #81908b; font: 10px 'DM Mono', monospace; }
 .vulnscan-unlock.verifying { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
 .vulnscan-unlock.success { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
 .vulnscan-finding.locked .vulnscan-finding-head { cursor: default; }

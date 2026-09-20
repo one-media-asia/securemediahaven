@@ -164,7 +164,7 @@ const VulnScanner = () => {
         <span>One-time payment unlocks unlimited scans.</span>
       </div>
       <button className="vulnscan-unlock-btn" onClick={handleCheckout} disabled={paymentStatus === 'verifying'}>
-        <CreditCard size={16} /> {paymentStatus === 'verifying' ? 'Verifying...' : 'Pay $19.99'}
+        <CreditCard size={16} /> {paymentStatus === 'verifying' ? 'Verifying...' : 'Pay $12 one time'}
       </button>
       <button className="vulnscan-owner-btn" onClick={handleOwnerUnlock}>Owner access</button>
     </div>

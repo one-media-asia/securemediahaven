@@ -1,1 +1,1 @@
-export const paymentUrl = 'https://payments.onemedia.asia/c/pay/cs_live_a1BkTayKovINH5IYsPLS4HCtHVO6P8FaBzCq9Ij7kSYsD9Yjbb7vjU1iJ9#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdicyc%2FNSknZHVsTmB8Jz8ndW5aaWxzYFowNFFLYlFzTWNJcEB4cklsXUtuNUZUaDJXR1RUd3BXbERxR0B2UmNrT3NBS0ZXQzB%2Fcm9HPDN3RktRVEhKd0ZNRG5jb1RhajNOcEJ0ZF9VXH1nYHFCXXRfdTU1bkByMFc1ZHQnKSdjd2poVmB3c2B3Jz9xd3BgeCUl';
+export const paymentUrl = '/api/all-access-checkout';

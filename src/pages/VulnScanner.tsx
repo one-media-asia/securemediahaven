@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Search, Shield, AlertTriangle, Bug, CheckCircle, XCircle, Loader2, Lock, Eye, Globe, FileCode, CreditCard, Crosshair, Wrench } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import { trackToolUsage } from '@/lib/clickTracking';
 import { paymentUrl } from '@/lib/payment';
 
@@ -236,10 +235,10 @@ const VulnScanner = () => {
   return (
     <main className="vulnscan-page">
       <header className="vulnscan-header">
-        <Link className="vulnscan-back" to="/">
+        <a className="vulnscan-back" href="https://onemedia.asia">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
           appfolk
-        </Link>
+        </a>
         <div className="vulnscan-logo">
           <Shield size={18} /> VulnScan
         </div>

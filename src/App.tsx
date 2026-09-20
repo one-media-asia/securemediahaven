@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
 import { AuthProvider } from "./context/AuthContext";
 import Index from "./pages/Index";
 import Hosting from "./pages/Hosting";
@@ -21,12 +22,16 @@ import VaultlineSignup from "./pages/VaultlineSignup";
 import Success from "./pages/Success";
 import HostingSuccess from "./pages/HostingSuccess";
 import NotFound from "./pages/NotFound";
+import Admin from "./pages/Admin";
+import { startClickTracking } from "./lib/clickTracking";
 
 const queryClient = new QueryClient();
 const isHostingSubdomain = typeof window !== "undefined" && window.location.hostname.startsWith("hosting.");
 
-const App = () => (
-  <AuthProvider>
+const App = () => {
+  useEffect(() => startClickTracking(), []);
+
+  return <AuthProvider>
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
@@ -48,13 +53,14 @@ const App = () => (
             <Route path="/vaultline/signup" element={<VaultlineSignup />} />
             <Route path="/success" element={<Success />} />
             <Route path="/hosting/success" element={<HostingSuccess />} />
+            <Route path="/admin" element={<Admin />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
-  </AuthProvider>
-);
+  </AuthProvider>;
+};
 
 export default App;

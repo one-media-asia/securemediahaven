@@ -173,6 +173,11 @@ const VulnScanner = () => {
       setError('Please enter a URL to scan');
       return;
     }
+    if (!hasFreeScan && paymentStatus !== 'success') {
+      setRequiresPayment(true);
+      setError('Your free scan has been used. Pay to scan another site.');
+      return;
+    }
     runScan(url);
   };
 
@@ -238,7 +243,7 @@ const VulnScanner = () => {
           <button
             className="vulnscan-scan-btn"
             onClick={startScan}
-            disabled={scanning || !url.trim()}
+            disabled={scanning || !url.trim() || (!hasFreeScan && paymentStatus !== 'success')}
           >
             {scanning ? <><Loader2 size={16} className="spin" /> Scanning...</> : <><Shield size={16} /> Scan</>}
           </button>

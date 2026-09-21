@@ -5,7 +5,7 @@ import { paymentUrl } from '@/lib/payment';
 
 const VoicePhishingAwareness = () => {
   const [hasAccess] = useState(() => sessionStorage.getItem('all-access-paid') === 'true');
-  const checkoutUrl = paymentUrl;
+  const checkoutUrl = hasAccess ? paymentUrl : 'https://learn.onemedia.asia';
   const openExternalTool = () => {
     if (!hasAccess) {
       if (checkoutUrl) window.location.assign(checkoutUrl);
@@ -36,7 +36,7 @@ const VoicePhishingAwareness = () => {
 
       <section className="voice-phish-scenario"><div><p className="eyebrow">Fictional call scenario</p><h2>“I need you to<br /><em>keep this quiet.”</em></h2><p>A caller claims to be a colleague and asks you to bypass the normal approval process. The voice sounds right. The request does not.</p></div><div className="voice-phish-call-card"><div><Phone size={17} /><span>Unknown caller</span><small>00:18</small></div><blockquote>“Please do this now and don't mention it to the team. I'll explain later.”</blockquote><div className="voice-phish-call-actions"><button type="button"><Phone size={15} /> End the call</button><button type="button"><Check size={15} /> Verify separately</button></div></div></section>
 
-      <section className="voice-phish-external"><div><p className="eyebrow">Member resource</p><h2>Explore the original<br /><em>voice phishing experience.</em></h2><p>Adaptive Security hosts an external voice-phishing simulation. It may request voice or personal information, so review its privacy terms before continuing.</p></div><button type="button" onClick={openExternalTool} className="voice-phish-external-link">{hasAccess ? 'Open Adaptive Security' : checkoutUrl ? 'Unlock with All Access' : 'Checkout unavailable'} <Eye size={16} /></button></section>
+      <section className="voice-phish-external"><div><p className="eyebrow">Member resource</p><h2>Explore the original<br /><em>voice phishing experience.</em></h2><p>Adaptive Security hosts an external voice-phishing simulation. It may request voice or personal information, so review its privacy terms before continuing.</p></div><button type="button" onClick={openExternalTool} className="voice-phish-external-link">{hasAccess ? 'Open Adaptive Security' : 'Buy All Access on LearnKit'} <Eye size={16} /></button></section>
 
       <footer className="voice-phish-footer"><span>Voice Reality Check by appfolk</span><Link to="/">Back to appfolk</Link></footer>
     </main>

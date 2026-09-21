@@ -5,7 +5,7 @@ import { paymentUrl } from '@/lib/payment';
 
 const VoicePhishingAwareness = () => {
   const [hasAccess] = useState(() => sessionStorage.getItem('all-access-paid') === 'true');
-  const checkoutUrl = hasAccess ? paymentUrl : 'https://learn.onemedia.asia';
+  const checkoutUrl = paymentUrl;
   const openExternalTool = () => {
     if (!hasAccess) {
       if (checkoutUrl) window.location.assign(checkoutUrl);

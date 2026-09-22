@@ -131,6 +131,12 @@ const VulnScanner = () => {
         signal: controller.signal,
       });
 
+      if (res.status === 403 || res.status === 405) {
+        setError('The scanning service is protected by a security checkpoint. This deployment cannot scan right now.');
+        setScanning(false);
+        return;
+      }
+
       const contentType = res.headers.get('content-type') || '';
       const data = contentType.includes('application/json')
         ? await res.json()
@@ -276,6 +282,9 @@ const VulnScanner = () => {
           </button>
         </div>
         <p className="vulnscan-input-help">Enter a domain like example.com. You do not need to type https://</p>
+        <button className="vulnscan-sample-btn" onClick={() => runScan('https://scanme.nmap.org')}>
+          <Globe size={14} /> Try sample: scanme.nmap.org
+        </button>
         {error && <div className="vulnscan-error">{error}</div>}
         {requiresPayment && paymentPrompt}
       </section>

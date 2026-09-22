@@ -1,4 +1,4 @@
-import { Send, Shield, Loader2, Lock, Bot } from 'lucide-react';
+import { Send, Shield, Loader2, Lock, Bot, Globe } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -74,6 +74,23 @@ const CyberAgent = () => {
 
   const checkoutUrl = '/api/cyberagent-checkout';
 
+  const samplePrompt = `Write a simple Python port scanner that:
+1. Takes a host and port range as arguments
+2. Uses socket connections to check if ports are open
+3. Shows which ports are open with their common service names
+4. Includes a short explanation of how it works and what each part does
+
+Keep it clear and educational — someone learning security should be able to follow it.`;
+
+  const sendSample = () => {
+    if (streaming || !hasAccess) return;
+    setInput(samplePrompt);
+    setMessages(prev => [...prev, { role: 'user', content: samplePrompt }]);
+    setStreaming(true);
+    setError('');
+    handleSend();
+  };
+
   const handleBypass = async () => {
     const key = window.prompt('Enter your owner access key');
     if (!key) return;
@@ -96,7 +113,7 @@ const CyberAgent = () => {
     }
   };
 
-  const paywall = (
+  const paywallView = (
     <div className="cyberagent-paywall">
       <div className="cyberagent-paywall-content">
         <Bot size={32} />
@@ -158,6 +175,14 @@ const CyberAgent = () => {
           DeepSeek model trained for defensive security, secure coding,
           and vulnerability analysis.
         </p>
+        <div className="cyberagent-hero-actions">
+          <button className="cyberagent-sample-btn"
+            onClick={() => sendSample()}
+            disabled={streaming || !hasAccess}
+          >
+            <Globe size={15} /> Load sample: port scan
+          </button>
+        </div>
         <p className="cyberagent-usage">
           Included: 3M tokens/month — enough for ~3,000 messages
         </p>
@@ -216,7 +241,7 @@ const CyberAgent = () => {
       </section>
 
       {!hasAccess ? (
-        paywall
+        paywallView
       ) : (
         <section className="cyberagent-chat">
           <div className="cyberagent-messages">
@@ -305,6 +330,15 @@ const CyberAgent = () => {
               ) : (
                 <Send size={18} />
               )}
+            </button>
+            <button
+              onClick={sendSample}
+              disabled={streaming || !hasAccess}
+              className="cyberagent-sample-btn"
+              title="Load a sample port scan request"
+            >
+              <Globe size={14} />
+              <span>Sample</span>
             </button>
           </div>
         </section>

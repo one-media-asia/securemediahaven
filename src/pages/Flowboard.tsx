@@ -1,9 +1,8 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  ArrowLeft, ArrowRight, Check, LayoutGrid, List, Settings,
-  Plus, X, Search, Filter, DotsVertical, GripVertical, Clock,
-  Target, Zap, Brain, Lightbulb, Briefcase, Shield, ChevronRight
+  ArrowLeft, ArrowRight, Check, LayoutGrid, List,
+  Plus, X, Search, Target, Zap, Brain, Lightbulb, ChevronRight
 } from 'lucide-react';
 
 type Board = {

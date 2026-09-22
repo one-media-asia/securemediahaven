@@ -456,6 +456,9 @@
 .vulnscan-unlock-btn:hover { background: #d14a3a; }
 .vulnscan-owner-btn { padding: 8px 0; border: 0; color: #75827f; background: transparent; font: 9px 'DM Mono', monospace; cursor: pointer; white-space: nowrap; }.vulnscan-owner-btn:hover { color: #263b39; text-decoration: underline; }
 .vulnscan-input-help { margin: 10px 0 0; color: #81908b; font: 10px 'DM Mono', monospace; }
+.vulnscan-sample-btn { margin-top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; border: 1px solid #d8d4ca; background: #fff; color: #1a1f2e; font: 600 11px 'DM Mono', monospace; cursor: pointer; border-radius: 6px; }
+.vulnscan-sample-btn:hover { border-color: #1a1f2e; background: #f8fafc; }
+.vulnscan-sample-btn svg { color: #1a1f2e; }
 .vulnscan-findings-help { margin: 0 0 14px; color: #81908b; font: 10px 'DM Mono', monospace; }
 
 .contact-page { min-height: 100vh; display: flex; flex-direction: column; color: #18231f; background: #f4f0e8; }
@@ -558,3 +561,172 @@
 }
 .cyberagent-bypass-btn { display: block; width: 100%; margin-top: 12px; padding: 10px; border: 1px dashed #9a9fa8; background: transparent; color: #81908b; font: 500 11px 'DM Mono', monospace; cursor: pointer; border-radius: 6px; text-align: center; }
 .cyberagent-bypass-btn:hover { border-color: #fa6b4b; color: #fa6b4b; background: #fff5f0; }
+
+/* MalwareGuard */
+.malware-page { min-height: 100vh; color: #f8fafc; background: #0f172a; }
+.malware-header { height: 72px; display: flex; align-items: center; justify-content: space-between; padding: 0 5vw; border-bottom: 1px solid #1e293b; background: rgba(15,23,42,.94); position: sticky; top: 0; z-index: 5; backdrop-filter: blur(12px); }
+.malware-back { display: inline-flex; align-items: center; gap: 8px; color: #94a3b8; font-size: 12px; font-weight: 800; text-decoration: none; }
+.malware-back:hover { color: #f8fafc; }
+.malware-logo { display: flex; align-items: center; gap: 9px; font-size: 18px; font-weight: 800; letter-spacing: -.04em; color: #f8fafc; }
+.malware-logo svg { color: #22d3ee; }
+.malware-badge { font: 700 10px 'DM Mono', monospace; padding: 4px 10px; border-radius: 4px; background: rgba(34,211,238,.1); color: #22d3ee; text-transform: uppercase; letter-spacing: .06em; }
+.malware-hero { max-width: 720px; margin: 72px auto 0; padding: 50px 5vw 40px; text-align: center; }
+.malware-hero .eyebrow { margin: 0 0 16px; color: #22d3ee; font: 500 10px 'DM Mono', monospace; letter-spacing: .09em; text-transform: uppercase; }
+.malware-hero h1 { margin: 0 0 18px; font-size: clamp(44px, 6vw, 68px); line-height: .96; letter-spacing: -.07em; }
+.malware-hero h1 em { color: #22d3ee; font-family: Georgia, serif; font-weight: 400; }
+.malware-intro { max-width: 540px; margin: 0 auto; color: #94a3b8; font-size: 15px; line-height: 1.7; }
+.malware-scanner { max-width: 640px; margin: 40px auto; padding: 0 1.5rem; }
+.malware-input-row { display: flex; gap: .75rem; }
+.malware-input { flex: 1; padding: .875rem 1.25rem; font-size: 1rem; background: #1e293b; border: 2px solid #334155; border-radius: 12px; color: #f8fafc; outline: none; transition: border-color .2s; font-family: inherit; }
+.malware-input:focus { border-color: #22d3ee; }
+.malware-input::placeholder { color: #64748b; }
+.malware-scan-btn { padding: .875rem 1.5rem; font-size: 1rem; font-weight: 600; background: #22d3ee; color: #0f172a; border: none; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: .5rem; transition: opacity .2s, transform .1s; font-family: inherit; }
+.malware-scan-btn:hover:not(:disabled) { opacity: .9; }
+.malware-scan-btn:active:not(:disabled) { transform: scale(.98); }
+.malware-scan-btn:disabled { opacity: .5; cursor: not-allowed; }
+.malware-error { margin-top: 1rem; display: flex; align-items: center; gap: .5rem; padding: .875rem 1.25rem; background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.3); border-radius: 12px; color: #ef4444; font-size: .9375rem; }
+.malware-result { margin-top: 1.5rem; animation: fadeIn .4s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.malware-result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.malware-badge-safe { padding: .375rem 1rem; border-radius: 9999px; font-weight: 700; font-size: .875rem; letter-spacing: .05em; background: rgba(16,185,129,.15); color: #10b981; }
+.malware-badge-warning { padding: .375rem 1rem; border-radius: 9999px; font-weight: 700; font-size: .875rem; letter-spacing: .05em; background: rgba(245,158,11,.15); color: #f59e0b; }
+.malware-badge-danger { padding: .375rem 1rem; border-radius: 9999px; font-weight: 700; font-size: .875rem; letter-spacing: .05em; background: rgba(239,68,68,.15); color: #ef4444; }
+.malware-score { font-size: .875rem; color: #94a3b8; }
+.malware-url-display { font-family: 'SF Mono', 'Fira Code', monospace; font-size: .875rem; color: #22d3ee; word-break: break-all; margin-bottom: 1.25rem; padding: .75rem; background: rgba(34,211,238,.05); border-radius: 8px; border: 1px solid rgba(34,211,238,.1); }
+.malware-findings { display: flex; flex-direction: column; gap: .75rem; }
+.malware-no-findings { color: #94a3b8; font-size: .9375rem; text-align: center; padding: 1rem; background: rgba(16,185,129,.05); border-radius: 8px; }
+.malware-finding { display: flex; align-items: flex-start; gap: .75rem; padding: .75rem; border-radius: 8px; background: rgba(255,255,255,.02); }
+.malware-finding-icon { flex-shrink: 0; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+.malware-finding-icon svg { width: 14px; height: 14px; }
+.malware-finding-safe .malware-finding-icon { background: rgba(16,185,129,.15); color: #10b981; }
+.malware-finding-warning .malware-finding-icon { background: rgba(245,158,11,.15); color: #f59e0b; }
+.malware-finding-danger .malware-finding-icon { background: rgba(239,68,68,.15); color: #ef4444; }
+.malware-finding-content h4 { font-size: .9375rem; font-weight: 600; margin-bottom: .25rem; color: #f8fafc; }
+.malware-finding-content p { font-size: .875rem; color: #94a3b8; }
+.malware-history { margin: 30px auto; max-width: 640px; padding: 0 1.5rem; }
+.malware-history .eyebrow { text-align: center; margin-bottom: 12px; color: #64748b; font: 500 10px 'DM Mono', monospace; letter-spacing: .09em; text-transform: uppercase; }
+.malware-history-list { display: flex; flex-direction: column; gap: .5rem; }
+.malware-history-item { display: flex; align-items: center; gap: .75rem; padding: .625rem .875rem; background: rgba(30,41,59,.6); border: 1px solid #334155; border-radius: 8px; cursor: pointer; text-align: left; transition: background .2s; width: 100%; font-family: inherit; color: inherit; }
+.malware-history-item:hover { background: rgba(30,41,59,.9); }
+.malware-history-score { font-weight: 700; font-size: .875rem; min-width: 3rem; }
+.malware-history-safe .malware-history-score { color: #10b981; }
+.malware-history-warning .malware-history-score { color: #f59e0b; }
+.malware-history-danger .malware-history-score { color: #ef4444; }
+.malware-history-url { font-size: .8125rem; color: #94a3b8; word-break: break-all; font-family: 'SF Mono', 'Fira Code', monospace; }
+.malware-info { max-width: 640px; margin: 30px auto; padding: 0 1.5rem 50px; }
+.malware-info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.malware-info-card { padding: 1.25rem; background: rgba(30,41,59,.5); border: 1px solid #334155; border-radius: 12px; text-align: center; }
+.malware-info-card svg { color: #22d3ee; margin-bottom: .75rem; }
+.malware-info-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: .5rem; color: #f8fafc; }
+.malware-info-card p { font-size: .8125rem; color: #94a3b8; line-height: 1.6; margin: 0; }
+.malware-footer { margin-top: auto; display: flex; justify-content: space-between; align-items: center; padding: 20px 5vw; color: #64748b; font: 11px 'DM Mono', monospace; border-top: 1px solid #1e293b; }
+.malware-footer a { color: #94a3b8; text-decoration: none; }
+.malware-footer a:hover { color: #f8fafc; }
+@media (max-width: 640px) {
+  .malware-input-row { flex-direction: column; }
+  .malware-hero { padding: 30px 1.5rem 25px; }
+  .malware-info-grid { grid-template-columns: 1fr; }
+  .malware-footer { flex-direction: column; gap: 10px; text-align: center; }
+}
+
+/* Flowboard - Task & Project Management */
+.flowboard-page { min-height: 100vh; display: flex; flex-direction: column; color: #1e2923; background: #f6f3ee; }
+.flowboard-header { height: 76px; display: flex; align-items: center; justify-content: space-between; padding: 0 5vw; border-bottom: 1px solid #ddd9d0; background: rgba(246,243,238,.93); position: sticky; top: 0; z-index: 5; backdrop-filter: blur(15px); }
+.flowboard-back, .flowboard-footer a { display: inline-flex; align-items: center; gap: 8px; color: inherit; font-size: 12px; font-weight: 800; text-decoration: none; }
+.flowboard-logo { display: flex; align-items: center; gap: 9px; font-size: 18px; font-weight: 800; letter-spacing: -.05em; }
+.flowboard-logo-mark { display: grid; place-items: center; width: 29px; height: 29px; color: #1e2923; background: #d97757; border-radius: 50% 50% 50% 3px; font-size: 16px; }
+.flowboard-badge { font: 700 10px 'DM Mono', monospace; padding: 4px 10px; border-radius: 4px; background: #1e2923; color: #c7d0c5; }
+.flowboard-hero { display: grid; grid-template-columns: 1.1fr .9fr; gap: 8vw; align-items: center; max-width: 1180px; min-height: 510px; margin: auto; padding: 78px 5vw 90px; }
+.flowboard-hero .eyebrow { margin: 0 0 18px; color: #d97757; font: 500 10px 'DM Mono', monospace; letter-spacing: .09em; text-transform: uppercase; }
+.flowboard-hero h1 { margin: 0; font-size: clamp(48px, 6vw, 78px); line-height: .95; letter-spacing: -.08em; }
+.flowboard-hero h1 em { color: #d97757; font-family: Georgia, serif; font-weight: 400; }
+.flowboard-intro { max-width: 470px; color: #6d7972; font-size: 16px; line-height: 1.7; }
+.flowboard-includes { max-width: 470px; margin: 18px 0 0; color: #68756f; font-size: 13px; line-height: 1.65; }
+.flowboard-includes strong { color: #1e2923; }
+.flowboard-stats { display: flex; gap: 25px; margin-top: 35px; color: #738078; font: 10px 'DM Mono', monospace; text-transform: uppercase; }
+.flowboard-stats strong { display: block; margin-bottom: 6px; color: #1e2923; font: 800 22px 'Manrope', sans-serif; text-transform: none; }
+.flowboard-hero-card { display: grid; gap: 13px; padding: 31px; background: #d97757; box-shadow: 14px 14px 0 #1e2923; transform: rotate(2deg); }
+.flowboard-hero-card strong { font-size: 23px; letter-spacing: -.05em; }
+.flowboard-hero-card span { color: #7a3b2a; font-size: 13px; line-height: 1.6; }
+.flowboard-hero-card svg { color: #fffaf1; }
+.flowboard-library { padding: 105px 5vw 120px; background: #fffaf1; }
+.flowboard-section-head { display: flex; align-items: end; justify-content: space-between; max-width: 1180px; margin: auto; }
+.flowboard-section-head h2 { font-size: clamp(40px, 4vw, 58px); margin: 0 0 24px; line-height: .97; letter-spacing: -.08em; }
+.flowboard-section-head h2 em { color: #d97757; font-family: Georgia, serif; font-weight: 400; }
+.flowboard-search-box { display: flex; align-items: center; gap: 9px; width: 210px; padding: 10px 0; border-bottom: 1px solid #aab4b0; color: #6d7972; }
+.flowboard-search-icon { color: #6d7972; }
+.flowboard-search-input { width: 100%; border: 0; outline: 0; color: inherit; background: transparent; font: 10px 'DM Mono', monospace; }
+.flowboard-categories { display: flex; flex-wrap: wrap; gap: 9px; max-width: 1180px; margin: 30px auto 38px; }
+.flowboard-category { padding: 9px 14px; border: 1px solid #d9d6cf; color: #65717b; background: transparent; font: 10px 'DM Mono', monospace; cursor: pointer; }
+.flowboard-category.active, .flowboard-category:hover { border-color: #1e2923; color: #fffaf1; background: #1e2923; }
+.flowboard-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1180px; margin: auto; }
+.flowboard-card { border: 1px solid #dfdcd5; background: #f6f3ee; transition: transform .15s, box-shadow .15s; }
+.flowboard-card:hover { transform: translateY(-2px); box-shadow: 8px 8px 0 #1e2923; }
+.flowboard-card-art { height: 150px; display: flex; align-items: center; justify-content: space-between; padding: 22px; }
+.flowboard-card-art span { align-self: start; padding: 6px 8px; color: #1e2923; background: #fffaf1; font: 9px 'DM Mono', monospace; text-transform: uppercase; }
+.flowboard-card-body { padding: 21px 20px 22px; }
+.flowboard-card-body h3 { margin: 0 0 10px; font-size: 21px; line-height: 1.02; letter-spacing: -.06em; }
+.flowboard-card-body p { min-height: 57px; margin: 0; color: #6d7972; font-size: 12px; line-height: 1.55; }
+.flowboard-card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; }
+.flowboard-category-tag { font: 9px 'DM Mono', monospace; text-transform: uppercase; padding: 3px 8px; border-radius: 3px; }
+.flowboard-card-footer .flowboard-category-tag.flow-coral { background: #f5a3a0; color: #8b2e2a; }
+.flowboard-card-footer .flowboard-category-tag.flow-blue { background: #a9c9e8; color: #2a4a6b; }
+.flowboard-card-footer .flowboard-category-tag.flow-mint { background: #a8d5c1; color: #2a5e44; }
+.flowboard-card-footer .flowboard-category-tag.flow-yellow { background: #f5d889; color: #7a5e1a; }
+.flowboard-card-footer .flowboard-category-tag.flow-green { background: #b9d9a8; color: #3a5e2a; }
+.flowboard-card-footer .flowboard-category-tag.flow-purple { background: #c8bce2; color: #4a2a6b; }
+.flowboard-open-btn { display: inline-flex; align-items: center; gap: 6px; padding: 0; border: 0; color: #1e2923; background: transparent; font: 700 10px 'Manrope', sans-serif; cursor: pointer; }
+.flowboard-open-btn svg { color: #d97757; }
+.flowboard-empty { max-width: 1180px; margin: 30px auto 0; padding: 25px; border: 1px dashed #c7c9c2; color: #6d7972; text-align: center; font: 11px 'DM Mono', monospace; }
+.flowboard-active { flex: 1; display: flex; flex-direction: column; max-width: 800px; width: 100%; margin: 0 auto; padding: 0 22px 40px; border-top: 1px solid #ddd9d0; background: #fffaf1; }
+.flowboard-active-header { display: flex; align-items: flex-start; gap: 14px; padding: 32px 0 24px; border-bottom: 1px solid #ddd9d0; }
+.flowboard-back-mini { display: inline-flex; align-items: center; gap: 6px; color: #6d7972; font: 700 11px 'Manrope', sans-serif; cursor: pointer; padding: 0; border: 0; background: transparent; }
+.flowboard-back-mini:hover { color: #d97757; }
+.flowboard-active-icon { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0; }
+.flowboard-active-icon.flow-coral { background: #f5a3a0; color: #8b2e2a; }
+.flowboard-active-icon.flow-blue { background: #a9c9e8; color: #2a4a6b; }
+.flowboard-active-icon.flow-mint { background: #a8d5c1; color: #2a5e44; }
+.flowboard-active-icon.flow-yellow { background: #f5d889; color: #7a5e1a; }
+.flowboard-active-icon.flow-green { background: #b9d9a8; color: #3a5e2a; }
+.flowboard-active-icon.flow-purple { background: #c8bce2; color: #4a2a6b; }
+.flowboard-active-header > div:nth-child(3) { flex: 1; }
+.flowboard-active-header h2 { margin: 0 0 6px; font-size: 26px; letter-spacing: -.05em; }
+.flowboard-active-header p { margin: 0; color: #6d7972; font-size: 12px; }
+.flowboard-item-count { font: 10px 'DM Mono', monospace; color: #6d7972; text-transform: uppercase; white-space: nowrap; }
+.flowboard-active-content { flex: 1; display: flex; flex-direction: column; }
+.flowboard-add-item { display: flex; gap: 10px; margin: 20px 0; }
+.flowboard-item-input { flex: 1; padding: 12px 14px; border: 1px solid #d2ddd2; outline: 0; color: #1e2923; background: #f6f3ee; font: 13px 'Manrope', sans-serif; border-radius: 4px; }
+.flowboard-item-input:focus { border-color: #d97757; }
+.flowboard-add-btn { display: inline-flex; align-items: center; gap: 6px; padding: 0 16px; border: 0; color: #fffaf1; background: #1e2923; font: 700 11px 'Manrope', sans-serif; cursor: pointer; border-radius: 4px; }
+.flowboard-add-btn:hover { background: #d97757; }
+.flowboard-add-btn:disabled { opacity: .4; cursor: default; }
+.flowboard-empty-state { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 50px 0; color: #6d7972; }
+.flowboard-empty-icon { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; }
+.flowboard-empty-icon.flow-coral { background: #f5a3a0; color: #8b2e2a; }
+.flowboard-empty-icon.flow-blue { background: #a9c9e8; color: #2a4a6b; }
+.flowboard-empty-icon.flow-mint { background: #a8d5c1; color: #2a5e44; }
+.flowboard-empty-icon.flow-yellow { background: #f5d889; color: #7a5e1a; }
+.flowboard-empty-icon.flow-green { background: #b9d9a8; color: #3a5e2a; }
+.flowboard-empty-icon.flow-purple { background: #c8bce2; color: #4a2a6b; }
+.flowboard-empty-state p { margin: 0; font: 12px 'DM Mono', monospace; }
+.flowboard-item-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
+.flowboard-item { display: flex; align-items: center; gap: 10px; padding: 11px 14px; background: #f6f3ee; border: 1px solid #dfdcd5; border-radius: 4px; }
+.flowboard-item.complete { opacity: .6; }
+.flowboard-item-check { display: flex; align-items: center; justify-content: center; width: 20px; height: 20px; border: 1px solid #aab4b0; background: #fffaf1; cursor: pointer; border-radius: 3px; flex-shrink: 0; }
+.flowboard-item-check:hover { border-color: #d97757; }
+.flowboard-item-checkbox { width: 10px; height: 10px; background: #fffaf1; }
+.flowboard-item-check svg { color: #d97757; }
+.flowboard-item-text { flex: 1; color: #1e2923; font: 13px 'Manrope', sans-serif; word-break: break-word; }
+.flowboard-item.complete .flowboard-item-text { text-decoration: line-through; color: #6d7972; }
+.flowboard-item-remove { display: flex; align-items: center; justify-content: center; width: 20px; height: 20px; border: 0; background: transparent; color: #aab4b0; cursor: pointer; border-radius: 3px; flex-shrink: 0; }
+.flowboard-item-remove:hover { color: #b33a3a; background: #fff5f5; }
+.flowboard-features { padding: 105px 5vw; background: #f6f3ee; }
+.flowboard-features-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; max-width: 1180px; margin: auto; }
+.flowboard-feature { display: flex; flex-direction: column; gap: 12px; padding: 24px; background: #fffaf1; border: 1px solid #dfdcd5; border-radius: 8px; }
+.flowboard-feature svg { color: #d97757; }
+.flowboard-feature h3 { margin: 0; font-size: 18px; letter-spacing: -.04em; }
+.flowboard-feature p { margin: 0; color: #6d7972; font-size: 12px; line-height: 1.55; }
+.flowboard-footer { display: flex; justify-content: space-between; padding: 32px 5vw; color: #c3cfca; background: #1e2923; font: 11px 'DM Mono', monospace; }
+.flowboard-footer a { color: #fffaf1; font: 700 11px 'Manrope', sans-serif; }
+@media (max-width: 900px) { .flowboard-hero { grid-template-columns: 1fr; gap: 45px; padding-top: 65px; } .flowboard-hero-card { max-width: 500px; } .flowboard-stats { gap: 15px; } .flowboard-stats span { font-size: 8px; } .flowboard-hero-card { box-shadow: 9px 9px 0 #1e2923; } .flowboard-grid { grid-template-columns: 1fr 1fr; } .flowboard-features-grid { grid-template-columns: 1fr 1fr; } .flowboard-footer { display: grid; gap: 14px; } }
+@media (max-width: 600px) { .flowboard-hero, .flowboard-library, .flowboard-features, .flowboard-active { padding-left: 22px; padding-right: 22px; } .flowboard-grid { grid-template-columns: 1fr; } .flowboard-features-grid { grid-template-columns: 1fr; } .flowboard-stats { gap: 15px; } .flowboard-stats span { font-size: 8px; } .flowboard-footer { display: grid; gap: 14px; } .flowboard-active-header { flex-wrap: wrap; } .flowboard-item-count { width: 100%; text-align: left; margin-top: 8px; } }

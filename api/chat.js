@@ -43,7 +43,7 @@ export default async function handler(req, res) {
     }));
 
     const command = new InvokeModelCommand({
-      modelId: 'eu.mistral.pixtral-large-2502-v1:0',
+      modelId: 'anthropic.claude-haiku-4-5-20251001-v1:0',
       contentType: 'application/json',
       body: JSON.stringify({
         anthropic_version: 'bedrock-2023-05-31',

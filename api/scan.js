@@ -74,55 +74,55 @@ function checkRateLimit(ip) {
   return true;
 }
 
-function fetchUrl(targetUrl, redirectCount = 0) {
-  return new Promise((resolve, reject) => {
-    if (redirectCount > 5) {
-      reject(new Error('Too many redirects'));
-      return;
-    }
+async function fetchUrl(targetUrl, redirectCount = 0) {
+  if (redirectCount > 5) {
+    throw new Error('Too many redirects');
+  }
 
-    const parsed = new URL(targetUrl);
-    const isHttps = parsed.protocol === 'https:';
-    const lib = isHttps ? https : http;
+  const parsed = new URL(targetUrl);
 
-    const req = lib.request(
-      {
-        hostname: parsed.hostname,
-        port: parsed.port || (isHttps ? 443 : 80),
-        path: parsed.pathname + parsed.search,
-        method: 'GET',
-        headers: {
-          'User-Agent': 'VulnScan-Passive-Scanner/1.0 (+https://onemedia.asia)',
-          Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-        },
-        timeout: 8000,
-        rejectUnauthorized: false,
+  let response;
+  try {
+    response = await fetch(targetUrl, {
+      method: 'GET',
+      headers: {
+        'User-Agent': 'VulnScan-Passive-Scanner/1.0 (+https://onemedia.asia)',
+        Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
       },
-      (res) => {
-        if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-          const redirectUrl = new URL(res.headers.location, targetUrl).toString();
-          res.destroy();
-          fetchUrl(redirectUrl, redirectCount + 1).then(resolve, reject);
-          return;
-        }
-
-        let body = '';
-        res.on('data', (chunk) => {
-          body += chunk;
-          if (body.length > 100000) res.destroy();
-        });
-        res.on('end', () => resolve({ statusCode: res.statusCode, headers: res.headers, body, url: targetUrl }));
-        res.on('error', reject);
-      }
-    );
-
-    req.on('timeout', () => {
-      req.destroy();
-      reject(new Error('Request timed out'));
+      redirect: 'manual',
+      signal: AbortSignal.timeout(8000),
     });
-    req.on('error', reject);
-    req.end();
+  } catch (err) {
+    if (err.name === 'TimeoutError' || err.name === 'AbortError') {
+      throw new Error('Request timed out');
+    }
+    throw new Error(`Request failed: ${err.message}`);
+  }
+
+  // Handle redirects manually
+  if (response.status >= 300 && response.status < 400 && response.headers.get('location')) {
+    const redirectUrl = new URL(response.headers.get('location'), targetUrl).toString();
+    return fetchUrl(redirectUrl, redirectCount + 1);
+  }
+
+  let body = '';
+  try {
+    body = await response.text();
+    if (body.length > 100000) body = body.slice(0, 100000);
+  } catch {}
+
+  // Convert headers to a plain object (lowercase keys like the old http module did)
+  const headersObj = {};
+  response.headers.forEach((val, key) => {
+    headersObj[key] = headersObj[key] ? `${headersObj[key]}, ${val}` : val;
   });
+
+  return {
+    statusCode: response.status,
+    headers: headersObj,
+    body,
+    url: targetUrl,
+  };
 }
 
 async function checkDns(hostname) {

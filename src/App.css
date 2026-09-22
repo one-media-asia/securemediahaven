@@ -494,6 +494,17 @@
 .cyberagent-hero h1 { margin: 0; font-size: clamp(48px, 6vw, 78px); line-height: .95; letter-spacing: -.08em; }
 .cyberagent-hero h1 em { color: #fa6b4b; font-family: Georgia, serif; font-weight: 400; }
 .cyberagent-hero p { max-width: 430px; margin: 24px 0 0; color: #68756e; font-size: 15px; line-height: 1.7; }
+.cyberagent-usage { max-width: 430px; margin: 12px 0 0; color: #fa6b4b; font: 600 12px 'DM Mono', monospace; letter-spacing: .04em; text-transform: uppercase; }
+.cyberagent-compare { max-width: 1080px; margin: 0 auto; padding: 40px 5vw; border-top: 1px solid #d9d5cc; }
+.cyberagent-compare .eyebrow { margin: 0 0 24px; color: #fa6b4b; font: 500 10px 'DM Mono', monospace; letter-spacing: .09em; text-transform: uppercase; }
+.cyberagent-compare-table { width: 100%; border-collapse: collapse; font: 13px 'DM Mono', monospace; }
+.cyberagent-compare-table th { text-align: left; padding: 10px 14px; color: #68756e; font: 600 11px 'DM Mono', monospace; letter-spacing: .06em; text-transform: uppercase; border-bottom: 1px solid #d9d5cc; }
+.cyberagent-compare-table td { padding: 12px 14px; color: #18231f; border-bottom: 1px solid #f0ebe3; }
+.cyberagent-compare-table tr:last-child td { border-bottom: none; }
+.cyberagent-compare-you { display: inline-block; background: #2d6a4f; color: #fff; padding: 2px 8px; border-radius: 3px; font: 700 11px 'DM Mono', monospace; }
+.cyberagent-compare-table td strong { color: #fa6b4b; }
+.cyberagent-model-tag { color: #fa6b4b; font: 600 10px 'DM Mono', monospace; letter-spacing: .04em; text-transform: uppercase; display: block; margin-top: 2px; }
+.cyberagent-compare-note { max-width: 600px; margin: 16px 0 0; color: #68756e; font: 12px 'DM Mono', monospace; line-height: 1.6; }
 .cyberagent-paywall { min-height: 60vh; display: flex; align-items: center; justify-content: center; padding: 80px 22px; }
 .cyberagent-paywall-content { max-width: 460px; padding: 40px; text-align: center; background: #fff; border: 1px solid #d9d5cc; border-radius: 12px; box-shadow: 20px 20px 0 #fa6b4b; }
 .cyberagent-paywall-content h2 { margin: 18px 0 12px; font-size: 24px; letter-spacing: -.04em; }
@@ -541,6 +552,9 @@
   .cyberagent-chat { padding: 0 16px 16px; }
   .cyberagent-message { max-width: 95%; }
   .cyberagent-footer { padding: 16px 22px; }
+  .cyberagent-compare { padding: 30px 22px; }
+  .cyberagent-compare-table { font-size: 12px; }
+  .cyberagent-compare-table th, .cyberagent-compare-table td { padding: 8px 10px; }
 }
 .cyberagent-bypass-btn { display: block; width: 100%; margin-top: 12px; padding: 10px; border: 1px dashed #9a9fa8; background: transparent; color: #81908b; font: 500 11px 'DM Mono', monospace; cursor: pointer; border-radius: 6px; text-align: center; }
 .cyberagent-bypass-btn:hover { border-color: #fa6b4b; color: #fa6b4b; background: #fff5f0; }

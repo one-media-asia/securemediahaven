@@ -112,6 +112,9 @@ const CyberAgent = () => {
           <li><span><Shield size={14} /></span>Build cybersecurity tools from scratch</li>
           <li><span><Shield size={14} /></span>OWASP, CVE, and crypto explanations</li>
         </ul>
+        <p className="cyberagent-usage">
+          3M tokens/month included — ~3,000 messages
+        </p>
         {checkoutUrl ? (
           <button className="cyberagent-unlock-btn"
             onClick={() => window.location.assign(checkoutUrl)}>
@@ -151,8 +154,64 @@ const CyberAgent = () => {
         </h1>
         <p>
           Ask anything about writing code, finding bugs, or building
-          security tools. CyberAgent runs on Claude and knows
-          defensive security inside out.
+          security tools. CyberAgent runs on a cybersecurity-tuned
+          DeepSeek model trained for defensive security, secure coding,
+          and vulnerability analysis.
+        </p>
+        <p className="cyberagent-usage">
+          Included: 3M tokens/month — enough for ~3,000 messages
+        </p>
+      </section>
+
+      <section className="cyberagent-compare">
+        <p className="eyebrow">How it compares</p>
+        <table className="cyberagent-compare-table">
+          <thead>
+            <tr>
+              <th>Plan</th>
+              <th>Price</th>
+              <th>Tokens</th>
+              <th>Model</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span className="cyberagent-compare-you">CyberAgent</span></td>
+              <td><strong>$12</strong> (one-time)</td>
+              <td>3M/mo</td>
+              <td>DeepSeek V4 Flash<br /><span className="cyberagent-model-tag">cybersecurity-tuned</span></td>
+            </tr>
+            <tr>
+              <td>Claude Pro</td>
+              <td>$20/mo</td>
+              <td>Uncapped*</td>
+              <td>Claude Sonnet/Opus</td>
+            </tr>
+            <tr>
+              <td>Bolt.new</td>
+              <td>$25/mo</td>
+              <td>10M/mo</td>
+              <td>GPT-4 / Claude</td>
+            </tr>
+            <tr>
+              <td>Windsurf Pro</td>
+              <td>$20/mo</td>
+              <td>Quota pool</td>
+              <td>SWE-1.6 / frontier</td>
+            </tr>
+            <tr>
+              <td>OpenAI Codex Plus</td>
+              <td>$20/mo</td>
+              <td>Msg limit</td>
+              <td>GPT-5</td>
+            </tr>
+          </tbody>
+        </table>
+        <p className="cyberagent-compare-note">
+          * Claude Pro has per-hour message caps, not a token ceiling.
+          Heavy users still hit ceilings — CyberAgent uses one of the
+          most cost-efficient frontier APIs available, so the $12
+          one-time tier stays well within margin.
         </p>
       </section>
 

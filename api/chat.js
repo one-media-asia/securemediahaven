@@ -1,14 +1,30 @@
-import { BedrockRuntimeClient, InvokeModelCommand } from '@aws-sdk/client-bedrock-runtime';
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
 
-const client = new BedrockRuntimeClient({
-  region: process.env.AWS_REGION || 'eu-north-1',
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
-  },
-});
+  try {
+    const { messages, maxTokens = 4096, temperature = 0.3 } = req.body;
 
-const SYSTEM_PROMPT = `You are CyberAgent, an expert AI assistant specialized in coding, debugging, and building cybersecurity tools. You help developers write secure code, find and fix vulnerabilities, and build security tools.
+    if (!messages || !Array.isArray(messages) || messages.length === 0) {
+      return res.status(400).json({ error: 'Messages array required' });
+    }
+
+    const apiKey = process.env.DEEPSEEK_API_KEY;
+    if (!apiKey) {
+      return res.status(500).json({ error: 'DEEPSEEK_API_KEY not configured' });
+    }
+
+    const response = await fetch('https://api.deepseek.com/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: 'deepseek-chat',
+        messages: [
+          { role: 'system', content: `You are CyberAgent, an expert AI assistant specialized in coding, debugging, and building cybersecurity tools. You help developers write secure code, find and fix vulnerabilities, and build security tools.
 
 Your expertise includes:
 - Writing code in Python, JavaScript, TypeScript, Go, Rust, Bash, and more
@@ -23,40 +39,21 @@ Guidelines:
 - For security topics, explain both the attack and defense perspectives.
 - When writing code, include comments explaining key parts.
 - If a request could be used maliciously, explain the defensive/educational context.
-- Keep responses focused and actionable.`;
-
-export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-
-  try {
-    const { messages, maxTokens = 4096, temperature = 0.3 } = req.body;
-
-    if (!messages || !Array.isArray(messages) || messages.length === 0) {
-      return res.status(400).json({ error: 'Messages array required' });
-    }
-
-    const conversationHistory = messages.map((m) => ({
-      role: m.role === 'user' ? 'user' : m.role === 'assistant' ? 'assistant' : 'user',
-      content: [{ type: 'text', text: m.content }],
-    }));
-
-    const command = new InvokeModelCommand({
-      modelId: 'anthropic.claude-haiku-4-5-20251001-v1:0',
-      contentType: 'application/json',
-      body: JSON.stringify({
-        anthropic_version: 'bedrock-2023-05-31',
-        maxTokens,
+- Keep responses focused and actionable.` },
+          ...messages,
+        ],
+        max_tokens: maxTokens,
         temperature,
-        system: SYSTEM_PROMPT,
-        messages: conversationHistory,
       }),
     });
 
-    const response = await client.send(command);
-    const body = JSON.parse(new TextDecoder().decode(response.body));
-    const text = body.content[0].text;
+    if (!response.ok) {
+      const errBody = await response.text();
+      throw new Error(`DeepSeek API error ${response.status}: ${errBody}`);
+    }
+
+    const data = await response.json();
+    const text = data.choices[0].message.content;
 
     return res.status(200).json({ response: text });
   } catch (error) {

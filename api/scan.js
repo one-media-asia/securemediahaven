@@ -1,5 +1,3 @@
-import http from 'node:http';
-import https from 'node:https';
 import dns from 'node:dns/promises';
 import { URL } from 'node:url';
 

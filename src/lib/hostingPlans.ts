@@ -25,13 +25,13 @@ export const hostingPlans: HostingPlan[] = [
   },
   {
     name: 'AWS Ubuntu OpenVPN',
-    price: '$9',
-    period: '/ month',
+    price: '$12',
+    period: ' one time',
     tagline: 'Best for self-hosted VPNs',
     description: 'A guided OpenVPN deployment for an Ubuntu server on AWS EC2, with practical hardening and client setup.',
     color: 'purple',
     badge: 'VPN',
-    stripeUrl: import.meta.env.VITE_STRIPE_VPN_URL,
+    stripeUrl: '/vpn',
     features: ['Ubuntu on AWS EC2', 'OpenVPN server setup', 'Security group checklist', 'Client profile tutorial', 'Private support'],
   },
 ];

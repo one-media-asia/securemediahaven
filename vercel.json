@@ -1,4 +1,7 @@
 {
+  "redirects": [
+    { "source": "/vpn", "destination": "https://imfree.onemedia.asia", "permanent": true }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",

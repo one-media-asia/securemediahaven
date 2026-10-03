@@ -7,8 +7,17 @@ const VpnSuccess = () => {
   const [configName, setConfigName] = useState('');
   const [configType, setConfigType] = useState('standard');
   const [email, setEmail] = useState('');
+  // Retained from the URL so the .ovpn download can prove payment server-side.
+  const [sessionId, setSessionId] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  // Strip session_id from the address bar once it has been captured; it is a
+  // bearer-ish credential that should not linger in history or leak via Referer.
+  useEffect(() => {
+    if (!sessionId) return;
+    window.history.replaceState({}, '', window.location.pathname);
+  }, [sessionId]);
 
   useEffect(() => {
     const fetchConfig = async () => {
@@ -18,6 +27,7 @@ const VpnSuccess = () => {
         const emailParam = params.get('email');
 
         if (emailParam) setEmail(emailParam);
+        setSessionId(sessionId);
 
         if (!sessionId) {
           setError('No session found. Please purchase from the VPN page.');
@@ -103,7 +113,7 @@ const VpnSuccess = () => {
 
           <a
             className="download-btn"
-            href={`/api/vpn-file?name=${configName}&email=${encodeURIComponent(email)}`}
+            href={`/api/vpn-file?name=${encodeURIComponent(configName)}&email=${encodeURIComponent(email)}&session_id=${encodeURIComponent(sessionId)}`}
             download={`${configName}.ovpn`}
           >
             <Download size={20} />

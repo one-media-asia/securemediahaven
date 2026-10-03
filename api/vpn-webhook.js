@@ -53,18 +53,24 @@ export default async function handler(req, res) {
   const signature = req.headers['stripe-signature'];
   const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
+  // Fail closed. Falling back to JSON.parse when the secret is unset means
+  // anyone can POST a forged checkout.session.completed and provision a VPN
+  // config for free.
   if (!endpointSecret) {
-    console.warn('STRIPE_WEBHOOK_SECRET not set');
+    console.error('STRIPE_WEBHOOK_SECRET is not configured; rejecting webhook');
+    return res.status(503).json({ error: 'Webhook verification unavailable' });
+  }
+
+  if (!signature) {
+    return res.status(400).json({ error: 'Missing stripe-signature header' });
   }
 
   let event;
   try {
-    event = endpointSecret
-      ? stripe.webhooks.constructEvent(rawBody, signature, endpointSecret)
-      : JSON.parse(rawBody);
+    event = stripe.webhooks.constructEvent(rawBody, signature, endpointSecret);
   } catch (err) {
     console.error('Webhook signature verification failed:', err.message);
-    return res.status(400).json({ error: `Webhook Error: ${err.message}` });
+    return res.status(400).json({ error: 'Webhook signature verification failed' });
   }
 
   if (event.type === 'checkout.session.completed') {

@@ -7,9 +7,16 @@ const CyberAgent = () => {
   const [input, setInput] = useState('');
   const [streaming, setStreaming] = useState(false);
   const [error, setError] = useState('');
-  const [hasAccess, setHasAccess] = useState(
-    () => sessionStorage.getItem('cyberagent-paid') === 'true'
-  );
+  // Optimistic UI only. The server re-checks access on every /api/chat call,
+  // so a stale value here cannot grant inference.
+  const [hasAccess, setHasAccess] = useState(false);
+  const [checkoutPending, setCheckoutPending] = useState(false);
+  const [usage, setUsage] = useState<{
+    used: number;
+    limit: number;
+    remaining: number;
+    resetAtISO: string;
+  } | null>(null);
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
@@ -18,20 +25,24 @@ const CyberAgent = () => {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get('payment') === 'success') {
-      setHasAccess(true);
-      sessionStorage.setItem('cyberagent-paid', 'true');
-      window.history.replaceState({}, '', '/cyberagent');
+    const sessionId = params.get('session_id');
+    if (params.get('payment') === 'success' && sessionId) {
+      // Exchange the Stripe session for an HttpOnly signed cookie. Access is
+      // enforced server-side; this only mirrors the result for the UI.
+      fetch('/api/verify-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.valid) setHasAccess(true);
+        })
+        .catch(() => {
+          // leave paywall up; inference will reject if access is not valid
+        });
     }
-  }, []);
-
-  useEffect(() => {
-    const cookies = document.cookie.split('; ');
-    const found = cookies.find(c => c.startsWith('cyberagent_paid='));
-    if (found) {
-      setHasAccess(true);
-      sessionStorage.setItem('cyberagent-paid', 'true');
-    }
+    window.history.replaceState({}, '', '/cyberagent');
   }, []);
 
   const handleSend = async () => {
@@ -58,6 +69,7 @@ const CyberAgent = () => {
       const data = await res.json();
 
       if (!res.ok) {
+        if (data.usage) setUsage(data.usage);
         throw new Error(data.error || 'Failed to get response');
       }
 
@@ -65,6 +77,8 @@ const CyberAgent = () => {
         ...prev,
         { role: 'assistant', content: data.response },
       ]);
+
+      if (data.usage) setUsage(data.usage);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
@@ -91,6 +105,24 @@ Keep it clear and educational — someone learning security should be able to fo
     handleSend();
   };
 
+  const startCheckout = async () => {
+    if (checkoutPending) return;
+    setCheckoutPending(true);
+    setError('');
+    try {
+      const res = await fetch(checkoutUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const data = await res.json();
+      if (!res.ok || !data.url) throw new Error(data.error || 'Checkout unavailable');
+      window.location.assign(data.url);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not start checkout');
+      setCheckoutPending(false);
+    }
+  };
+
   const handleBypass = async () => {
     const key = window.prompt('Enter your owner access key');
     if (!key) return;
@@ -107,7 +139,6 @@ Keep it clear and educational — someone learning security should be able to fo
         return;
       }
       setHasAccess(true);
-      sessionStorage.setItem('cyberagent-paid', 'true');
     } catch {
       setError('Could not verify owner access');
     }
@@ -134,8 +165,9 @@ Keep it clear and educational — someone learning security should be able to fo
         </p>
         {checkoutUrl ? (
           <button className="cyberagent-unlock-btn"
-            onClick={() => window.location.assign(checkoutUrl)}>
-            <Lock size={16} /> Unlock with one-time payment
+            onClick={startCheckout} disabled={checkoutPending}>
+            <Lock size={16} />
+            {checkoutPending ? 'Opening checkout…' : 'Unlock with one-time payment'}
           </button>
         ) : (
           <button className="cyberagent-unlock-btn" disabled>
@@ -186,6 +218,14 @@ Keep it clear and educational — someone learning security should be able to fo
         <p className="cyberagent-usage">
           Included: 3M tokens/month — enough for ~3,000 messages
         </p>
+        {usage && (
+          <p className="cyberagent-usage" data-testid="cyberagent-usage-meter">
+            {Math.round(usage.used).toLocaleString()} of{' '}
+            {Math.round(usage.limit).toLocaleString()} tokens used —{' '}
+            {Math.round(usage.remaining).toLocaleString()} remaining, resets{' '}
+            {new Date(usage.resetAtISO).toLocaleDateString()}
+          </p>
+        )}
       </section>
 
       <section className="cyberagent-compare">

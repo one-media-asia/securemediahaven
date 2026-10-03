@@ -7,12 +7,16 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', process.env.ALLOWED_ORIGIN || '*');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
 
   if (req.method === 'OPTIONS') return res.status(204).end();
-  if (req.method !== 'GET' && req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  // Session creation is a side effect, so it must not run on GET.
+  // Link scanners and prefetchers would otherwise mint live sessions.
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
+    const unitAmount = Number(process.env.CYBERAGENT_PRICE_CENTS || 1200);
+
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       payment_method_types: ['card'],
@@ -23,7 +27,7 @@ export default async function handler(req, res) {
             name: 'CyberAgent - AI Coding & Cybersecurity Assistant',
             description: 'One-time access to your personal AI coding, debugging, and cybersecurity tool-building assistant.',
           },
-          unit_amount: 2900,
+          unit_amount: unitAmount,
         },
         quantity: 1,
       }],
@@ -32,7 +36,6 @@ export default async function handler(req, res) {
       metadata: { product: 'cyberagent' },
     });
 
-    if (req.method === 'GET') return res.redirect(303, session.url);
     return res.status(200).json({ url: session.url });
   } catch (err) {
     console.error('CyberAgent Stripe error:', err);

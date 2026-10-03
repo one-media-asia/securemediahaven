@@ -1,10 +1,4 @@
-import { timingSafeEqual } from 'node:crypto';
-
-function keysMatch(received, expected) {
-  const receivedBuffer = Buffer.from(received || '');
-  const expectedBuffer = Buffer.from(expected || '');
-  return receivedBuffer.length === expectedBuffer.length && timingSafeEqual(receivedBuffer, expectedBuffer);
-}
+import { keysMatch, issueSessionCookie } from './cyberagent-access.js';
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
@@ -21,6 +15,6 @@ export default async function handler(req, res) {
     return res.status(401).json({ error: 'Invalid owner key' });
   }
 
-  res.setHeader('Set-Cookie', `cyberagent_paid=1; Path=/; HttpOnly; SameSite=Lax; ${process.env.NODE_ENV === 'production' ? 'Secure; ' : ''}Max-Age=31536000`);
+  issueSessionCookie(res);
   return res.status(200).json({ valid: true });
 }

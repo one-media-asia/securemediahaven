@@ -12,8 +12,19 @@ const supabase = createClient(
 
 const EC2_API_URL = process.env.EC2_API_URL || 'http://13.63.238.142:3001';
 
-/** Config names are generated server-side as `vpn-<ts>` / `shadow-<ts>`. */
-const CLIENT_NAME_RE = /^(vpn|shadow)-\d{10,}$/;
+/**
+ * Reject anything that could escape the EC2 path segment or inject headers.
+ * Real client names are assigned by the EC2 companion API and are not
+ * guaranteed to follow a fixed pattern, so this blocks dangerous characters
+ * rather than demanding a specific shape.
+ */
+const isSafeClientName = (name) =>
+  typeof name === 'string' &&
+  name.length > 0 &&
+  name.length <= 64 &&
+  /^[A-Za-z0-9._-]+$/.test(name) &&
+  name !== '.' &&
+  name !== '..';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', process.env.ALLOWED_ORIGIN || '*');
@@ -54,7 +65,7 @@ export default async function handler(req, res) {
   }
 
   // Reject traversal and unexpected shapes before the value reaches EC2.
-  if (!CLIENT_NAME_RE.test(name)) {
+  if (!isSafeClientName(name)) {
     return res.status(400).json({ error: 'Invalid client name' });
   }
 

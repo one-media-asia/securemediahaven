@@ -5,7 +5,7 @@ import {
   usageFrom,
   clampTokens,
   TOKEN_LIMIT,
-} from './cyberagent-access.js';
+} from '../lib/cyberagent-access.js';
 
 const client = new BedrockRuntimeClient({ region: process.env.AWS_REGION || 'eu-north-1' });
 

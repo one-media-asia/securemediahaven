@@ -1,4 +1,4 @@
-import { keysMatch, issueSessionCookie } from './cyberagent-access.js';
+import { keysMatch, issueSessionCookie } from '../lib/cyberagent-access.js';
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');

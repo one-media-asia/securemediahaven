@@ -1,5 +1,5 @@
 import Stripe from 'stripe';
-import { issueSessionCookie } from './cyberagent-access.js';
+import { issueSessionCookie } from '../lib/cyberagent-access.js';
 
 const stripe = process.env.STRIPE_SECRET_KEY
   ? new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2026-09-30' })

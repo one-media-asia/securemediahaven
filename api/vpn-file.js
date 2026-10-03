@@ -80,7 +80,7 @@ export default async function handler(req, res) {
       .select('client_name, config_type, email')
       .eq('email', email.toLowerCase())
       .eq('client_name', name)
-      .single();
+      .maybeSingle();
 
     if (dbError || !customer) {
       return res.status(404).json({ error: 'Config not found for this customer' });

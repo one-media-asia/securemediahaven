@@ -38,12 +38,14 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'No email associated with this session' });
     }
 
-    // Look up the customer in Supabase
+    // maybeSingle() returns null for zero rows rather than raising PGRST116, so
+    // a customer whose config has not provisioned yet is a 404 with guidance
+    // instead of a bare "Database error" 500.
     const { data, error: dbError } = await supabase
       .from('vpn_customers')
       .select('client_name, config_type')
       .eq('email', customerEmail.toLowerCase())
-      .single();
+      .maybeSingle();
 
     if (dbError) {
       console.error('DB lookup error:', dbError);
@@ -51,7 +53,10 @@ export default async function handler(req, res) {
     }
 
     if (!data) {
-      return res.status(404).json({ error: 'No VPN config found for this customer' });
+      return res.status(404).json({
+        error: 'No VPN config found for this customer',
+        hint: 'If you just paid, your config may still be provisioning. Try again in a minute.',
+      });
     }
 
     return res.status(200).json({

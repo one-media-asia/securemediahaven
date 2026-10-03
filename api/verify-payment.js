@@ -2,7 +2,7 @@ import Stripe from 'stripe';
 import { issueSessionCookie } from '../lib/cyberagent-access.js';
 
 const stripe = process.env.STRIPE_SECRET_KEY
-  ? new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2026-09-30' })
+  ? new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2026-08-26.dahlia' })
   : null;
 
 export default async function handler(req, res) {

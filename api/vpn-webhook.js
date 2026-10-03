@@ -2,7 +2,7 @@ import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2026-09-30',
+  apiVersion: '2026-08-26.dahlia',
 });
 
 const supabase = createClient(

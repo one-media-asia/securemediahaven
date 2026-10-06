@@ -10,7 +10,7 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY || '',
 );
 
-const EC2_API_URL = process.env.EC2_API_URL || 'http://13.63.238.142:3001';
+const EC2_API_URL = process.env.EC2_API_URL || 'http://13.250.50.221:3001';
 
 /**
  * Reject anything that could escape the EC2 path segment or inject headers.
@@ -99,11 +99,17 @@ export default async function handler(req, res) {
       return res.status(502).json({ error: 'Could not retrieve config from server' });
     }
 
-    const ovpnContent = await ec2Response.text();
+    const configContent = await ec2Response.text();
+
+    // The companion names files with their real extension (.conf for WireGuard,
+    // .json for Trojan). Read it back from the response to avoid hardcoding.
+    const disposition = ec2Response.headers.get('Content-Disposition') || '';
+    const filenameMatch = disposition.match(/filename="([^"]+)"/);
+    const filename = filenameMatch ? filenameMatch[1] : `${name}.conf`;
 
     res.setHeader('Content-Type', 'application/octet-stream');
-    res.setHeader('Content-Disposition', `attachment; filename="${name}.ovpn"`);
-    return res.status(200).send(ovpnContent);
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    return res.status(200).send(configContent);
   } catch (err) {
     console.error('VPN file error:', err);
     return res.status(500).json({ error: 'Error retrieving config' });

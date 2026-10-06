@@ -36,8 +36,8 @@ export default async function handler(req, res) {
             product_data: {
               name: 'One Media Asia VPN',
               description: isChina
-                ? 'OpenVPN access — China-optimized (TCP/443)'
-                : 'OpenVPN access — Standard (UDP/1194)',
+                ? 'Trojan VPN — China-optimized (TCP/443)'
+                : 'WireGuard VPN — Standard (UDP/1194)',
             },
             unit_amount: 1200, // $12.00
           },

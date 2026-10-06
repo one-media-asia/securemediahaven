@@ -15,8 +15,8 @@ async function detectCountry(): Promise<string | null> {
 
 const features = [
   { icon: Shield, title: 'Bypass restrictions', desc: 'Access the open internet from anywhere, including networks that block VPN traffic.' },
-  { icon: Globe, title: 'China-optimized', desc: 'TCP port 443 config for users in China — blends in with normal HTTPS traffic.' },
-  { icon: Lock, title: 'Encrypted tunnel', desc: 'AES-128-GCM encryption. Your traffic stays private between your device and the server.' },
+  { icon: Globe, title: 'China-optimized', desc: 'Trojan over TLS on TCP port 443 for users in China — blends in with normal HTTPS traffic.' },
+  { icon: Lock, title: 'Encrypted tunnel', desc: 'WireGuard ChaCha20-Poly1305 encryption. Your traffic stays private between your device and the server.' },
   { icon: Download, title: 'One-time purchase', desc: '12 USD, lifetime access. No subscription. Download your config and connect.' },
 ];
 
@@ -85,10 +85,12 @@ const VpnPage = () => {
         <div className="vpn-badge">
           <Lock size={12} /> Secure tunnel
         </div>
-        <h1>OpenVPN access.<br /><em>One purchase. Lifetime.</em></h1>
+        <h1>WireGuard + Trojan access.<br /><em>One purchase. Lifetime.</em></h1>
         <p className="vpn-sub">
-          Connect to our EC2 OpenVPN server. Your traffic exits through a clean IP in eu-north-1.
-          China users and travelers get the shadow config (TCP/443) — everyone else gets the standard UDP config.
+          Connect to our Singapore (AWS ap-southeast-1) VPN server. Your traffic exits
+          through a clean IP.
+          China users and travelers get the Trojan config (TCP/443) — everyone else gets
+          the standard WireGuard config (UDP/1194).
         </p>
 
         <div className="vpn-card">
@@ -159,7 +161,7 @@ const VpnPage = () => {
             </label>
             {error && <p className="form-error">{error}</p>}
             <p className="form-fine">
-              After payment you'll get a download link for your personal .ovpn config.
+              After payment you'll get a download link for your personal VPN config.
             </p>
           </form>
         </div>
@@ -185,14 +187,14 @@ const VpnPage = () => {
             <span className="step-num">2</span>
             <div>
               <strong>Get your config</strong>
-              <p>After payment, download your personal .ovpn file. China? You get the shadow (TCP/443) config. Others get standard (UDP/1194).</p>
+              <p>After payment, download your personal config. China? You get the Trojan (TCP/443) config. Others get the WireGuard (UDP/1194) config.</p>
             </div>
           </div>
           <div className="step">
             <span className="step-num">3</span>
             <div>
               <strong>Connect</strong>
-              <p>Import the .ovpn into OpenVPN Connect (mobile/desktop) and tap connect. Your traffic exits through our server.</p>
+              <p>Import the config into WireGuard (standard) or your Trojan/v2ray client (China) and tap connect. Your traffic exits through our server.</p>
             </div>
           </div>
         </div>
@@ -201,10 +203,10 @@ const VpnPage = () => {
       <section className="vpn-specs">
         <h2>Server specs</h2>
         <div className="spec-grid">
-          <div className="spec"><span>Location</span><strong>AWS eu-north-1</strong></div>
-          <div className="spec"><span>Standard</span><strong>t3.micro / UDP 1194 / AES-128-GCM</strong></div>
-          <div className="spec"><span>Shadow</span><strong>c7i-flex.large / TCP 443 / VMess</strong></div>
-          <div className="spec"><span>Validity</span><strong>3650 days</strong></div>
+          <div className="spec"><span>Location</span><strong>AWS ap-southeast-1</strong></div>
+          <div className="spec"><span>Standard</span><strong>WireGuard / UDP 1194 / ChaCha20-Poly1305</strong></div>
+          <div className="spec"><span>China</span><strong>Trojan / TLS / TCP 443</strong></div>
+          <div className="spec"><span>Validity</span><strong>Lifetime</strong></div>
         </div>
       </section>
 

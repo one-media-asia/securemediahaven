@@ -10,7 +10,7 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY || '',
 );
 
-const EC2_API_URL = process.env.EC2_API_URL || 'http://13.63.238.142:3001';
+const EC2_API_URL = process.env.EC2_API_URL || 'http://13.250.50.221:3001';
 const EC2_API_KEY = process.env.EC2_API_KEY || '';
 
 export const config = {
@@ -83,7 +83,7 @@ export default async function handler(req, res) {
       return res.status(200).json({ received: true });
     }
 
-    const clientName = configType === 'shadow' ? `shadow-${Date.now()}` : `vpn-${Date.now()}`;
+    const clientName = configType === 'shadow' ? `trojan-${Date.now()}` : `wg-${Date.now()}`;
 
     try {
       const { error: dbError } = await supabase

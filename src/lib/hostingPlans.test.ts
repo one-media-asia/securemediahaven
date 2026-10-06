@@ -4,15 +4,15 @@ import { hostingPlans } from './hostingPlans';
 
 describe('hostingPlans', () => {
   it('only exposes the active storefront categories', () => {
-    expect(hostingCategories).toEqual(['All', 'Launch', 'VPN']);
+    expect(hostingCategories).toEqual(['All', 'Launch']);
   });
 
   it('includes the active hosting products', () => {
     expect(hostingPlans.map((plan) => plan.name)).toEqual(
-      expect.arrayContaining(['Launch Hosting', 'AWS Ubuntu OpenVPN'])
+      expect.arrayContaining(['Launch Hosting'])
     );
     expect(hostingPlans.map((plan) => plan.name)).not.toEqual(
-      expect.arrayContaining(['Studio Hosting', 'Business Hosting'])
+      expect.arrayContaining(['Studio Hosting', 'Business Hosting', 'AWS Ubuntu OpenVPN'])
     );
   });
 
@@ -24,17 +24,11 @@ describe('hostingPlans', () => {
     expect(launchPlan?.stripeUrl).toBe('https://buy.stripe.com/00w3cvdBS2K6gRe1PN7EQ0b');
   });
 
-  it('includes a separate VPN product', () => {
-    expect(hostingPlans).toEqual(expect.arrayContaining([
-      expect.objectContaining({ name: 'AWS Ubuntu OpenVPN', badge: 'VPN' }),
-    ]));
-  });
-
   it('includes essentials customers expect from the onboarding offer', () => {
     const features = hostingPlans.flatMap((plan) => plan.features);
 
     expect(features).toContain('1 starter site');
     expect(features).toContain('Support onboarding');
-    expect(hostingPlans.length).toBeGreaterThan(1);
+    expect(hostingPlans.length).toBe(1);
   });
 });

@@ -28,8 +28,6 @@ import Flowboard from "./pages/Flowboard";
 import DeepSeekPage from "./pages/DeepSeek";
 import MalwareScanner from "./pages/MalwareScanner";
 import { startClickTracking } from "./lib/clickTracking";
-import Vpn from "./pages/Vpn";
-import VpnSuccess from "./pages/VpnSuccess";
 
 const queryClient = new QueryClient();
 const isHostingSubdomain = typeof window !== "undefined" && window.location.hostname.startsWith("hosting.");
@@ -65,8 +63,6 @@ const App = () => {
             <Route path="/deepseek" element={<DeepSeekPage />} />
             <Route path="/flowboard" element={<Flowboard />} />
             <Route path="/malware-scanner" element={<MalwareScanner />} />
-            <Route path="/vpn" element={<Vpn />} />
-            <Route path="/vpn/success" element={<VpnSuccess />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

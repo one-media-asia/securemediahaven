@@ -1,0 +1,31 @@
+{
+  "name": "CyberAgent - AI Coding & Cybersecurity Assistant",
+  "short_name": "CyberAgent",
+  "description": "Your personal AI coding and cybersecurity assistant. Write code, debug errors, build security tools, and learn defensive techniques.",
+  "id": "/cyberagent",
+  "start_url": "/cyberagent",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#040506",
+  "theme_color": "#040506",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

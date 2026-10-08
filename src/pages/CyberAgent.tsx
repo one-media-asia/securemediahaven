@@ -45,6 +45,15 @@ const CyberAgent = () => {
     window.history.replaceState({}, '', '/cyberagent');
   }, []);
 
+  useEffect(() => {
+    // Installing from this page installs CyberAgent, not the whole site.
+    const link = document.querySelector('link[rel="manifest"]');
+    if (!link) return;
+    const original = link.getAttribute('href') || '/manifest.webmanifest';
+    link.setAttribute('href', '/cyberagent.webmanifest');
+    return () => link.setAttribute('href', original);
+  }, []);
+
   const handleSend = async () => {
     if (!input.trim() || streaming) return;
 

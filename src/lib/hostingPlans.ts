@@ -14,7 +14,7 @@ export type HostingPlan = {
 export const hostingPlans: HostingPlan[] = [
   {
     name: 'Launch Hosting',
-    price: '$12',
+    price: '$0.99',
     period: '/ month',
     tagline: 'Start managed hosting',
     description: 'Launch a managed hosting slot for lawful, privacy-first projects and early testing.',

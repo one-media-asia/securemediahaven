@@ -19,7 +19,7 @@ describe('hostingPlans', () => {
   it('routes launch hosting to the paid Stripe offer', () => {
     const launchPlan = hostingPlans.find((plan) => plan.name === 'Launch Hosting');
 
-    expect(launchPlan?.price).toBe('$12');
+    expect(launchPlan?.price).toBe('$0.99');
     expect(launchPlan?.period).toBe('/ month');
     expect(launchPlan?.stripeUrl).toBe('https://buy.stripe.com/00w3cvdBS2K6gRe1PN7EQ0b');
   });

@@ -86,6 +86,7 @@ const CyberAgent = () => {
     }
   };
 
+  // €0.99 one-time intro charge, then €4.99/month after a 7-day trial.
   const checkoutUrl = '/api/cyberagent-checkout';
 
   const samplePrompt = `Write a simple Python port scanner that:
@@ -108,17 +109,17 @@ Keep it clear and educational — someone learning security should be able to fo
   const startCheckout = async () => {
     if (checkoutPending) return;
     setCheckoutPending(true);
-    setError('');
     try {
       const res = await fetch(checkoutUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        body: '{}',
       });
       const data = await res.json();
       if (!res.ok || !data.url) throw new Error(data.error || 'Checkout unavailable');
       window.location.assign(data.url);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not start checkout');
+      setError(err instanceof Error ? err.message : 'Checkout unavailable');
       setCheckoutPending(false);
     }
   };
@@ -242,7 +243,7 @@ Keep it clear and educational — someone learning security should be able to fo
           <tbody>
             <tr>
               <td><span className="cyberagent-compare-you">CyberAgent</span></td>
-              <td><strong>$12</strong> (one-time)</td>
+              <td><strong>$0.99</strong> (one-time)</td>
               <td>3M/mo</td>
               <td>DeepSeek V4 Flash<br /><span className="cyberagent-model-tag">cybersecurity-tuned</span></td>
             </tr>
@@ -275,7 +276,7 @@ Keep it clear and educational — someone learning security should be able to fo
         <p className="cyberagent-compare-note">
           * Claude Pro has per-hour message caps, not a token ceiling.
           Heavy users still hit ceilings — CyberAgent uses one of the
-          most cost-efficient frontier APIs available, so the $12
+          most cost-efficient frontier APIs available, so the $0.99
           one-time tier stays well within margin.
         </p>
       </section>

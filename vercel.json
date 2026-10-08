@@ -1,4 +1,12 @@
 {
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/cyberagent",
+      "has": [{ "type": "host", "value": "cyberagent.onemedia.asia" }],
+      "permanent": false
+    }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",

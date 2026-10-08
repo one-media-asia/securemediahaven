@@ -95,6 +95,20 @@ function parseResponse(data) {
 
 const wireFor = (modelId) => (modelId.startsWith('deepseek') ? 'openai' : 'anthropic');
 
+const sourceFor = (req) => {
+  const ref = String(req.headers.referer || req.headers.origin || '');
+  if (ref.includes('deepseek')) return 'deepseek';
+  if (ref.includes('cyberagent')) return 'cyberagent';
+  return 'unknown';
+};
+
+const lastUserInput = (messages) => {
+  for (let i = messages.length - 1; i >= 0; i -= 1) {
+    if (messages[i]?.role === 'user') return String(messages[i].content ?? '');
+  }
+  return '';
+};
+
 async function invoke(modelId, messages, maxTokens, temperature) {
   const response = await client.send(
     new InvokeModelCommand({
@@ -158,6 +172,21 @@ export default async function handler(req, res) {
     const tokens = clampTokens(maxTokens);
     const temp = Number(temperature) || 0.3;
 
+    console.log(
+      JSON.stringify({
+        event: 'chat_input',
+        ts: new Date().toISOString(),
+        source: sourceFor(req),
+        ip: String(req.headers['x-forwarded-for'] || '')
+          .split(',')[0]
+          .trim(),
+        turn: messages.length,
+        input: lastUserInput(messages).slice(0, 2000),
+        tokensUsed: claims.t,
+        remaining: usage.remaining,
+      })
+    );
+
     let result;
     let modelUsed = PRIMARY_MODEL;
 
@@ -175,6 +204,17 @@ export default async function handler(req, res) {
     // Bill actual consumption whichever wire format answered.
     claims.t = (Number(claims.t) || 0) + result.spent;
     persistUsage(res, claims);
+
+    console.log(
+      JSON.stringify({
+        event: 'chat_result',
+        ts: new Date().toISOString(),
+        model: modelUsed,
+        spent: result.spent,
+        stopReason: result.stopReason,
+        remaining: usageFrom(claims).remaining,
+      })
+    );
 
     return res.status(200).json({
       response: result.text,

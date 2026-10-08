@@ -3,7 +3,7 @@ import App from './App.tsx'
 import './index.css'
 import './App.css'
 
-createRoot(document.getElementById("root")!).render(<App>());
+createRoot(document.getElementById("root")!).render(<App/>);
 
 // Service worker powers the installable PWA (offline shell). Registered only
 // in production so it never caches dev-server assets.

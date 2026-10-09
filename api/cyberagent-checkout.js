@@ -6,12 +6,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 
 // $6.99/month subscription.
 //
-// Checkout refuses to start a subscription trial shorter than 48 hours (and
-// trial_period_days is whole days), so the subscription is created here with an
-// exact `trial_end` and Checkout runs in `setup` mode purely to collect a card
-// for it. verify-payment attaches that card to the subscription.
+// Subscription created up front; Checkout collects the card which is attached to the subscription.
 const MONTHLY_PRICE_ID = process.env.CYBERAGENT_MONTHLY_PRICE_ID;
-const TRIAL_SECONDS = Number(process.env.CYBERAGENT_TRIAL_SECONDS || 3600);
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', process.env.ALLOWED_ORIGIN || '*');
@@ -34,10 +30,6 @@ export default async function handler(req, res) {
     const subscription = await stripe.subscriptions.create({
       customer: customer.id,
       items: [{ price: MONTHLY_PRICE_ID }],
-      trial_end: Math.floor(Date.now() / 1000) + TRIAL_SECONDS,
-      // If no card is added before the trial ends, cancel rather than let the
-      // subscription drift to past_due.
-      trial_settings: { end_behavior: { missing_payment_method: 'cancel' } },
       metadata: { product: 'cyberagent' },
     });
 

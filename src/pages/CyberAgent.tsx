@@ -252,7 +252,7 @@ Keep it clear and educational — someone learning security should be able to fo
           <tbody>
             <tr>
               <td><span className="cyberagent-compare-you">CyberAgent</span></td>
-              <td><strong>$6.99</strong>/mo<br /><span className="cyberagent-model-tag">1h free trial</span></td>
+              <td><strong>$6.99</strong>/mo<br /><span className="cyberagent-model-tag"></span></td>
               <td>3M/mo</td>
               <td>DeepSeek V4 Flash<br /><span className="cyberagent-model-tag">cybersecurity-tuned</span></td>
             </tr>

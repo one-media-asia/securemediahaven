@@ -6,7 +6,9 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 
 // $6.99/month subscription.
 //
-// Subscription created up front; Checkout collects the card which is attached to the subscription.
+// Checkout runs in subscription mode so Stripe collects the card and creates
+// the subscription itself. Creating the subscription up front only works while
+// a trial is set; without one Stripe rejects it ("no default payment method").
 const MONTHLY_PRICE_ID = process.env.CYBERAGENT_MONTHLY_PRICE_ID;
 
 export default async function handler(req, res) {
@@ -27,21 +29,18 @@ export default async function handler(req, res) {
       metadata: { product: 'cyberagent' },
     });
 
-    const subscription = await stripe.subscriptions.create({
-      customer: customer.id,
-      items: [{ price: MONTHLY_PRICE_ID }],
-      metadata: { product: 'cyberagent' },
-    });
-
+    // Checkout creates the subscription and attaches the card; the old flow
+    // pre-created it, which only works when a trial is set.
     const sessionParams = {
-      mode: 'setup',
+      mode: 'subscription',
       // Managed Payments rejects payment_method_types on this account.
-      managed_payments: { enabled: false },
       payment_method_types: ['card'],
       customer: customer.id,
+      line_items: [{ price: MONTHLY_PRICE_ID, quantity: 1 }],
       success_url: `${process.env.SITE_URL || 'http://localhost:8080'}/cyberagent?payment=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.SITE_URL || 'http://localhost:8080'}/cyberagent?payment=cancelled`,
-      metadata: { product: 'cyberagent', subscription: subscription.id },
+      metadata: { product: 'cyberagent' },
+      subscription_data: { metadata: { product: 'cyberagent' } },
     };
 
     let session;

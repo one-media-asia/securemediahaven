@@ -5,9 +5,9 @@ const stripe = process.env.STRIPE_SECRET_KEY
   ? new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2026-08-26.dahlia' })
   : null;
 
-// The subscription is created up front with a  (see
-// cyberagent-checkout.js) and Checkout only collects the card. Attach that card
-// as the subscription default so it can be charged when the trial ends.
+// Subscription Checkout attaches the card and creates the subscription itself.
+// Legacy `setup` sessions (created before the switch to subscription mode) still
+// need their card attached to the pre-created subscription.
 async function attachSubscriptionCard(session) {
   const subscriptionId = session.metadata?.subscription;
   if (!subscriptionId) return;
@@ -50,13 +50,14 @@ export default async function handler(req, res) {
     });
 
     const paid = session.payment_status === 'paid';
-    const setupComplete = session.mode === 'setup' && session.status === 'complete';
+    const optInComplete = session.status === 'complete'
+      && (session.mode === 'setup' || session.mode === 'subscription');
 
-    if (paid || setupComplete) {
+    if (paid || optInComplete) {
       try {
         await attachSubscriptionCard(session);
       } catch (err) {
-        // Access still starts with the trial; the card can be retried later.
+        // Access still starts; the card can be retried later.
         console.error('Attach subscription card failed:', err);
       }
       issueSessionCookie(res);

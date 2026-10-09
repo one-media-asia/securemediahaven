@@ -95,7 +95,7 @@ const CyberAgent = () => {
     }
   };
 
-  // 1-hour free trial, then $6.99/month.
+  // $6.99/month subscription.
   const checkoutUrl = '/api/cyberagent-checkout';
 
   const samplePrompt = `Write a simple Python port scanner that:
@@ -171,13 +171,13 @@ Keep it clear and educational — someone learning security should be able to fo
           <li><span><Shield size={14} /></span>OWASP, CVE, and crypto explanations</li>
         </ul>
         <p className="cyberagent-usage">
-          1-hour free trial, then $6.99/month — 3M tokens/month included (~3,000 messages)
+          $6.99/month — 3M tokens/month included (~3,000 messages)
         </p>
         {checkoutUrl ? (
           <button className="cyberagent-unlock-btn"
             onClick={startCheckout} disabled={checkoutPending}>
             <Lock size={16} />
-            {checkoutPending ? 'Opening checkout…' : 'Start 1-hour free trial'}
+            {checkoutPending ? 'Opening checkout…' : 'Subscribe for $6.99/month'}
           </button>
         ) : (
           <button className="cyberagent-unlock-btn" disabled>

@@ -4,7 +4,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2026-08-26.dahlia',
 });
 
-// $6.99/month, after a 1-hour free trial.
+// $6.99/month subscription.
 //
 // Checkout refuses to start a subscription trial shorter than 48 hours (and
 // trial_period_days is whole days), so the subscription is created here with an

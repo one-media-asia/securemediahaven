@@ -24,7 +24,7 @@ const parseBody = (body: unknown) => {
 };
 
 export default async function handler(request: Request, response: Response) {
-  response.setHeader('Access-Control-Allow-Origin', process.env.ALLOWED_ORIGIN || 'https://phish.onemedia.asia');
+  response.setHeader('Access-Control-Allow-Origin', process.env.ALLOWED_ORIGIN || 'https://onemedia.asia');
   response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   response.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
 

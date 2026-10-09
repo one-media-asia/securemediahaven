@@ -5,7 +5,7 @@ const stripe = process.env.STRIPE_SECRET_KEY
   ? new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2026-08-26.dahlia' })
   : null;
 
-// The subscription is created up front with a 1-hour trial (see
+// The subscription is created up front with a  (see
 // cyberagent-checkout.js) and Checkout only collects the card. Attach that card
 // as the subscription default so it can be charged when the trial ends.
 async function attachSubscriptionCard(session) {

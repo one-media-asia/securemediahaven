@@ -13,6 +13,7 @@
   "dependencies": {
     "@anthropic-ai/bedrock-sdk": "^0.33.7",
     "@aws-sdk/client-bedrock-runtime": "^3.1136.0",
+    "@aws-sdk/client-cloudwatch-logs": "^3.1147.0",
     "@aws-sdk/client-cognito-identity-provider": "^3.1135.0",
     "@hookform/resolvers": "^3.9.0",
     "@radix-ui/react-accordion": "^1.2.0",
@@ -42,6 +43,7 @@
     "@radix-ui/react-toggle": "^1.1.0",
     "@radix-ui/react-toggle-group": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.4",
+    "@supabase/supabase-js": "^2.58.0",
     "@tanstack/react-query": "^5.56.2",
     "amazon-cognito-identity-js": "^6.3.20",
     "class-variance-authority": "^0.7.1",
@@ -62,7 +64,6 @@
     "recharts": "^2.12.7",
     "sonner": "^1.5.0",
     "stripe": "^22.6.2",
-    "@supabase/supabase-js": "^2.58.0",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.3",

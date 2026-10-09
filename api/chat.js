@@ -1,5 +1,11 @@
 import { BedrockRuntimeClient, InvokeModelCommand } from '@aws-sdk/client-bedrock-runtime';
 import {
+  CloudWatchLogsClient,
+  CreateLogGroupCommand,
+  CreateLogStreamCommand,
+  PutLogEventsCommand,
+} from '@aws-sdk/client-cloudwatch-logs';
+import {
   getCustomer,
   persistUsage,
   usageFrom,
@@ -8,6 +14,43 @@ import {
 } from '../lib/cyberagent-access.js';
 
 const client = new BedrockRuntimeClient({ region: process.env.AWS_REGION || 'eu-north-1' });
+const logsClient = new CloudWatchLogsClient({ region: process.env.AWS_REGION || 'eu-north-1' });
+
+const LOG_GROUP = process.env.CYBERAGENT_LOG_GROUP || '/cyberagent/chat';
+const readyStreams = new Set();
+
+async function putLog(event) {
+  const message = JSON.stringify(event);
+  console.log(message);
+
+  const day = new Date().toISOString().slice(0, 10);
+  try {
+    if (!readyStreams.has(day)) {
+      try {
+        await logsClient.send(new CreateLogGroupCommand({ logGroupName: LOG_GROUP }));
+      } catch (e) {
+        if (e?.name !== 'ResourceAlreadyExistsException') throw e;
+      }
+      try {
+        await logsClient.send(
+          new CreateLogStreamCommand({ logGroupName: LOG_GROUP, logStreamName: day })
+        );
+      } catch (e) {
+        if (e?.name !== 'ResourceAlreadyExistsException') throw e;
+      }
+      readyStreams.add(day);
+    }
+    await logsClient.send(
+      new PutLogEventsCommand({
+        logGroupName: LOG_GROUP,
+        logStreamName: day,
+        logEvents: [{ timestamp: Date.now(), message }],
+      })
+    );
+  } catch (e) {
+    console.error('CloudWatch log failed:', e.message);
+  }
+}
 
 // DeepSeek V3 only. Not throttled on this account (the Anthropic models are)
 // and roughly 20x cheaper, so the 3M-token plan has real margin and customers
@@ -172,20 +215,18 @@ export default async function handler(req, res) {
     const tokens = clampTokens(maxTokens);
     const temp = Number(temperature) || 0.3;
 
-    console.log(
-      JSON.stringify({
-        event: 'chat_input',
-        ts: new Date().toISOString(),
-        source: sourceFor(req),
-        ip: String(req.headers['x-forwarded-for'] || '')
-          .split(',')[0]
-          .trim(),
-        turn: messages.length,
-        input: lastUserInput(messages).slice(0, 2000),
-        tokensUsed: claims.t,
-        remaining: usage.remaining,
-      })
-    );
+    await putLog({
+      event: 'chat_input',
+      ts: new Date().toISOString(),
+      source: sourceFor(req),
+      ip: String(req.headers['x-forwarded-for'] || '')
+        .split(',')[0]
+        .trim(),
+      turn: messages.length,
+      input: lastUserInput(messages).slice(0, 2000),
+      tokensUsed: claims.t,
+      remaining: usage.remaining,
+    });
 
     let result;
     let modelUsed = PRIMARY_MODEL;
@@ -205,16 +246,14 @@ export default async function handler(req, res) {
     claims.t = (Number(claims.t) || 0) + result.spent;
     persistUsage(res, claims);
 
-    console.log(
-      JSON.stringify({
-        event: 'chat_result',
-        ts: new Date().toISOString(),
-        model: modelUsed,
-        spent: result.spent,
-        stopReason: result.stopReason,
-        remaining: usageFrom(claims).remaining,
-      })
-    );
+    await putLog({
+      event: 'chat_result',
+      ts: new Date().toISOString(),
+      model: modelUsed,
+      spent: result.spent,
+      stopReason: result.stopReason,
+      remaining: usageFrom(claims).remaining,
+    });
 
     return res.status(200).json({
       response: result.text,

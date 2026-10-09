@@ -95,7 +95,7 @@ const CyberAgent = () => {
     }
   };
 
-  // €0.99 one-time intro charge, then €4.99/month after a 7-day trial.
+  // 1-hour free trial, then $6.99/month.
   const checkoutUrl = '/api/cyberagent-checkout';
 
   const samplePrompt = `Write a simple Python port scanner that:
@@ -171,13 +171,13 @@ Keep it clear and educational — someone learning security should be able to fo
           <li><span><Shield size={14} /></span>OWASP, CVE, and crypto explanations</li>
         </ul>
         <p className="cyberagent-usage">
-          3M tokens/month included — ~3,000 messages
+          1-hour free trial, then $6.99/month — 3M tokens/month included (~3,000 messages)
         </p>
         {checkoutUrl ? (
           <button className="cyberagent-unlock-btn"
             onClick={startCheckout} disabled={checkoutPending}>
             <Lock size={16} />
-            {checkoutPending ? 'Opening checkout…' : 'Unlock with one-time payment'}
+            {checkoutPending ? 'Opening checkout…' : 'Start 1-hour free trial'}
           </button>
         ) : (
           <button className="cyberagent-unlock-btn" disabled>
@@ -252,7 +252,7 @@ Keep it clear and educational — someone learning security should be able to fo
           <tbody>
             <tr>
               <td><span className="cyberagent-compare-you">CyberAgent</span></td>
-              <td><strong>$0.99</strong> (one-time)</td>
+              <td><strong>$6.99</strong>/mo<br /><span className="cyberagent-model-tag">1h free trial</span></td>
               <td>3M/mo</td>
               <td>DeepSeek V4 Flash<br /><span className="cyberagent-model-tag">cybersecurity-tuned</span></td>
             </tr>
@@ -285,8 +285,8 @@ Keep it clear and educational — someone learning security should be able to fo
         <p className="cyberagent-compare-note">
           * Claude Pro has per-hour message caps, not a token ceiling.
           Heavy users still hit ceilings — CyberAgent uses one of the
-          most cost-efficient frontier APIs available, so the $0.99
-          one-time tier stays well within margin.
+          most cost-efficient frontier APIs available, so the $6.99/mo
+          plan stays well within margin.
         </p>
       </section>
 

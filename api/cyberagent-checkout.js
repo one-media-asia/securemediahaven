@@ -4,10 +4,14 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2026-08-26.dahlia',
 });
 
-// €0.99 one-time intro charge, then €4.99/month once the trial ends.
-const INTRO_PRICE_ID = process.env.CYBERAGENT_INTRO_PRICE_ID || 'price_1UOEHyHfLuEywLiX6x500nfk';
-const MONTHLY_PRICE_ID = process.env.CYBERAGENT_MONTHLY_PRICE_ID || 'price_1UOE6PHfLuEywLiXaaRXMGAT';
-const TRIAL_DAYS = Number(process.env.CYBERAGENT_TRIAL_DAYS || 7);
+// $6.99/month, after a 1-hour free trial.
+//
+// Checkout refuses to start a subscription trial shorter than 48 hours (and
+// trial_period_days is whole days), so the subscription is created here with an
+// exact `trial_end` and Checkout runs in `setup` mode purely to collect a card
+// for it. verify-payment attaches that card to the subscription.
+const MONTHLY_PRICE_ID = process.env.CYBERAGENT_MONTHLY_PRICE_ID;
+const TRIAL_SECONDS = Number(process.env.CYBERAGENT_TRIAL_SECONDS || 3600);
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', process.env.ALLOWED_ORIGIN || '*');
@@ -16,6 +20,9 @@ export default async function handler(req, res) {
 
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  if (!MONTHLY_PRICE_ID) {
+    return res.status(503).json({ error: 'CyberAgent pricing is not configured' });
+  }
 
   try {
     const email = typeof req.body?.email === 'string' ? req.body.email.trim() : '';
@@ -27,20 +34,19 @@ export default async function handler(req, res) {
     const subscription = await stripe.subscriptions.create({
       customer: customer.id,
       items: [{ price: MONTHLY_PRICE_ID }],
-      trial_period_days: TRIAL_DAYS,
-      // An abandoned checkout leaves a trial with no card; cancel it instead
-      // of letting it move to past_due at the end of the trial.
+      trial_end: Math.floor(Date.now() / 1000) + TRIAL_SECONDS,
+      // If no card is added before the trial ends, cancel rather than let the
+      // subscription drift to past_due.
       trial_settings: { end_behavior: { missing_payment_method: 'cancel' } },
       metadata: { product: 'cyberagent' },
     });
 
     const sessionParams = {
-      mode: 'payment',
+      mode: 'setup',
       // Managed Payments rejects payment_method_types on this account.
       managed_payments: { enabled: false },
       payment_method_types: ['card'],
       customer: customer.id,
-      line_items: [{ price: INTRO_PRICE_ID, quantity: 1 }],
       success_url: `${process.env.SITE_URL || 'http://localhost:8080'}/cyberagent?payment=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.SITE_URL || 'http://localhost:8080'}/cyberagent?payment=cancelled`,
       metadata: { product: 'cyberagent', subscription: subscription.id },
@@ -48,17 +54,11 @@ export default async function handler(req, res) {
 
     let session;
     try {
-      // Save the intro card so the subscription can charge €4.99 on day 8.
-      session = await stripe.checkout.sessions.create({
-        ...sessionParams,
-        payment_intent_data: {
-          setup_future_usage: 'off_session',
-          metadata: { product: 'cyberagent' },
-        },
-      });
-    } catch (err) {
-      console.warn('CyberAgent checkout: setup_future_usage rejected, retrying without it:', err.message);
       session = await stripe.checkout.sessions.create(sessionParams);
+    } catch (err) {
+      console.warn('CyberAgent checkout: managed_payments override rejected, retrying:', err.message);
+      const { managed_payments, payment_method_types, ...fallback } = sessionParams;
+      session = await stripe.checkout.sessions.create(fallback);
     }
 
     return res.status(200).json({ url: session.url });

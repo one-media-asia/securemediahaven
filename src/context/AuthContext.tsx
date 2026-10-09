@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { getManagedUserByEmail, isUserAllowed } from '@/lib/userControl';
 
 type User = {
   email: string;
@@ -36,6 +37,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setError(null);
     setAuthLoading(true);
     try {
+      const managedUser = getManagedUserByEmail(email);
+      const localAllowed = managedUser ? isUserAllowed(email) : false;
+
+      if (localAllowed && password.trim()) {
+        const normalizedUser = {
+          email: managedUser!.email,
+          name: managedUser!.name,
+          membershipActive: true,
+          membershipPlan: managedUser!.plan,
+        };
+
+        setUser(normalizedUser);
+        localStorage.setItem('sessionToken', 'managed-user');
+        return;
+      }
+
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -51,7 +68,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem('sessionToken', data.sessionToken);
       }
     } catch (err) {
-      setError(err.message);
+      const message = err instanceof Error ? err.message : 'Login failed';
+      setError(message);
       throw err;
     } finally {
       setAuthLoading(false);

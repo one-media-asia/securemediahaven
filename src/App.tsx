@@ -3,7 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { AuthProvider } from "./context/AuthContext";
 import Index from "./pages/Index";
 import Hosting from "./pages/Hosting";
@@ -28,18 +28,44 @@ import Flowboard from "./pages/Flowboard";
 import DeepSeekPage from "./pages/DeepSeek";
 import MalwareScanner from "./pages/MalwareScanner";
 import { startClickTracking } from "./lib/clickTracking";
+import { getInputMonitoringConsent, setInputMonitoringConsent, startInputMonitoring } from "./lib/inputMonitoring";
 
 const queryClient = new QueryClient();
 const isHostingSubdomain = typeof window !== "undefined" && window.location.hostname.startsWith("hosting.");
 
+const InputActivityConsent = () => {
+  const [consent, setConsent] = useState(getInputMonitoringConsent);
+
+  const chooseConsent = (allowed: boolean) => {
+    setInputMonitoringConsent(allowed);
+    setConsent(allowed);
+  };
+
+  if (consent !== null) return null;
+
+  return <aside className="input-consent-notice" aria-label="Optional input activity logging">
+    <p><strong>Optional text-input logging</strong> Text from non-sensitive fields can be saved in this browser for review on its admin page. Password, email, payment, and authentication fields are excluded. Nothing is sent to a server.</p>
+    <div><button type="button" onClick={() => chooseConsent(false)}>Decline</button><button type="button" onClick={() => chooseConsent(true)}>Allow</button></div>
+  </aside>;
+};
+
 const App = () => {
-  useEffect(() => startClickTracking(), []);
+  useEffect(() => {
+    const stopClickTracking = startClickTracking();
+    const stopInputMonitoring = startInputMonitoring();
+
+    return () => {
+      stopClickTracking?.();
+      stopInputMonitoring?.();
+    };
+  }, []);
 
   return <AuthProvider>
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
         <Sonner />
+        <InputActivityConsent />
         <BrowserRouter>
           <Routes>
             <Route path="/" element={isHostingSubdomain ? <Hosting /> : <Index />} />
